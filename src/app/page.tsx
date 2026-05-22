@@ -1,65 +1,170 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <section className="route route--home">
+      {/* HERO */}
+      <div className="hero">
+        <div className="hero__media">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/hero-zion.jpg"
+            alt="Robert Castellino photographing Zion Canyon at sunset"
+          />
+          <div className="hero__vignette" />
+          <div className="hero__lower-fade" />
+        </div>
+
+        <div className="hero__chrome">
+          <div className="hero__eyebrow">
+            <span className="dot" />
+            <span>A Photographer&apos;s Life — Forty Years on the Land</span>
+          </div>
+
+          <h1 className="hero__title">
+            <span className="hero__line hero__line--a">A life&apos;s</span>
+            <span className="hero__line hero__line--b"><em>work</em></span>
+            <span className="hero__line hero__line--c">in the West.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="hero__sub">
+            Four decades of large-format landscape photography from the Colorado Rockies
+            and the wider American West — a working archive by a photographer whose
+            prints hang in museums, statehouses, and a great many living rooms.
           </p>
+
+          <div className="hero__cta-row">
+            <Link className="btn btn--ghost" href="/about">Meet Robert</Link>
+            <Link className="btn btn--bare" href="/gallery">
+              View the Gallery
+              <svg viewBox="0 0 14 14" width="11" height="11"><path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4"/></svg>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="hero__meta">
+          <div className="hero__meta-block">
+            <span className="hero__meta-k">N 37.2982°</span>
+            <span className="hero__meta-v">W 113.0263°</span>
+          </div>
+          <div className="hero__meta-block">
+            <span className="hero__meta-k">Elev.</span>
+            <span className="hero__meta-v">4,400 ft</span>
+          </div>
+          <div className="hero__meta-block">
+            <span className="hero__meta-k">Est.</span>
+            <span className="hero__meta-v">Boulder · 1984</span>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div className="hero__scroll">
+          <span>Scroll</span>
+          <span className="hero__scroll-line" />
+        </div>
+      </div>
+
+      {/* SELECTED WORK */}
+      <section className="selected">
+        <header className="section-head">
+          <div>
+            <span className="section-head__eyebrow">— From the archive</span>
+            <h2 className="section-head__title">Forty years <em>of looking.</em></h2>
+          </div>
+          <Link className="section-head__link" href="/gallery">
+            See the full gallery
+            <svg viewBox="0 0 14 14" width="11" height="11"><path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4"/></svg>
+          </Link>
+        </header>
+
+        <div className="selected__grid">
+          <Link href="/gallery" className="card card--tall">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/mt-yale.jpg" alt="Mount Yale at last light, Cottonwood Pass" />
+            <div className="card__overlay">
+              <span className="card__no">N° 014</span>
+              <span className="card__title">Mount Yale, Last Light</span>
+              <span className="card__loc">Cottonwood Pass · Colorado</span>
+            </div>
+          </Link>
+          <Link href="/gallery" className="card card--wide">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/mt-sopris.jpg" alt="Mount Sopris panoramic" />
+            <div className="card__overlay">
+              <span className="card__no">N° 022</span>
+              <span className="card__title">Mt. Sopris, A Day Folds In</span>
+              <span className="card__loc">Carbondale · Colorado</span>
+            </div>
+          </Link>
+          <Link href="/gallery" className="card card--sq">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/lone-pine.jpg" alt="A lone pine in deep snow at Red Mountain Pass" />
+            <div className="card__overlay">
+              <span className="card__no">N° 037</span>
+              <span className="card__title">Lone Pine, Quiet Drift</span>
+              <span className="card__loc">Red Mountain Pass · Colorado</span>
+            </div>
+          </Link>
+          <Link href="/gallery" className="card card--sq">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/horses-snow.jpg" alt="Horses walking through a snow storm" />
+            <div className="card__overlay">
+              <span className="card__no">N° 041</span>
+              <span className="card__title">Walk Through Weather</span>
+              <span className="card__loc">Northern Range · Colorado</span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* PHOTOGRAPHER TEASER */}
+      <section className="teaser">
+        <div className="teaser__art">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/portrait-hat.png" alt="Robert Castellino portrait" className="teaser__portrait" />
+          <div className="teaser__chip">
+            <span className="teaser__chip-line">Behind the Camera</span>
+            <span className="teaser__chip-name">Robert Castellino</span>
+          </div>
+        </div>
+        <div className="teaser__copy">
+          <span className="kicker">— The photographer</span>
+          <h2 className="display">
+            An elder eye on<br />
+            the <em>American West.</em>
+          </h2>
+          <p>
+            Robert Castellino has photographed the Colorado high country since 1984.
+            Three monographs, two Lowell Thomas Awards, a Hasselblad Masters
+            nomination, and prints held in the permanent collections of the Denver
+            Art Museum and the Anschutz Collection of American Art.
+          </p>
+          <p className="muted">
+            He still works the same passes he learned in his twenties — Cottonwood,
+            Independence, Red Mountain — with a tripod in the truck and forty years
+            of weather in his memory.
+          </p>
+          <Link className="btn btn--ghost" href="/about">Read his story</Link>
+        </div>
+      </section>
+
+      {/* BOOK TEASER */}
+      <section className="book-strip">
+        <div className="book-strip__copy">
+          <span className="kicker kicker--gold">— A career retrospective</span>
+          <h2 className="display">
+            <em>Colorado:</em><br />
+            Life &amp; Light on the Land.
+          </h2>
+          <p>The definitive monograph — 168 plates drawn from forty years in the
+          Rockies. Foreword by John Fielder. Now in its fifth printing.</p>
+          <Link className="btn btn--gold" href="/book">Open the Book</Link>
+        </div>
+        <div className="book-strip__art">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/book-cover.png" alt="Colorado: Life and Light on the Land — book cover" />
+          <div className="book-strip__shelf" />
+        </div>
+      </section>
+    </section>
   );
 }
