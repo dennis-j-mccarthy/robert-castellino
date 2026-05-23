@@ -68,7 +68,7 @@ export default function Home() {
         <header className="section-head">
           <div>
             <span className="section-head__eyebrow">— From the archive</span>
-            <h2 className="section-head__title">Half a century <em>of looking.</em></h2>
+            <h2 className="section-head__title">Half a century <em>of noticing, capturing.</em></h2>
           </div>
           <Link className="section-head__link" href="/gallery">
             See the full gallery
@@ -133,15 +133,16 @@ export default function Home() {
             <em>the natural world.</em>
           </h2>
           <p>
-            Robert Castellino has photographed the Colorado high country since 1984.
-            Three monographs, two Lowell Thomas Awards, a Hasselblad Masters
-            nomination, and prints held in the permanent collections of the Denver
-            Art Museum and the Anschutz Collection of American Art.
+            Robert Castellino began photographing in Oregon in the winter of 1985,
+            while he was VP of Operations and Marketing at Willamette Pass Ski
+            Area. In 1991 he attended his first workshop with the late National
+            Geographic staff photographer Sam Abell — a turning point in his work.
           </p>
           <p className="muted">
-            He still works the same passes he learned in his twenties — Cottonwood,
-            Independence, Red Mountain — with a tripod in the truck and half a
-            century of weather in his memory.
+            Now based in Lafayette, Colorado, he photographs the Rocky Mountains,
+            the desert Southwest, the national parks, oceans and islands, and the
+            quieter subjects close to home — with a single goal: to connect people
+            with nature through fine art photography.
           </p>
           <Link className="btn btn--ghost" href="/about">Read his story</Link>
         </div>

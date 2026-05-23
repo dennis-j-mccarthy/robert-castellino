@@ -12,11 +12,73 @@ type Item = {
 };
 
 const ITEMS: Item[] = [
-  { side: "l", year: "1984", title: "First published photograph", body: <>The first landscape photograph appears in print — the start of a working archive that has not stopped growing since.</>, chip: "Colorado" },
-  { side: "r", year: "1989", title: "Boulder studio opens", body: <>The studio on Pearl Street opens its doors — and remains the working address to this day.</>, chip: "Boulder, CO" },
-  { side: "l", year: "1998", variant: "book", title: <>The High Country — <em>first monograph</em></>, body: <>The first book of plates — a record of the high country as Robert had come to know it after fifteen years of looking.</>, chip: "Book I" },
-  { side: "r", year: "2011", variant: "book", title: <>Plains — <em>second monograph</em></>, body: <>The second book — a meditation on the short-grass prairie east of the Front Range.</>, chip: "Book II" },
-  { side: "l", year: "2019", variant: "book", title: <>Colorado: Life &amp; Light on the Land</>, body: <>The career retrospective — the working archive of half a century drawn into a single volume.</>, chip: "Book III · magnum opus" },
+  {
+    side: "l",
+    year: "1985",
+    title: "The first photograph",
+    body: (
+      <>
+        It begins on a cold winter day in Oregon. At the time, Robert is VP of
+        Operations and Marketing at Willamette Pass Ski Area. The camera comes
+        out, and the work that follows never stops.
+      </>
+    ),
+    chip: "Oregon",
+  },
+  {
+    side: "r",
+    year: "1991",
+    title: <>A workshop with <em>Sam Abell</em></>,
+    body: (
+      <>
+        Robert attends his first photographic workshop, with renowned National
+        Geographic staff photographer Sam Abell — a turning point in the way he
+        sees and composes.
+      </>
+    ),
+    chip: "Workshop",
+  },
+  {
+    side: "l",
+    title: <>The Artist&apos;s Way</>,
+    year: "Practice",
+    body: (
+      <>
+        Robert becomes a student of Julia Cameron&apos;s <em>The Artist&apos;s
+        Way</em> — a practice of attention and creative discipline that has
+        shaped the photographic work since.
+      </>
+    ),
+    chip: "Discipline",
+  },
+  {
+    side: "r",
+    variant: "book",
+    year: "Book",
+    title: <>Colorado: Life &amp; Light on the Land</>,
+    body: (
+      <>
+        Self-published, in a Collectors Edition — a book of plates drawn from
+        years of photographing the Rockies, the desert Southwest, and the
+        quieter subjects in between.
+      </>
+    ),
+    chip: "Collectors Edition",
+  },
+  {
+    side: "l",
+    variant: "present",
+    year: "Now",
+    title: "Lafayette, Colorado",
+    body: (
+      <>
+        Working from Lafayette, CO. A Trusted Art Seller with The Art Storefronts
+        Organization. One goal, unchanged since 1985 — to connect people with
+        nature through fine art photography.
+      </>
+    ),
+    chip: "Lafayette, CO",
+  },
 ];
 
 export function Timeline() {

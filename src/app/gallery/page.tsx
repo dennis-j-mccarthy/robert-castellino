@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { PrintModal } from "@/components/print-modal";
 import { PageHero } from "@/components/page-hero";
@@ -160,18 +159,6 @@ export default function GalleryPage() {
         );
       })}
 
-      <aside className="gallery-cta">
-        <div>
-          <span className="kicker kicker--gold">— Fine art prints</span>
-          <h3 className="display">Bring a piece of the land home.</h3>
-          <p>
-            Limited-edition prints on archival paper, canvas, metal, and acrylic.
-            Signed and editioned, shipped from the Boulder studio.
-          </p>
-        </div>
-        <Link className="btn btn--gold" href="/book">See print options</Link>
-      </aside>
-
       <PrintModal
         open={openPlate !== null}
         onClose={() => setOpenPlate(null)}
@@ -182,14 +169,8 @@ export default function GalleryPage() {
         <span className="gallery-bar__dot" aria-hidden="true" />
         <span className="gallery-bar__text">
           All images available for printing — from <strong>10×8</strong> to
-          dramatic poster size.
+          dramatic poster size. <em>Click an image for details.</em>
         </span>
-        <Link className="gallery-bar__cta" href="/book">
-          See print options
-          <svg viewBox="0 0 14 14" width="11" height="11" aria-hidden="true">
-            <path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4" />
-          </svg>
-        </Link>
       </div>
     </section>
   );

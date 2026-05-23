@@ -22,9 +22,7 @@ export function Footer() {
           <li><Link href="/book">The Book</Link></li>
         </ul>
         <ul className="footer__contact">
-          <li><span>Studio</span>1314 Pearl St, Boulder · CO 80302</li>
           <li><span>Email</span>studio@robertcastellino.com</li>
-          <li><span>Phone</span>+1 303 555 0142</li>
         </ul>
       </div>
       <div className="footer__bot">
