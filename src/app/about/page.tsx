@@ -176,7 +176,7 @@ export default function AboutPage() {
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/behind-1.png" alt="Robert in the field" />
-            <figcaption>In the field — recent</figcaption>
+            <figcaption>In the field</figcaption>
           </figure>
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -191,7 +191,7 @@ export default function AboutPage() {
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/behind-4.png" alt="Studio portrait" />
-            <figcaption>Studio portrait</figcaption>
+            <figcaption>Sunrise in the wildflowers</figcaption>
           </figure>
         </div>
       </section>
@@ -267,7 +267,7 @@ export default function AboutPage() {
             <blockquote className="voice__q">
               &ldquo;When the Governor&rsquo;s Award committee debated the 2019
               recipient, the conversation was unusually brief. Castellino has
-              been making Colorado&rsquo;s case in pictures for forty years.
+              been making Colorado&rsquo;s case in pictures for fifty years.
               The state was, in some sense, simply acknowledging him back.&rdquo;
             </blockquote>
             <figcaption className="voice__cite">

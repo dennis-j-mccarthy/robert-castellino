@@ -1,16 +1,21 @@
 import { Timeline } from "@/components/timeline";
+import { PageHero } from "@/components/page-hero";
 
 export default function TimelinePage() {
   return (
     <section className="route route--timeline">
-      <header className="page-head">
-        <span className="page-head__index">04 — Chronology</span>
-        <h1 className="page-head__title">A working chronology.</h1>
-        <p className="page-head__sub">
-          Selected milestones from 1978 to the present — books, awards,
-          exhibitions, and the year of the photograph that occasioned each.
-        </p>
-      </header>
+      <PageHero
+        img="/assets/mt-sopris.jpg"
+        alt="Mount Sopris panoramic"
+        index="04 — Chronology"
+        title={<>A working <em>chronology.</em></>}
+        sub={
+          <>
+            Selected milestones from 1978 to the present — books, exhibitions,
+            and the year of the photograph that occasioned each.
+          </>
+        }
+      />
 
       <Timeline />
     </section>

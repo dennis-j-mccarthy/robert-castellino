@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { MUSINGS, CAT_META, type MusingCategory } from "@/data/musings";
+import { PageHero } from "@/components/page-hero";
 
 const FILTERS: { key: "all" | MusingCategory; label: string }[] = [
   { key: "all",         label: "All Entries" },
@@ -18,15 +19,19 @@ export default function MusingsPage() {
 
   return (
     <section className="route route--musings">
-      <header className="page-head">
-        <span className="page-head__index">06 — Musings</span>
-        <h1 className="page-head__title">Musings</h1>
-        <p className="page-head__sub">
-          Short essays from the studio — reflections, life lessons, and quiet
-          notes on light, land, locations, and the wilderness. Updated when the work
-          allows it.
-        </p>
-
+      <PageHero
+        img="/assets/lone-pine.jpg"
+        alt="Lone pine in deep snow"
+        index="06 — Musings"
+        title={<><em>Musings</em></>}
+        sub={
+          <>
+            Short essays from the studio — reflections, life lessons, and quiet
+            notes on light, land, locations, and the wilderness.
+          </>
+        }
+      />
+      <header className="page-head page-head--compact">
         <div className="filters filters--mus" role="tablist">
           {FILTERS.map((f) => (
             <button

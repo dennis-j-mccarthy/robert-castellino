@@ -18,7 +18,7 @@ export default function Home() {
         <div className="hero__chrome">
           <div className="hero__eyebrow">
             <span className="dot" />
-            <span>A Photographer&apos;s Life — Forty Years on the Land</span>
+            <span>A Photographer&apos;s Life — Fifty Years on the Land</span>
           </div>
 
           <h1 className="hero__title">
@@ -76,8 +76,8 @@ export default function Home() {
           </Link>
         </header>
 
-        <div className="selected__grid">
-          <Link href="/gallery" className="card card--tall">
+        <div className="selected__grid selected__grid--balanced">
+          <Link href="/gallery" className="card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/mt-yale.jpg" alt="Mount Yale at last light, Cottonwood Pass" />
             <div className="card__overlay">
@@ -86,7 +86,7 @@ export default function Home() {
               <span className="card__loc">Cottonwood Pass · Colorado</span>
             </div>
           </Link>
-          <Link href="/gallery" className="card card--wide">
+          <Link href="/gallery" className="card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/mt-sopris.jpg" alt="Mount Sopris panoramic" />
             <div className="card__overlay">
@@ -95,7 +95,7 @@ export default function Home() {
               <span className="card__loc">Carbondale · Colorado</span>
             </div>
           </Link>
-          <Link href="/gallery" className="card card--sq">
+          <Link href="/gallery" className="card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/lone-pine.jpg" alt="A lone pine in deep snow at Red Mountain Pass" />
             <div className="card__overlay">
@@ -104,7 +104,7 @@ export default function Home() {
               <span className="card__loc">Red Mountain Pass · Colorado</span>
             </div>
           </Link>
-          <Link href="/gallery" className="card card--sq">
+          <Link href="/gallery" className="card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/horses-snow.jpg" alt="Horses walking through a snow storm" />
             <div className="card__overlay">

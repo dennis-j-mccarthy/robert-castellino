@@ -460,6 +460,17 @@ a  { color: inherit; text-decoration: none; }
   grid-template-rows: auto auto;
   gap: 18px;
 }
+.selected__grid--balanced {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+}
+.selected__grid--balanced .card { aspect-ratio: 4 / 5; }
+@media (max-width: 980px) {
+  .selected__grid--balanced { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .selected__grid--balanced { grid-template-columns: 1fr; }
+}
 
 .card {
   position: relative;
@@ -633,6 +644,14 @@ a  { color: inherit; text-decoration: none; }
   margin: 0 auto;
   padding: 160px var(--col-pad) 64px;
 }
+.page-head--compact {
+  padding: 56px var(--col-pad) 32px;
+}
+.page-head--compact .filters {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
 .page-head__index {
   font-family: var(--mono);
   font-size: 11px;
@@ -686,6 +705,133 @@ a  { color: inherit; text-decoration: none; }
   background: var(--bone-95);
   color: var(--ink-00);
   border-color: var(--bone-95);
+}
+
+/* ============================================================
+   PAGE HERO — dramatic full-bleed for gallery/timeline/book/musings
+============================================================ */
+.page-hero {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  min-height: 520px;
+  overflow: hidden;
+  margin-top: 0;
+}
+.page-hero__media {
+  position: absolute; inset: 0;
+}
+.page-hero__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: contrast(1.06) saturate(0.95) brightness(0.7);
+  animation: heroIn 2.4s var(--ease) both;
+}
+.page-hero__grade {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 65% 55% at 18% 12%, rgba(217,122,58,0.18), transparent 60%),
+    radial-gradient(ellipse 60% 55% at 88% 92%, rgba(74,111,176,0.22), transparent 60%),
+    linear-gradient(180deg, rgba(5,6,8,0.6) 0%, transparent 28%, transparent 55%, rgba(5,6,8,0.9) 100%);
+  pointer-events: none;
+}
+.page-hero__vignette {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 50%, transparent 0%, rgba(5,6,8,0.4) 65%, rgba(5,6,8,0.9) 100%);
+  pointer-events: none;
+}
+.page-hero__fade {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 28vh;
+  background: linear-gradient(180deg, transparent 0%, var(--ink-00) 95%);
+  pointer-events: none;
+}
+.page-hero__chrome {
+  position: absolute;
+  left: var(--col-pad);
+  right: var(--col-pad);
+  bottom: 12vh;
+  max-width: var(--col-max);
+  z-index: 2;
+}
+.page-hero__index {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+  display: block;
+}
+.page-hero__title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(56px, 8vw, 124px);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  margin: 0 0 22px;
+  color: var(--bone-95);
+  text-shadow: 0 4px 60px rgba(0,0,0,0.5);
+  max-width: 14ch;
+}
+.page-hero__title em { color: var(--ember); font-style: italic; }
+.page-hero__sub {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.5vw, 22px);
+  line-height: 1.55;
+  font-weight: 300;
+  color: var(--bone-85);
+  max-width: 560px;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+}
+@media (max-width: 980px) {
+  .page-hero { height: 56vh; min-height: 420px; }
+  .page-hero__chrome { bottom: 8vh; }
+}
+
+/* ============================================================
+   GALLERY — Collection section headers
+============================================================ */
+.collection {
+  max-width: var(--col-max);
+  margin: 0 auto;
+  padding-top: 24px;
+}
+.collection__head {
+  padding: 80px var(--col-pad) 32px;
+  border-top: 1px solid var(--rule);
+  margin: 0 var(--col-pad);
+  padding-left: 0;
+  padding-right: 0;
+}
+.collection:first-of-type .collection__head { border-top: none; padding-top: 32px; }
+.collection__eyebrow {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.collection__title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--bone-95);
+  margin: 0 0 16px;
+}
+.collection__intro {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--bone-70);
+  margin: 0;
+  max-width: 640px;
 }
 
 /* ============================================================

@@ -50,7 +50,7 @@ export const MUSINGS: Musing[] = [
     excerpt: "A camera is not a way of recording the world. It is, if you let it be, a way of being instructed by it.",
     body: [
       "A camera is not, primarily, a way of recording the world. People who use it that way mostly produce records, which is to say documents of having been somewhere, and documents are a poor substitute for the looking that should have happened on the spot.",
-      "A camera is, if you let it be, a way of being instructed by the world &mdash; an instrument that requires you to slow down, to consider edges, to attend to what is at the foreground rather than what is at the postcard. Forty years of holding one has, I think, taught me more about how to be in the world than any other practice I have undertaken, religious or otherwise.",
+      "A camera is, if you let it be, a way of being instructed by the world &mdash; an instrument that requires you to slow down, to consider edges, to attend to what is at the foreground rather than what is at the postcard. Fifty years of holding one has, I think, taught me more about how to be in the world than any other practice I have undertaken, religious or otherwise.",
       "The instruction is not that the world is beautiful. The instruction is that the world is beautiful only when looked at, and that looking is a discipline most adults have forgotten and a few children have not yet lost."
     ]
   },
@@ -58,10 +58,10 @@ export const MUSINGS: Musing[] = [
     id: "m03", num: "M.003", cat: "reflections",
     title: "Patience as the Whole Practice",
     date: "Autumn 2024",
-    excerpt: "Forty years has not made me a better photographer. It has made me a more patient one. These turn out, in the end, to be the same thing.",
+    excerpt: "Fifty years has not made me a better photographer. It has made me a more patient one. These turn out, in the end, to be the same thing.",
     body: [
-      "Forty years has not made me a better photographer in any of the ways the phrase usually means. I have not, with time, acquired techniques I did not have at thirty. I have not learned secrets the younger version of myself was not also told. The light at sixty-eight does what the light at twenty-eight did. The gear, by and large, is the same gear.",
-      "What forty years has made me is more patient. I will sit on a rock for three hours where the younger man would have moved after thirty minutes. I will return to an overlook for the eleventh time when I would once have given up at the fourth. I will let a photograph fail to materialize without taking it personally.",
+      "Fifty years has not made me a better photographer in any of the ways the phrase usually means. I have not, with time, acquired techniques I did not have at thirty. I have not learned secrets the younger version of myself was not also told. The light at sixty-eight does what the light at twenty-eight did. The gear, by and large, is the same gear.",
+      "What fifty years has made me is more patient. I will sit on a rock for three hours where the younger man would have moved after thirty minutes. I will return to an overlook for the eleventh time when I would once have given up at the fourth. I will let a photograph fail to materialize without taking it personally.",
       "These turn out, in the end, to be the same thing. Better photographer and more patient photographer are not adjacent qualities; they are the same quality. Whoever told you it was about talent, or about gear, or about being in the right place at the right time, was speaking of a different art."
     ]
   },
@@ -89,28 +89,28 @@ export const MUSINGS: Musing[] = [
   },
   {
     id: "m06", num: "M.006", cat: "reflections",
-    title: "What Forty Years Has Taught Me",
+    title: "What Fifty Years Has Taught Me",
     date: "Winter 2024",
     excerpt: "Three things, and only three: that the light is the subject, that the patience is the work, and that you are very, very lucky to be doing this at all.",
     body: [
-      "Forty years, three lessons. I am suspicious of anyone who has been at any art for that long and claims to have learned more than three things, and equally suspicious of anyone who claims to have learned fewer.",
+      "Fifty years, three lessons. I am suspicious of anyone who has been at any art for that long and claims to have learned more than three things, and equally suspicious of anyone who claims to have learned fewer.",
       "The first: the light is the subject. The mountain is not the subject. The lake is not the subject. The cottonwoods are not the subject. The light that happens to be falling on the mountain, the lake, and the cottonwoods on a particular afternoon in a particular minute &mdash; that is the subject. Everything else is supporting cast.",
       "The second: the patience is the work. Not the gear, not the technique, not the eye for composition. The willingness to wait. The willingness to drive home empty. The willingness to come back. Patience is not a virtue applied to the work; patience is the work, and the rest is decoration.",
-      "The third: you are very, very lucky to be doing this at all. The world is staggeringly beautiful, and you are alive in a moment of it, and you have been given a small instrument with which to register your gratitude. Forty years is not long enough. It will have to be long enough."
+      "The third: you are very, very lucky to be doing this at all. The world is staggeringly beautiful, and you are alive in a moment of it, and you have been given a small instrument with which to register your gratitude. Fifty years is not long enough. It will have to be long enough."
     ]
   },
 
   // ───────────── LIGHT (6) ─────────────
   {
     id: "m07", num: "M.007", cat: "light",
-    title: "The Forty-Second Light",
+    title: "The Fifty-Second Light",
     date: "Spring 2024", loc: "Independence Pass · CO",
     img: "/assets/mt-yale.jpg", size: "lg",
-    excerpt: "Every alpine sunset gives you about forty seconds of real photograph. The thirty minutes before are a kind of conversation; the forty seconds are an argument you either win or lose.",
+    excerpt: "Every alpine sunset gives you about fifty seconds of real photograph. The thirty minutes before are a kind of conversation; the fifty seconds are an argument you either win or lose.",
     body: [
-      "Forty years on the same passes have taught me that almost every alpine sunset gives you about forty seconds of real photograph. Not eight minutes, not three. Forty seconds. Everything before is a conversation between the light and the land — long, deliberate, often disappointing. The forty seconds at the end are an argument, and you have to be already set up to win it.",
+      "Fifty years on the same passes have taught me that almost every alpine sunset gives you about fifty seconds of real photograph. Not eight minutes, not three. Fifty seconds. Everything before is a conversation between the light and the land — long, deliberate, often disappointing. The fifty seconds at the end are an argument, and you have to be already set up to win it.",
       "The mistake of younger photographers is to wait for the light to arrive and then begin composing. By then it has begun to leave. You compose for the light that will be there in twelve minutes, not the light that is there now. You meter for snow that will be lit. You frame for clouds that haven't burned yet.",
-      "On Independence in October of 2018 the band of last light moved across Mount Champion's east face in exactly thirty-eight seconds. I made seven exposures. Two of them were ruined by a tripod leg I'd left loose. Of the five remaining, one became the cover of the second book. That is roughly the percentage you should expect — and roughly the percentage that has kept me at it for forty years."
+      "On Independence in October of 2018 the band of last light moved across Mount Champion's east face in exactly thirty-eight seconds. I made seven exposures. Two of them were ruined by a tripod leg I'd left loose. Of the five remaining, one became the cover of the second book. That is roughly the percentage you should expect — and roughly the percentage that has kept me at it for fifty years."
     ]
   },
   {
@@ -213,9 +213,9 @@ export const MUSINGS: Musing[] = [
     img: "/assets/mt-sopris.jpg",
     excerpt: "I have made roughly three thousand photographs of Mount Sopris. Three of them are any good.",
     body: [
-      "I have made roughly three thousand photographs of Mount Sopris over forty years — call it seventy-five trips, with a tripod, in every season — and I would defend three of them.",
+      "I have made roughly three thousand photographs of Mount Sopris over fifty years — call it seventy-five trips, with a tripod, in every season — and I would defend three of them.",
       "The first is from 1991, when I was thirty-three and did not yet know what I did not know. The second is from 2008, in the spring after my father died. The third is from 2019, the panoramic plate that opens the third section of the new book. Each of these photographs was made under conditions I could not have predicted and would not have requested.",
-      "What this tells me, after forty years, is something I would not have believed at thirty: most of the photograph is showing up. A small percentage of the photograph is talent. None of the photograph is gear."
+      "What this tells me, after fifty years, is something I would not have believed at thirty: most of the photograph is showing up. A small percentage of the photograph is talent. None of the photograph is gear."
     ]
   },
   {
@@ -250,7 +250,7 @@ export const MUSINGS: Musing[] = [
     excerpt: "Cottonwood is the pass I have driven the most often, the one I know the best, and — by a considerable margin — the one I have failed at the most.",
     body: [
       "Cottonwood is the pass I have driven the most often, the one I know the best, and — by a considerable margin — the one I have failed at the most. The road tops out at 12,126 feet, the air is thin enough to slow you down by a third, and the light at the summit is, on most days, unreasonably good.",
-      "And yet for thirty-two of my forty years I made no photograph of Cottonwood that I would defend. The pass is geographically generous and photographically demanding. It gives you everything and then expects you to choose.",
+      "And yet for thirty-two of my fifty years I made no photograph of Cottonwood that I would defend. The pass is geographically generous and photographically demanding. It gives you everything and then expects you to choose.",
       "The Mount Yale plate from 2023, the one that became the centerpiece of the new book, was made about a mile and a half east of the summit, on a service spur most drivers never notice. The light lasted thirty-eight seconds. I had been visiting the spot for nine autumns. That is, I think, the right ratio."
     ]
   },
@@ -285,18 +285,17 @@ export const MUSINGS: Musing[] = [
     body: [
       "The Flatirons are most often photographed from the meadows below them, in summer, near sunset, with a foreground of paintbrush or grass. There is a reason for this — the light hits the west-facing rock at exactly the wrong angle in the morning and exactly the right one at dusk, and the meadows are public land.",
       "There is also, occasionally, an alternative. In late winter, after a storm, the Flatirons collect snow on their north-facing ledges and almost nowhere else. The result is a striped landscape no other configuration of light and weather produces, and it lasts about six hours before the wind redistributes it.",
-      "Living in Boulder has meant photographing the same rocks for forty years from a distance of about three miles. They are the only mountains I know in this way, and the only ones I am still surprised by."
+      "Living in Boulder has meant photographing the same rocks for fifty years from a distance of about three miles. They are the only mountains I know in this way, and the only ones I am still surprised by."
     ]
   },
   {
     id: "m23", num: "M.023", cat: "locations",
     title: "Red Mountain Pass, in February",
     date: "Winter 2023",
-    img: "/assets/horses-snow.jpg",
-    excerpt: "Red Mountain Pass in February is the most dangerous and most rewarding drive in the state. I have done it forty-three times. Half of those, I would not do again.",
+    excerpt: "Red Mountain Pass in February is the most dangerous and most rewarding drive in the state. I have done it fifty-three times. Half of those, I would not do again.",
     body: [
       "Red Mountain in February is the most dangerous and most rewarding drive in the state. The highway department closes it more often than they admit, the avalanche paths cross the road at six known points, and the views from the upper switchbacks are, on a clear winter morning, almost unreasonable.",
-      "I have done the pass in February forty-three times since 1989. Half of those trips, looking back, I would not do again. The other half produced about a quarter of the winter work in the new book, and one photograph I am willing to defend without reservation: a single pine in deep snow, made on a turnout most maps do not show, on a morning when the road was officially closed and I was officially not there.",
+      "I have done the pass in February fifty-three times since 1989. Half of those trips, looking back, I would not do again. The other half produced about a quarter of the winter work in the new book, and one photograph I am willing to defend without reservation: a single pine in deep snow, made on a turnout most maps do not show, on a morning when the road was officially closed and I was officially not there.",
       "I do not recommend the trip. I do not regret a single one of them."
     ]
   },
@@ -317,9 +316,9 @@ export const MUSINGS: Musing[] = [
     id: "m25", num: "M.025", cat: "wilderness",
     title: "On Solitude, Working Alone",
     date: "Autumn 2024",
-    excerpt: "I have worked almost entirely alone for forty years. The first ten of those years I thought this was a deficiency. The next thirty I came to understand as a method.",
+    excerpt: "I have worked almost entirely alone for fifty years. The first ten of those years I thought this was a deficiency. The next thirty I came to understand as a method.",
     body: [
-      "I have worked almost entirely alone for forty years — first by accident, then by preference, eventually by what I would now call method. The first ten of those years I thought working alone was a deficiency. The next thirty I came to understand as the principal reason any of the photographs are any good.",
+      "I have worked almost entirely alone for fifty years — first by accident, then by preference, eventually by what I would now call method. The first ten of those years I thought working alone was a deficiency. The next thirty I came to understand as the principal reason any of the photographs are any good.",
       "Photography in company is conversation interrupted by photography. Photography alone is photography interrupted, occasionally, by attention to the body's quiet needs. The composition gets ten times the time. The light gets all of it.",
       "I have known very few good landscape photographers who worked well with companions. I have known several mediocre ones who did. It is, in the end, a temperamental sorting."
     ]
@@ -350,9 +349,9 @@ export const MUSINGS: Musing[] = [
     id: "m28", num: "M.028", cat: "wilderness",
     title: "A Defense of the Quiet Trail",
     date: "Spring 2024",
-    excerpt: "Half of what I have photographed in forty years was made within four miles of the nearest road. The famous wildernesses are largely overrated. The quiet trail next door is largely under-loved.",
+    excerpt: "Half of what I have photographed in fifty years was made within four miles of the nearest road. The famous wildernesses are largely overrated. The quiet trail next door is largely under-loved.",
     body: [
-      "Half of what I have photographed in forty years was made within four miles of the nearest road. Not because I am unwilling to walk farther — I have walked farther many times — but because the four-mile radius around any decent trailhead in Colorado contains more photographable terrain than a working photographer can exhaust in a lifetime.",
+      "Half of what I have photographed in fifty years was made within four miles of the nearest road. Not because I am unwilling to walk farther — I have walked farther many times — but because the four-mile radius around any decent trailhead in Colorado contains more photographable terrain than a working photographer can exhaust in a lifetime.",
       "The famous wildernesses — the Maroon Bells–Snowmass, the Indian Peaks, the Holy Cross — are largely overrated for the photographer, and not because they are not beautiful but because they have been photographed by everyone. The quiet trail next door, the one without a name on the map, the one that ends at an unsigned overlook, is the one that has not.",
       "I will not name any of these trails."
     ]

@@ -1,8 +1,22 @@
 import Link from "next/link";
+import { PageHero } from "@/components/page-hero";
 
 export default function BookPage() {
   return (
     <section className="route route--book">
+      <PageHero
+        img="/assets/maroon-bells.jpg"
+        alt="Maroon Bells, Summer's End"
+        index="05 — The Monograph"
+        title={<>Life &amp; <em>Light</em> on the Land.</>}
+        sub={
+          <>
+            The career retrospective — half a century of mountains, streams,
+            light, land, and the long Colorado sky, drawn together in a single
+            volume.
+          </>
+        }
+      />
       <div className="book">
         <div className="book__art">
           <div className="book__halo" />
@@ -37,7 +51,6 @@ export default function BookPage() {
 
           <div className="book__cta">
             <Link className="btn btn--gold btn--lg" href="/book">Order a signed copy</Link>
-            <Link className="btn btn--ghost btn--lg" href="/book">Preview the plates</Link>
           </div>
 
           <p className="book__shipnote">Shipped from the Boulder studio · usually within 3 business days.</p>
@@ -59,7 +72,7 @@ export default function BookPage() {
               <h3>Maroon Bells, Summer&apos;s End</h3>
               <p>
                 Aspen Snowmass — Sept. 2022.<br />
-                A slow lake, an early frost, and the bells lit for forty seconds.
+                A slow lake, an early frost, and the bells lit for fifty seconds.
               </p>
             </div>
           </div>
