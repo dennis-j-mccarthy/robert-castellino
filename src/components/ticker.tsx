@@ -13,6 +13,8 @@ const MAP: Record<string, { idx: string; name: string }> = {
 
 export function Ticker() {
   const pathname = usePathname();
+  // Hide on /gallery — the pinned print-availability bar lives there
+  if (pathname === "/gallery") return null;
   let entry = MAP[pathname];
   if (!entry) {
     if (pathname.startsWith("/musings/")) entry = { idx: "07", name: "Field Note" };

@@ -1559,6 +1559,91 @@ a  { color: inherit; text-decoration: none; }
 }
 
 /* ============================================================
+   GALLERY — pinned bottom bar (print availability)
+============================================================ */
+.gallery-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 22px;
+  background: linear-gradient(180deg, rgba(20,18,14,0.92), rgba(8,9,12,0.92));
+  border: 1px solid rgba(200,169,106,0.30);
+  border-radius: 100px;
+  box-shadow:
+    0 30px 60px -20px rgba(0,0,0,0.7),
+    0 0 40px -10px rgba(200,169,106,0.20);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  max-width: calc(100vw - 32px);
+}
+.gallery-bar__dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+  flex-shrink: 0;
+}
+.gallery-bar__text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--bone-95);
+  text-wrap: pretty;
+}
+.gallery-bar__text strong {
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  margin: 0 2px;
+  padding: 2px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.gallery-bar__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--ember) 70%, var(--amber) 100%);
+  color: var(--ink-00);
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+  flex-shrink: 0;
+}
+.gallery-bar__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px -6px rgba(216,170,84,0.55);
+}
+
+@media (max-width: 720px) {
+  .gallery-bar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 22px;
+    text-align: center;
+    border-radius: 18px;
+    left: 16px; right: 16px;
+    transform: none;
+    max-width: none;
+  }
+  .gallery-bar__text { font-size: 14px; }
+}
+
+/* ============================================================
    TICKER (route indicator bottom-right)
 ============================================================ */
 .ticker {

@@ -62,7 +62,7 @@ const ARCHIVE: Plate[] = [
 
 const COLLECTION_FILTERS = [
   { key: "all",     label: "All Collections" },
-  { key: "archive", label: "The Archive" },
+  { key: "archive", label: "Selected Plates" },
   ...COLLECTIONS.map((c) => ({ key: c.slug, label: c.label })),
 ];
 
@@ -82,7 +82,7 @@ export default function GalleryPage() {
         img="/assets/mt-yale.jpg"
         alt="Mount Yale at last light"
         index="02 — Gallery"
-        title={<>The <em>Archive.</em></>}
+        title={<>The <em>Gallery.</em></>}
         sub={
           <>
             A gallery of nature photography — mountains, streams, light, land,
@@ -110,10 +110,10 @@ export default function GalleryPage() {
         <section className="collection">
           <header className="collection__head">
             <span className="collection__eyebrow">— Selected plates</span>
-            <h2 className="collection__title">The Archive</h2>
+            <h2 className="collection__title">Selected Plates</h2>
             <p className="collection__intro">
               The seven plates Robert returns to most often — the spine of the
-              working archive.
+              working gallery.
             </p>
           </header>
           <div className="gallery">
@@ -177,6 +177,20 @@ export default function GalleryPage() {
         onClose={() => setOpenPlate(null)}
         image={openPlate}
       />
+
+      <div className="gallery-bar" role="note">
+        <span className="gallery-bar__dot" aria-hidden="true" />
+        <span className="gallery-bar__text">
+          All images available for printing — from <strong>10×8</strong> to
+          dramatic poster size.
+        </span>
+        <Link className="gallery-bar__cta" href="/book">
+          See print options
+          <svg viewBox="0 0 14 14" width="11" height="11" aria-hidden="true">
+            <path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          </svg>
+        </Link>
+      </div>
     </section>
   );
 }

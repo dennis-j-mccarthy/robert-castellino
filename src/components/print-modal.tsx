@@ -110,7 +110,7 @@ export function PrintModal({ open, onClose, image }: Props) {
               </button>
             </div>
             <button type="button" className="btn btn--gold btn--lg modal__cart">
-              Add to Cart
+              Purchase with Stripe
             </button>
           </div>
 
@@ -142,9 +142,6 @@ export function PrintModal({ open, onClose, image }: Props) {
             </div>
           </fieldset>
 
-          <p className="modal__ship">
-            Shipped from the Boulder studio · usually within 5 business days.
-          </p>
         </div>
       </div>
     </div>

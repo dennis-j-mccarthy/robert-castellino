@@ -32,6 +32,8 @@ export function Timeline() {
 
     const items = track.querySelectorAll(".timeline__item");
 
+    const NAV_OFFSET = 110; // approximate fixed-nav height with buffer
+
     function update() {
       if (!track || !orb || !progress) return;
       const r = track.getBoundingClientRect();
@@ -39,10 +41,25 @@ export function Timeline() {
       const start = r.top - vh * 0.5;
       const total = r.height;
       const p = Math.max(0, Math.min(1, -start / total));
-      const y = p * total;
+      let y = p * total;
+
+      // Clamp: the orb's viewport-y is (r.top + y). Never let it sit under
+      // the fixed nav — pin to NAV_OFFSET when scrolled past.
+      const orbViewportY = r.top + y;
+      if (orbViewportY < NAV_OFFSET) {
+        y = NAV_OFFSET - r.top;
+      }
+      // And never let it run past the end of the track.
+      if (y > total) y = total;
+      if (y < 0) y = 0;
 
       orb.style.transform = `translate(-50%, ${y}px)`;
       progress.style.height = y + "px";
+
+      // Hide the orb when the track is entirely above or below the viewport
+      const trackOffscreenAbove = r.bottom < NAV_OFFSET;
+      const trackOffscreenBelow = r.top > vh;
+      orb.style.opacity = trackOffscreenAbove || trackOffscreenBelow ? "0" : "1";
 
       const orbY = r.top + y;
       items.forEach((it) => {
