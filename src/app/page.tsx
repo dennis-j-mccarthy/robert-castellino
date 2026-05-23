@@ -157,7 +157,7 @@ export default function Home() {
             Life &amp; Light on the Land.
           </h2>
           <p>The definitive monograph — 168 plates drawn from half a century in
-          the Rockies. Foreword by John Fielder. Now in its fifth printing.</p>
+          the Rockies. Now in its fifth printing.</p>
           <Link className="btn btn--gold" href="/book">Open the Book</Link>
         </div>
         <div className="book-strip__art">

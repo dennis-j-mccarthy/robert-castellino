@@ -22,72 +22,40 @@ export default function AboutPage() {
 
       <div className="bio">
         <aside className="bio__rail">
-          <div className="bio__rail-item"><span className="bio__rail-k">Based</span><span className="bio__rail-v">Boulder, Colorado</span></div>
-          <div className="bio__rail-item"><span className="bio__rail-k">Working since</span><span className="bio__rail-v">1984</span></div>
-          <div className="bio__rail-item"><span className="bio__rail-k">Subjects</span><span className="bio__rail-v">Landscape · Weather · Wildlife</span></div>
-          <div className="bio__rail-item"><span className="bio__rail-k">Format</span><span className="bio__rail-v">4×5 large format · medium format digital</span></div>
-          <div className="bio__rail-item"><span className="bio__rail-k">Collected</span><span className="bio__rail-v">Denver Art Museum · Anschutz · private</span></div>
-          <div className="bio__rail-item"><span className="bio__rail-k">Published</span><span className="bio__rail-v">National Geographic · Outside · Colorado Life</span></div>
+          <div className="bio__rail-item"><span className="bio__rail-k">Based</span><span className="bio__rail-v">Lafayette, Colorado</span></div>
+          <div className="bio__rail-item"><span className="bio__rail-k">Working since</span><span className="bio__rail-v">1985</span></div>
+          <div className="bio__rail-item"><span className="bio__rail-k">Subjects</span><span className="bio__rail-v">Rockies · Desert · National Parks · Reflections · Florals</span></div>
+          <div className="bio__rail-item"><span className="bio__rail-k">Mentors</span><span className="bio__rail-v">Sam Abell · Julia Cameron</span></div>
         </aside>
 
         <article className="bio__body">
           <p className="bio__lede">
-            Robert Castellino made his first published photograph on Independence Pass
-            in the fall of 1984. He has been at it, with patience and increasing
-            renown, for half a century since.
+            It started on a cold winter day in Oregon, in 1985. Robert was VP of
+            Operations and Marketing at Willamette Pass Ski Area; the camera
+            came out, and the work that followed never stopped.
           </p>
           <p>
-            Born in 1958 and trained at the Brooks Institute of Photography, Robert
-            came West for a summer and stayed for a life. He worked as an assistant
-            for John Fielder through the mid-1980s, then opened his own studio in
-            Boulder in 1989 — the same address it occupies today.
+            In 1991 he attended his first photographic workshop, with the
+            renowned <em>National Geographic</em> staff photographer Sam Abell
+            — a turning point in the way he sees and composes. He has also
+            been a long student of Julia Cameron&apos;s <em>The Artist&apos;s
+            Way</em>, a discipline of attention that has shaped the practice
+            since.
           </p>
           <p>
-            His landscapes are recognized for their restraint and their gravity.
-            He still works almost exclusively in large format, builds compositions
-            slowly, and returns to favored overlooks — Cottonwood, Independence,
-            Maroon Lake, the Pawnee — for years at a time before he is satisfied.
+            Now based in Lafayette, Colorado, Robert photographs the Rocky
+            Mountains, the desert Southwest, the national parks, oceans and
+            islands, and the quieter subjects close to home. He has
+            self-published greeting cards, calendars, books, and fine art
+            print exhibits, including the Collectors Edition of <em>Colorado:
+            Life &amp; Light on the Land</em>.
           </p>
           <p>
-            Three monographs have followed: <em>The High Country</em> (1998, out of
-            print), <em>Plains</em> (2011), and his career retrospective
-            <em> Colorado: Life &amp; Light on the Land</em> (2019, now in its fifth
-            printing). His work is held in the permanent collections of the Denver
-            Art Museum, the Anschutz Collection of American Art, and the Colorado
-            Governor&apos;s Mansion, and on the walls of the U.S. Capitol, the St. Julien,
-            and the Aspen Institute.
+            One goal, unchanged from the first winter morning: to connect
+            people with nature and life through fine art photography, by
+            making exceptional and extraordinary images.
           </p>
 
-          <hr className="rule" />
-
-          <h3 className="bio__h">Selected awards &amp; honors</h3>
-          <ul className="bio__list">
-            <li><span>2022</span> Lowell Thomas Award — Travel Photography of the Year</li>
-            <li><span>2019</span> Colorado Governor&apos;s Award for the Arts</li>
-            <li><span>2017</span> Hasselblad Masters — Landscape, nominee</li>
-            <li><span>2014</span> Ansel Adams Award for Conservation Photography</li>
-            <li><span>2008</span> Lowell Thomas Award — Photo Essay of the Year</li>
-            <li><span>1996</span> North American Nature Photography Assn. — Fellow</li>
-          </ul>
-
-          <hr className="rule" />
-
-          <h3 className="bio__h">Selected exhibitions</h3>
-          <ul className="bio__list">
-            <li><span>2023</span> Denver Art Museum — <em>The Long View</em>, solo</li>
-            <li><span>2018</span> History Colorado Center — <em>A State in Pictures</em></li>
-            <li><span>2011</span> Aspen Art Museum — <em>Plains</em>, solo</li>
-            <li><span>2002</span> Smithsonian Institution — <em>The American West</em>, group</li>
-          </ul>
-
-          <hr className="rule" />
-
-          <h3 className="bio__h">In conversation</h3>
-          <blockquote className="pull">
-            &ldquo;The famous view at the famous overlook was made famous by somebody
-            who got there before me. I am interested in the ten minutes before that
-            photograph, and the ten years after.&rdquo;
-          </blockquote>
         </article>
       </div>
 
@@ -119,20 +87,6 @@ export default function AboutPage() {
             <figcaption className="voice__cite">
               <span className="voice__name">Eleanor Vance</span>
               <span className="voice__role">Senior Curator of Photography, Denver Art Museum</span>
-            </figcaption>
-          </figure>
-
-          <figure className="voice">
-            <blockquote className="voice__q">
-              &ldquo;I have known Bob since 1982, when he was loading my film
-              holders. He sees the Colorado high country the way a long-married
-              man sees his wife — gratefully, accurately, and without flattery.
-              The fourth book, when it comes, will be the one I want on the
-              shelf.&rdquo;
-            </blockquote>
-            <figcaption className="voice__cite">
-              <span className="voice__name">John Fielder</span>
-              <span className="voice__role">Landscape photographer · foreword, <em>Colorado: Life &amp; Light on the Land</em></span>
             </figcaption>
           </figure>
 

@@ -36,8 +36,8 @@ export default function BookPage() {
           <p className="book__deck">
             The career retrospective. Half a century of mountains, streams, light,
             land, and the long Colorado sky, drawn together in a 168-page
-            monograph. Foreword by John Fielder. Hand-bound, smyth-sewn, printed
-            on 157gsm archival matte stock.
+            monograph. Hand-bound, smyth-sewn, printed on 157gsm archival matte
+            stock.
           </p>
 
           <dl className="book__specs">
@@ -45,7 +45,6 @@ export default function BookPage() {
             <div><dt>Extent</dt><dd>168 pages · 124 plates</dd></div>
             <div><dt>Paper</dt><dd>157gsm archival matte, FSC</dd></div>
             <div><dt>Printing</dt><dd>Fifth edition · signed copies available</dd></div>
-            <div><dt>Foreword</dt><dd>by John Fielder</dd></div>
             <div><dt>Price</dt><dd><span className="price">$ 75</span> <span className="price__note">+ shipping, signed +$10</span></dd></div>
           </dl>
 
