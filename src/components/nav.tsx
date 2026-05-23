@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/gallery", label: "Gallery" },
   { href: "/about", label: "About" },
   { href: "/timeline", label: "Timeline" },
+  { href: "/gallery", label: "Gallery" },
   { href: "/book", label: "The Book" },
   { href: "/musings", label: "Musings" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Nav() {

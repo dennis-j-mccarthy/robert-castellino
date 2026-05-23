@@ -7,7 +7,7 @@ export default function TimelinePage() {
       <PageHero
         img="/assets/mt-sopris.jpg"
         alt="Mount Sopris panoramic"
-        index="04 — Chronology"
+        index="03 — Chronology"
         title={<>A working <em>chronology.</em></>}
         sub={
           <>

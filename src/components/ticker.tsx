@@ -4,11 +4,12 @@ import { usePathname } from "next/navigation";
 
 const MAP: Record<string, { idx: string; name: string }> = {
   "/": { idx: "01", name: "Home" },
-  "/gallery": { idx: "02", name: "Gallery" },
-  "/about": { idx: "03", name: "About" },
-  "/timeline": { idx: "04", name: "Timeline" },
+  "/about": { idx: "02", name: "About" },
+  "/timeline": { idx: "03", name: "Timeline" },
+  "/gallery": { idx: "04", name: "Gallery" },
   "/book": { idx: "05", name: "The Book" },
   "/musings": { idx: "06", name: "Musings" },
+  "/contact": { idx: "07", name: "Contact" },
 };
 
 export function Ticker() {
@@ -17,7 +18,7 @@ export function Ticker() {
   if (pathname === "/gallery") return null;
   let entry = MAP[pathname];
   if (!entry) {
-    if (pathname.startsWith("/musings/")) entry = { idx: "07", name: "Field Note" };
+    if (pathname.startsWith("/musings/")) entry = { idx: "08", name: "Field Note" };
     else entry = { idx: "01", name: "Home" };
   }
   return (
