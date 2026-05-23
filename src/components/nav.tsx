@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
@@ -14,6 +15,14 @@ const links = [
 
 export function Nav() {
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -21,7 +30,7 @@ export function Nav() {
   };
 
   return (
-    <header className="nav">
+    <header className={`nav ${scrolled ? "is-scrolled" : ""}`}>
       <Link href="/" className="nav__brand">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

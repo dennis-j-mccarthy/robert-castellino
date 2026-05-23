@@ -23,6 +23,7 @@ type Props = {
     title: string;
     loc: string;
     img: string;
+    blurb?: string;
   } | null;
 };
 
@@ -85,6 +86,10 @@ export function PrintModal({ open, onClose, image }: Props) {
             {image.title}
           </h2>
           <span className="modal__loc">{image.loc}</span>
+
+          {image.blurb && (
+            <p className="modal__blurb">{image.blurb}</p>
+          )}
 
           <div className="modal__price">
             <span className="modal__price-amt">${total}</span>

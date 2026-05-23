@@ -80,7 +80,7 @@ export default function GalleryPage() {
       <PageHero
         img="/assets/mt-yale.jpg"
         alt="Mount Yale at last light"
-        index="02 — Gallery"
+        index="— Catching light for fifty years"
         title={<>The <em>Gallery.</em></>}
         sub={
           <>
