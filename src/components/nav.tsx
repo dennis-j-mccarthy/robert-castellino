@@ -7,6 +7,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/gallery", label: "Gallery" },
   { href: "/about", label: "About" },
+  { href: "/timeline", label: "Timeline" },
   { href: "/book", label: "The Book" },
   { href: "/musings", label: "Musings" },
 ];
@@ -28,7 +29,6 @@ export function Nav() {
           src="/assets/logo-script.png"
           alt="Robert Castellino Photography"
         />
-        <span className="nav__role">Boulder · Colorado · est. 1984</span>
       </Link>
       <nav className="nav__menu" aria-label="Primary">
         {links.map((l) => (
@@ -42,7 +42,7 @@ export function Nav() {
         ))}
       </nav>
       <Link className="nav__cta" href="/book">
-        <span>Collect a Print</span>
+        <span>View the Book</span>
         <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
           <path
             d="M2 7h10M7 2l5 5-5 5"

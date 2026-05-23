@@ -1,16 +1,16 @@
-import { Timeline } from "@/components/timeline";
-
 export default function AboutPage() {
   return (
     <section className="route route--about">
-      <div className="about-hero">
+      <div className="about-hero about-hero--full">
         <div className="about-hero__media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/portrait-hat.png" alt="Robert Castellino in studio portrait" />
+          <img src="/assets/about-hero.png" alt="Robert Castellino" />
           <div className="about-hero__grade" />
+          <div className="about-hero__vignette" />
+          <div className="about-hero__fade" />
         </div>
 
-        <div className="about-hero__copy">
+        <div className="about-hero__chrome">
           <span className="page-head__index">03 — About</span>
           <h1 className="about-hero__title">
             <span>Half a century.</span>
@@ -172,21 +172,26 @@ export default function AboutPage() {
             <h2 className="section-head__title">Behind the camera.</h2>
           </div>
         </header>
-        <div className="behind__row">
-          <figure className="behind__cell behind__cell--tall">
+        <div className="behind__row behind__row--four">
+          <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/about-zion.jpg" alt="Robert photographing in Zion" />
-            <figcaption>Zion Canyon, sunset — October 2022</figcaption>
+            <img src="/assets/behind-1.png" alt="Robert in the field" />
+            <figcaption>In the field — recent</figcaption>
           </figure>
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/portrait-flatirons.png" alt="Robert near the Flatirons" />
-            <figcaption>The Flatirons, near home — July 2023</figcaption>
+            <img src="/assets/behind-2.png" alt="Robert at work" />
+            <figcaption>At work, on location</figcaption>
           </figure>
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/portrait-hat.png" alt="Studio portrait" />
-            <figcaption>Studio portrait — 1996</figcaption>
+            <img src="/assets/behind-3.png" alt="Robert near home" />
+            <figcaption>Near home — Colorado</figcaption>
+          </figure>
+          <figure className="behind__cell">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/behind-4.png" alt="Studio portrait" />
+            <figcaption>Studio portrait</figcaption>
           </figure>
         </div>
       </section>
@@ -287,7 +292,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Timeline />
     </section>
   );
 }

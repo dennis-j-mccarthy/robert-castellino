@@ -19,7 +19,7 @@ export default function MusingsPage() {
   return (
     <section className="route route--musings">
       <header className="page-head">
-        <span className="page-head__index">05 — Musings</span>
+        <span className="page-head__index">06 — Musings</span>
         <h1 className="page-head__title">Musings</h1>
         <p className="page-head__sub">
           Short essays from the studio — reflections, life lessons, and quiet

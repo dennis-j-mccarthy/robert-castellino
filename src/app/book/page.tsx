@@ -15,7 +15,7 @@ export default function BookPage() {
         </div>
 
         <div className="book__copy">
-          <span className="page-head__index">04 — The Monograph</span>
+          <span className="page-head__index">05 — The Monograph</span>
           <h1 className="book__title">
             <em>Colorado</em><br />Life &amp; Light on the Land.
           </h1>

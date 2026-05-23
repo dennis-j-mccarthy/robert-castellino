@@ -22,9 +22,8 @@ export default function Home() {
           </div>
 
           <h1 className="hero__title">
-            <span className="hero__line hero__line--a">A life&apos;s</span>
-            <span className="hero__line hero__line--b"><em>work</em></span>
-            <span className="hero__line hero__line--c">in nature.</span>
+            <span className="hero__line hero__line--a">Light</span>
+            <span className="hero__line hero__line--b"><em>Catcher</em></span>
           </h1>
 
           <p className="hero__sub">
