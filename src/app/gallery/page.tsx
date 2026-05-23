@@ -84,8 +84,8 @@ export default function GalleryPage() {
         <span className="page-head__index">02 — Gallery</span>
         <h1 className="page-head__title">The Archive</h1>
         <p className="page-head__sub">
-          A gallery of the best nature photography of the American West —
-          spanning half a century behind the lens.
+          A gallery of nature photography — mountains, streams, light, land,
+          sky — spanning half a century behind the lens.
         </p>
 
         <div className="filters" role="tablist">
@@ -147,7 +147,7 @@ export default function GalleryPage() {
       <aside className="gallery-cta">
         <div>
           <span className="kicker kicker--gold">— Fine art prints</span>
-          <h3 className="display">Bring a piece of the West home.</h3>
+          <h3 className="display">Bring a piece of the land home.</h3>
           <p>
             Limited-edition prints on archival paper, canvas, metal, and acrylic.
             Signed and editioned, shipped from the Boulder studio.

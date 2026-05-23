@@ -13,7 +13,7 @@ export default function AboutPage() {
         <div className="about-hero__copy">
           <span className="page-head__index">03 — About</span>
           <h1 className="about-hero__title">
-            <span>Forty years.</span>
+            <span>Half a century.</span>
             <span><em>One landscape.</em></span>
           </h1>
           <p className="about-hero__sig">— Robert Castellino, Boulder · CO · est. 1984</p>
@@ -34,7 +34,7 @@ export default function AboutPage() {
           <p className="bio__lede">
             Robert Castellino made his first published photograph on Independence Pass
             in the fall of 1984. He has been at it, with patience and increasing
-            renown, for forty years since.
+            renown, for half a century since.
           </p>
           <p>
             Born in 1958 and trained at the Brooks Institute of Photography, Robert
@@ -100,9 +100,9 @@ export default function AboutPage() {
               What others have <em>said.</em>
             </h2>
             <p className="section-head__sub">
-              Forty years of looking has earned forty years of being looked at —
-              by curators, peers, collectors, and the writers who have lived with
-              the prints long enough to have something to say.
+              Half a century of looking has earned half a century of being looked
+              at — by curators, peers, collectors, and the writers who have lived
+              with the prints long enough to have something to say.
             </p>
           </div>
         </header>

@@ -24,13 +24,14 @@ export default function Home() {
           <h1 className="hero__title">
             <span className="hero__line hero__line--a">A life&apos;s</span>
             <span className="hero__line hero__line--b"><em>work</em></span>
-            <span className="hero__line hero__line--c">in the West.</span>
+            <span className="hero__line hero__line--c">in nature.</span>
           </h1>
 
           <p className="hero__sub">
-            Four decades of large-format landscape photography from the Colorado Rockies
-            and the wider American West — a working archive by a photographer whose
-            prints hang in museums, statehouses, and a great many living rooms.
+            Half a century of large-format nature photography from the Colorado
+            Rockies — mountains, streams, light, land, sky. A working archive by
+            a photographer whose prints hang in museums, statehouses, and a great
+            many living rooms.
           </p>
 
           <div className="hero__cta-row">
@@ -68,7 +69,7 @@ export default function Home() {
         <header className="section-head">
           <div>
             <span className="section-head__eyebrow">— From the archive</span>
-            <h2 className="section-head__title">Forty years <em>of looking.</em></h2>
+            <h2 className="section-head__title">Half a century <em>of looking.</em></h2>
           </div>
           <Link className="section-head__link" href="/gallery">
             See the full gallery
@@ -129,8 +130,8 @@ export default function Home() {
         <div className="teaser__copy">
           <span className="kicker">— The photographer</span>
           <h2 className="display">
-            An elder eye on<br />
-            the <em>American West.</em>
+            A practiced eye on<br />
+            <em>the natural world.</em>
           </h2>
           <p>
             Robert Castellino has photographed the Colorado high country since 1984.
@@ -140,8 +141,8 @@ export default function Home() {
           </p>
           <p className="muted">
             He still works the same passes he learned in his twenties — Cottonwood,
-            Independence, Red Mountain — with a tripod in the truck and forty years
-            of weather in his memory.
+            Independence, Red Mountain — with a tripod in the truck and half a
+            century of weather in his memory.
           </p>
           <Link className="btn btn--ghost" href="/about">Read his story</Link>
         </div>
@@ -155,8 +156,8 @@ export default function Home() {
             <em>Colorado:</em><br />
             Life &amp; Light on the Land.
           </h2>
-          <p>The definitive monograph — 168 plates drawn from forty years in the
-          Rockies. Foreword by John Fielder. Now in its fifth printing.</p>
+          <p>The definitive monograph — 168 plates drawn from half a century in
+          the Rockies. Foreword by John Fielder. Now in its fifth printing.</p>
           <Link className="btn btn--gold" href="/book">Open the Book</Link>
         </div>
         <div className="book-strip__art">

@@ -24,7 +24,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Robert Castellino — Nature & Landscape Photography, Boulder CO",
   description:
-    "Four decades of large-format landscape photography from the Colorado Rockies and the wider American West — a working archive by Robert Castellino.",
+    "Half a century of large-format nature photography from the Colorado Rockies — mountains, streams, light, land, sky. A working archive by Robert Castellino.",
 };
 
 export default function RootLayout({

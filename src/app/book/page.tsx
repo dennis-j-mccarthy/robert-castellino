@@ -20,10 +20,10 @@ export default function BookPage() {
             <em>Colorado</em><br />Life &amp; Light on the Land.
           </h1>
           <p className="book__deck">
-            The career retrospective. Forty years of the high country, the plains,
-            and the long Colorado sky, drawn together in a 168-page monograph.
-            Foreword by John Fielder. Hand-bound, smyth-sewn, printed on 157gsm
-            archival matte stock.
+            The career retrospective. Half a century of mountains, streams, light,
+            land, and the long Colorado sky, drawn together in a 168-page
+            monograph. Foreword by John Fielder. Hand-bound, smyth-sewn, printed
+            on 157gsm archival matte stock.
           </p>
 
           <dl className="book__specs">
