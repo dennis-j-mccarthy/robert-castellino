@@ -136,7 +136,7 @@ export default function AboutPage() {
           </figure>
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/behind-4.png" alt="Studio portrait" />
+            <img src="/assets/home-teaser.jpg" alt="Robert Castellino at Jenny Lake, Wyoming" />
             <figcaption>Sunrise in the wildflowers</figcaption>
           </figure>
         </div>
