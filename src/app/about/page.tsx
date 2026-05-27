@@ -137,7 +137,7 @@ export default function AboutPage() {
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/home-teaser.jpg" alt="Robert Castellino at Jenny Lake, Wyoming" />
-            <figcaption>Sunrise in the wildflowers</figcaption>
+            <figcaption>Jenny Lake, Wyoming</figcaption>
           </figure>
         </div>
       </section>
