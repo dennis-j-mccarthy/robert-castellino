@@ -121,12 +121,12 @@ export default function AboutPage() {
         <div className="behind__row behind__row--four">
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/behind-1.png" alt="Robert in the field" />
+            <img src="/assets/zion-primus-sunset.jpg" alt="Zion National Park, Primus AW at sunset" />
             <figcaption>In the field</figcaption>
           </figure>
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/behind-2.png" alt="Robert at work" />
+            <img src="/assets/hero-zion.jpg" alt="Robert photographing Zion Canyon at sunset" />
             <figcaption>At work, on location</figcaption>
           </figure>
           <figure className="behind__cell">
