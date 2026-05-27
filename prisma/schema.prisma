@@ -1,0 +1,92 @@
+// Robert Castellino site — Prisma schema
+//
+// This schema is groundwork. Public pages still read from src/data/*.ts
+// until the DB is connected and populated; see src/lib/data-source.ts for
+// the fallback layer.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────── MUSINGS ─────────
+enum MusingCategory {
+  reflections
+  light
+  land
+  locations
+  wilderness
+}
+
+model Musing {
+  id        String         @id // "m01" etc. — matches existing slugs
+  num       String         // "M.001"
+  cat       MusingCategory
+  title     String
+  date      String         // "Spring 2024" — human-readable, not a real date
+  loc       String?
+  img       String?
+  size      String?        // "sm" | "md" | "lg"
+  excerpt   String
+  /// Paragraphs; may contain inline <em>...</em>
+  body      String[]
+  published Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  order     Int            @default(0)
+
+  @@index([cat])
+  @@index([published, order])
+}
+
+// ───────── COLLECTIONS (gallery sections) ─────────
+model Collection {
+  id        String   @id @default(cuid())
+  slug      String   @unique // "waterfalls", "reflections", etc.
+  label     String
+  intro     String
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  photos    Photo[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+model Photo {
+  id           String     @id @default(cuid())
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId String
+  img          String     // /assets/... or https://blob URL
+  title        String
+  loc          String
+  blurb        String
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([collectionId, order])
+}
+
+// ───────── CONTACT SUBMISSIONS ─────────
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  message   String
+  // Optional metadata
+  userAgent String?
+  ipHash    String?
+  // Workflow
+  read      Boolean  @default(false)
+  archived  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([read, archived, createdAt])
+}

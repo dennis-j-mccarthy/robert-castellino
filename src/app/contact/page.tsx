@@ -3,14 +3,50 @@
 import { useState } from "react";
 import { PageHero } from "@/components/page-hero";
 
-export default function ContactPage() {
-  const [sent, setSent] = useState(false);
+type Status = "idle" | "sending" | "sent" | "error";
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+export default function ContactPage() {
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // No backend wired yet — just acknowledge the submission.
-    setSent(true);
+    setStatus("sending");
+    setErrorMsg(null);
+
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const payload = {
+      firstName: String(fd.get("firstName") ?? "").trim(),
+      lastName: String(fd.get("lastName") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      message: String(fd.get("message") ?? "").trim(),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        setErrorMsg(data?.error || "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
+      }
+      setStatus("sent");
+      form.reset();
+    } catch {
+      setErrorMsg("Network error. Please try again.");
+      setStatus("error");
+    }
   }
+
+  const sent = status === "sent";
+  const sending = status === "sending";
 
   return (
     <section className="route route--contact">
@@ -79,8 +115,16 @@ export default function ContactPage() {
               />
             </label>
 
-            <button type="submit" className="btn btn--gold btn--lg contact__submit">
-              Send the note
+            {errorMsg && (
+              <p className="contact__error" role="alert">{errorMsg}</p>
+            )}
+            <button
+              type="submit"
+              className="btn btn--gold btn--lg contact__submit"
+              disabled={sending}
+              aria-busy={sending}
+            >
+              {sending ? "Sending…" : "Send the note"}
             </button>
           </form>
         )}

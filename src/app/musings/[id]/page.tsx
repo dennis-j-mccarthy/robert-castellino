@@ -1,17 +1,23 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { MUSINGS as STATIC_MUSINGS } from "@/data/musings";
 import {
-  MUSINGS,
   CAT_META,
   getMusing,
   getMusingNeighbors,
-} from "@/data/musings";
+} from "@/lib/data-source";
 
 type Params = { id: string };
 
+// Pre-render the static-data IDs at build time. DB-only IDs will be
+// rendered on demand (Next will 404 unless dynamicParams allows them).
+// We always allow them so admin-added musings can be reached without a
+// rebuild.
+export const dynamicParams = true;
+
 export function generateStaticParams(): Params[] {
-  return MUSINGS.map((m) => ({ id: m.id }));
+  return STATIC_MUSINGS.map((m) => ({ id: m.id }));
 }
 
 export async function generateMetadata({
@@ -20,7 +26,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const m = getMusing(id);
+  const m = await getMusing(id);
   if (!m) return {};
   const title = `${m.title} — Musings — Robert Castellino`;
   const description = m.excerpt.replace(/<[^>]+>/g, "");
@@ -49,9 +55,10 @@ export default async function MusingDetailPage({
   params: Promise<Params>;
 }) {
   const { id } = await params;
-  const m = getMusing(id);
+  const m = await getMusing(id);
   if (!m) notFound();
-  const neighbors = getMusingNeighbors(id)!;
+  const neighbors = await getMusingNeighbors(id);
+  if (!neighbors) notFound();
   const { prev, next } = neighbors;
   const c = CAT_META[m.cat];
 

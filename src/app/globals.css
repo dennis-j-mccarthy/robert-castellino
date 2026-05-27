@@ -1569,6 +1569,165 @@ a  { color: inherit; text-decoration: none; }
 }
 
 /* ============================================================
+   ADMIN
+============================================================ */
+.admin-shell {
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+.admin-shell__nav {
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(5,6,8,0.95);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px var(--col-pad);
+  backdrop-filter: blur(8px);
+}
+.admin-shell__brand {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.admin-shell__menu {
+  display: flex; align-items: center; gap: 26px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-85);
+}
+.admin-shell__menu a:hover { color: var(--gold); }
+.admin-shell__logout-form { display: inline; }
+.admin-shell__logout {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--bone-85);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: border-color .25s var(--ease), color .25s var(--ease);
+}
+.admin-shell__logout:hover { color: var(--gold); border-color: var(--gold); }
+.admin-shell__main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px var(--col-pad);
+}
+
+.admin-page h1,
+.admin-login h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  margin: 0 0 16px;
+  color: var(--bone-95);
+}
+.admin-page p,
+.admin-login p {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--bone-85);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+.admin-page__sig {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+}
+.admin-page__links {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-page__links a {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.admin-page__links a:hover { color: var(--ember); }
+
+.admin-login {
+  max-width: 460px;
+  margin: 12vh auto;
+  padding: 0 var(--col-pad);
+}
+.admin-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 24px;
+}
+.admin-login code,
+.admin-page code,
+.admin-table code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: rgba(255,255,255,0.05);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--gold);
+}
+.admin-page__notice {
+  border: 1px solid rgba(217,122,58,0.35);
+  background: rgba(217,122,58,0.06);
+  padding: 14px 18px;
+  border-radius: 2px;
+  font-style: italic;
+  font-size: 15px;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0 36px;
+  font-family: var(--sans);
+  font-size: 14px;
+}
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--bone-85);
+}
+.admin-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+  font-weight: 500;
+}
+.admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+.admin-table a { color: var(--gold); }
+.admin-table a:hover { color: var(--ember); }
+.admin-table__message {
+  max-width: 560px;
+  white-space: pre-wrap;
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--bone-95);
+}
+
+/* ============================================================
    CONTACT
 ============================================================ */
 .contact {
@@ -1629,6 +1788,21 @@ a  { color: inherit; text-decoration: none; }
   align-self: flex-start;
   margin-top: 8px;
   justify-content: center;
+}
+.contact__submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.contact__error {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--amber);
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid rgba(217,122,58,0.35);
+  border-radius: 2px;
+  background: rgba(217,122,58,0.08);
 }
 .contact__thanks {
   text-align: center;
