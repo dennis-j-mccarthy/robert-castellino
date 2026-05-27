@@ -120,7 +120,7 @@ export default function Home() {
       <section className="teaser">
         <div className="teaser__art">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/portrait-hat.png" alt="Robert Castellino portrait" className="teaser__portrait" />
+          <img src="/assets/home-teaser.jpg" alt="Robert Castellino at Jenny Lake, Wyoming" className="teaser__portrait" />
           <div className="teaser__chip">
             <span className="teaser__chip-line">Behind the Camera</span>
             <span className="teaser__chip-name">Robert Castellino</span>
