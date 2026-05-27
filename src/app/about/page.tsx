@@ -126,7 +126,11 @@ export default function AboutPage() {
           </figure>
           <figure className="behind__cell">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/hero-zion.jpg" alt="Robert photographing Zion Canyon at sunset" />
+            <img
+              src="/assets/hero-zion.jpg"
+              alt="Robert photographing Zion Canyon at sunset"
+              style={{ objectPosition: "right center" }}
+            />
             <figcaption>At work, on location</figcaption>
           </figure>
           <figure className="behind__cell">
