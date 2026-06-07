@@ -129,9 +129,9 @@ a  { color: inherit; text-decoration: none; }
   display: flex; align-items: center; gap: 16px;
 }
 .nav__logo {
-  height: 76px;
+  height: 56px;
   width: auto;
-  padding-right: 32px;
+  flex-shrink: 0;
   filter: invert(1) brightness(1.02) drop-shadow(0 1px 0 rgba(0,0,0,0.2));
   transition: filter .3s var(--ease);
 }
@@ -1514,8 +1514,9 @@ a  { color: inherit; text-decoration: none; }
 }
 .footer__brand { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
 .footer__logo {
-  height: 112px;
+  height: 80px;
   width: auto;
+  flex-shrink: 0;
   filter: invert(1) brightness(1.02);
 }
 .footer__line {
