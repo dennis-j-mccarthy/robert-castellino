@@ -439,7 +439,14 @@ export default function CollectionsCRUD({ initial, dbMissing }: Props) {
                             {c.photos.map(p => (
                               <>
                                 <tr key={p.id}>
-                                  <td><code style={{ fontSize: "12px" }}>{p.img}</code></td>
+                                  <td>
+                                    {p.img ? (
+                                      // eslint-disable-next-line @next/next/no-img-element
+                                      <img src={p.img} alt={p.title} className="admin-photo-thumb" />
+                                    ) : (
+                                      <span style={{ color: "var(--bone-70)", fontSize: "12px" }}>—</span>
+                                    )}
+                                  </td>
                                   <td>{p.title}</td>
                                   <td>{p.loc}</td>
                                   <td>{p.order}</td>
@@ -598,22 +605,64 @@ type PhotoFormProps = {
 };
 
 function PhotoForm({ form, setForm, busy, onSubmit, onCancel }: PhotoFormProps) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   function set<K extends keyof PhotoForm>(k: K, v: PhotoForm[K]) {
     setForm(f => ({ ...f, [k]: v }));
   }
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json() as { url?: string; error?: string };
+      if (!res.ok) { setUploadError(data.error ?? "Upload failed."); return; }
+      set("img", data.url ?? "");
+    } catch {
+      setUploadError("Network error during upload.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <div>
       <div className="admin-form__grid">
-        <label className="admin-form__field admin-form__field--wide">
-          <span className="admin-form__label">Image path <span className="admin-form__hint">(/assets/... or https://...)</span></span>
+        <div className="admin-form__field admin-form__field--wide">
+          <span className="admin-form__label">Photo</span>
+          <label className="admin-upload">
+            <input
+              type="file"
+              accept="image/*"
+              className="admin-upload__input"
+              onChange={handleFile}
+              disabled={busy || uploading}
+            />
+            <span className="admin-upload__btn">
+              {uploading ? "Uploading…" : "📷 Choose photo or take picture"}
+            </span>
+          </label>
+          {uploadError && <p className="admin-form__error" style={{ marginTop: "4px" }}>{uploadError}</p>}
+          {form.img && (
+            <div className="admin-upload__preview">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.img} alt="preview" />
+            </div>
+          )}
           <input
             className="admin-form__input"
+            style={{ marginTop: "6px", fontSize: "11px" }}
             value={form.img}
             onChange={e => set("img", e.target.value)}
-            placeholder="/assets/collections/..."
-            required
+            placeholder="or paste a URL / path"
           />
-        </label>
+        </div>
         <label className="admin-form__field">
           <span className="admin-form__label">Title</span>
           <input
@@ -652,10 +701,10 @@ function PhotoForm({ form, setForm, busy, onSubmit, onCancel }: PhotoFormProps) 
         />
       </label>
       <div className="admin-form__actions">
-        <button className="btn btn--gold" onClick={onSubmit} disabled={busy} aria-busy={busy}>
+        <button className="btn btn--gold" onClick={onSubmit} disabled={busy || uploading} aria-busy={busy}>
           {busy ? "Saving…" : "Save photo"}
         </button>
-        <button className="btn btn--ghost" onClick={onCancel} disabled={busy}>
+        <button className="btn btn--ghost" onClick={onCancel} disabled={busy || uploading}>
           Cancel
         </button>
       </div>

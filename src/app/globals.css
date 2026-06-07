@@ -3065,3 +3065,50 @@ a  { color: inherit; text-decoration: none; }
   padding: 9px 12px;
   font-size: 13px;
 }
+
+/* ── Photo upload ──────────────────────────────────────────────── */
+.admin-upload {
+  display: block;
+  cursor: pointer;
+}
+.admin-upload__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.admin-upload__btn {
+  display: block;
+  padding: 14px 20px;
+  border: 2px dashed var(--bone-30);
+  border-radius: 6px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--bone-70);
+  transition: border-color 0.15s, color 0.15s;
+}
+.admin-upload:hover .admin-upload__btn,
+.admin-upload:focus-within .admin-upload__btn {
+  border-color: var(--gold);
+  color: var(--bone-85);
+}
+.admin-upload__preview {
+  margin-top: 10px;
+  max-width: 240px;
+}
+.admin-upload__preview img {
+  width: 100%;
+  border-radius: 4px;
+  object-fit: cover;
+  max-height: 200px;
+}
+.admin-photo-thumb {
+  width: 56px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+}
