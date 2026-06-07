@@ -1,42 +1,89 @@
-import Link from "next/link";
 import { isDatabaseConfigured } from "@/lib/prisma";
-import { getAllCollections } from "@/lib/data-source";
+import { prisma } from "@/lib/prisma";
+import { COLLECTIONS } from "@/data/collections";
+import CollectionsCRUD from "./CollectionsCRUD";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCollectionsPage() {
-  const collections = await getAllCollections();
-  return (
-    <section className="admin-page">
-      <h1>Gallery collections</h1>
-      {!isDatabaseConfigured() && (
-        <p className="admin-page__notice">
-          The database is not yet connected. Showing the static placeholders
-          from <code>src/data/collections.ts</code>.
-        </p>
-      )}
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Slug</th>
-            <th>Label</th>
-            <th>Photos</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {collections.map((c) => (
-            <tr key={c.slug}>
-              <td><code>{c.slug}</code></td>
-              <td>{c.label}</td>
-              <td>{c.photos.length}</td>
-              <td>
-                <Link href={`/gallery`} target="_blank">view ↗</Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
-  );
+  let items: {
+    id: string;
+    slug: string;
+    label: string;
+    intro: string;
+    order: number;
+    published: boolean;
+    photos: { id: string; collectionId: string; img: string; title: string; loc: string; blurb: string; order: number }[];
+  }[] = [];
+  let dbMissing = false;
+
+  if (!isDatabaseConfigured()) {
+    items = COLLECTIONS.map((c, i) => ({
+      id: c.slug,
+      slug: c.slug,
+      label: c.label,
+      intro: c.intro,
+      order: i,
+      published: true,
+      photos: c.photos.map((p, j) => ({
+        id: `${c.slug}-${j}`,
+        collectionId: c.slug,
+        img: p.img,
+        title: p.title,
+        loc: p.loc,
+        blurb: p.blurb,
+        order: j,
+      })),
+    }));
+    dbMissing = true;
+  } else {
+    try {
+      const rows = await prisma.collection.findMany({
+        orderBy: { order: "asc" },
+        include: { photos: { orderBy: { order: "asc" } } },
+      });
+      if (rows.length === 0) {
+        items = COLLECTIONS.map((c, i) => ({
+          id: c.slug,
+          slug: c.slug,
+          label: c.label,
+          intro: c.intro,
+          order: i,
+          published: true,
+          photos: c.photos.map((p, j) => ({
+            id: `${c.slug}-${j}`,
+            collectionId: c.slug,
+            img: p.img,
+            title: p.title,
+            loc: p.loc,
+            blurb: p.blurb,
+            order: j,
+          })),
+        }));
+      } else {
+        items = rows;
+      }
+    } catch {
+      items = COLLECTIONS.map((c, i) => ({
+        id: c.slug,
+        slug: c.slug,
+        label: c.label,
+        intro: c.intro,
+        order: i,
+        published: true,
+        photos: c.photos.map((p, j) => ({
+          id: `${c.slug}-${j}`,
+          collectionId: c.slug,
+          img: p.img,
+          title: p.title,
+          loc: p.loc,
+          blurb: p.blurb,
+          order: j,
+        })),
+      }));
+      dbMissing = true;
+    }
+  }
+
+  return <CollectionsCRUD initial={items} dbMissing={dbMissing} />;
 }
