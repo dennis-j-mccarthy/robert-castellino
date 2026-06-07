@@ -21,7 +21,7 @@ async function isValid(token: string | undefined, secret: string | undefined) {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Public/unauthenticated within /admin
+  // Public/unauthenticated routes
   if (pathname === "/admin/login") return NextResponse.next();
 
   const secret = process.env.ADMIN_JWT_SECRET;
@@ -44,5 +44,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/add"],
 };

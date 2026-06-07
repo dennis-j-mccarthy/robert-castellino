@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const links = [
-  { href: "/", label: "🏠" },
+  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/timeline", label: "Timeline" },
   { href: "/gallery", label: "Gallery" },
@@ -46,8 +46,14 @@ export function Nav() {
             key={l.href}
             href={l.href}
             className={[isActive(l.href) ? "is-active" : "", i === 0 ? "nav__home" : ""].join(" ").trim()}
+            aria-label={i === 0 ? "Home" : undefined}
           >
-            {l.label}
+            {i === 0 ? (
+              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true" style={{ display: "block" }}>
+                <path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+                <path d="M7 18v-6h6v6" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+              </svg>
+            ) : l.label}
           </Link>
         ))}
       </nav>
