@@ -42,27 +42,7 @@ export default async function AdminCollectionsPage() {
         orderBy: { order: "asc" },
         include: { photos: { orderBy: { order: "asc" } } },
       });
-      if (rows.length === 0) {
-        items = COLLECTIONS.map((c, i) => ({
-          id: c.slug,
-          slug: c.slug,
-          label: c.label,
-          intro: c.intro,
-          order: i,
-          published: true,
-          photos: c.photos.map((p, j) => ({
-            id: `${c.slug}-${j}`,
-            collectionId: c.slug,
-            img: p.img,
-            title: p.title,
-            loc: p.loc,
-            blurb: p.blurb,
-            order: j,
-          })),
-        }));
-      } else {
-        items = rows;
-      }
+      items = rows;
     } catch {
       items = COLLECTIONS.map((c, i) => ({
         id: c.slug,

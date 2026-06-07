@@ -17,23 +17,18 @@ export default async function AdminMusingsPage() {
       const rows = await prisma.musing.findMany({
         orderBy: [{ order: "asc" }, { id: "asc" }],
       });
-      if (rows.length === 0) {
-        items = MUSINGS;
-        dbMissing = false;
-      } else {
-        items = rows.map(r => ({
-          id: r.id,
-          num: r.num,
-          cat: r.cat as typeof MUSINGS[0]["cat"],
-          title: r.title,
-          date: r.date,
-          loc: r.loc ?? undefined,
-          img: r.img ?? undefined,
-          size: (r.size ?? undefined) as typeof MUSINGS[0]["size"],
-          excerpt: r.excerpt,
-          body: r.body,
-        }));
-      }
+      items = rows.map(r => ({
+        id: r.id,
+        num: r.num,
+        cat: r.cat as typeof MUSINGS[0]["cat"],
+        title: r.title,
+        date: r.date,
+        loc: r.loc ?? undefined,
+        img: r.img ?? undefined,
+        size: (r.size ?? undefined) as typeof MUSINGS[0]["size"],
+        excerpt: r.excerpt,
+        body: r.body,
+      }));
     } catch {
       items = MUSINGS;
       dbMissing = true;
