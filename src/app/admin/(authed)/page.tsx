@@ -8,14 +8,19 @@ export const dynamic = "force-dynamic";
 export default async function AdminHome() {
   const session = await getSession();
 
-  let showSeed = false;
+  let dbCounts: { musings: number; collections: number; photos: number } | null = null;
+  let dbError = false;
+
   if (isDatabaseConfigured()) {
     try {
-      const [m, c] = await Promise.all([prisma.musing.count(), prisma.collection.count()]);
-      showSeed = m === 0 && c === 0;
+      const [musings, collections, photos] = await Promise.all([
+        prisma.musing.count(),
+        prisma.collection.count(),
+        prisma.photo.count(),
+      ]);
+      dbCounts = { musings, collections, photos };
     } catch {
-      // Tables may not exist yet — show the seed button so the user can initialise
-      showSeed = true;
+      dbError = true;
     }
   }
 
@@ -33,7 +38,24 @@ export default async function AdminHome() {
         <li><Link href="/admin/collections">Manage gallery collections</Link></li>
         <li><Link href="/admin/contact">Read contact submissions</Link></li>
       </ul>
-      {showSeed && <SeedButton />}
+
+      {isDatabaseConfigured() && (
+        <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid var(--rule)" }}>
+          <h2 style={{ fontSize: "13px", fontFamily: "var(--mono)", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--bone-70)", marginBottom: "10px" }}>
+            Database
+          </h2>
+          {dbError ? (
+            <p style={{ fontSize: "14px", color: "#e07070", marginBottom: "16px" }}>
+              Could not reach the database — check connection.
+            </p>
+          ) : dbCounts ? (
+            <p style={{ fontSize: "14px", color: "var(--bone-70)", marginBottom: "16px" }}>
+              {dbCounts.musings} musings · {dbCounts.collections} collections · {dbCounts.photos} photos
+            </p>
+          ) : null}
+          <SeedButton />
+        </div>
+      )}
     </section>
   );
 }
