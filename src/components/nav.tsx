@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const links = [
-  { href: "/", label: "Home" },
+  { href: "/", label: "🏠" },
   { href: "/about", label: "About" },
   { href: "/timeline", label: "Timeline" },
   { href: "/gallery", label: "Gallery" },
@@ -41,11 +41,11 @@ export function Nav() {
         />
       </Link>
       <nav className="nav__menu" aria-label="Primary">
-        {links.map((l) => (
+        {links.map((l, i) => (
           <Link
             key={l.href}
             href={l.href}
-            className={isActive(l.href) ? "is-active" : ""}
+            className={[isActive(l.href) ? "is-active" : "", i === 0 ? "nav__home" : ""].join(" ").trim()}
           >
             {l.label}
           </Link>

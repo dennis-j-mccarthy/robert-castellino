@@ -164,6 +164,7 @@ a  { color: inherit; text-decoration: none; }
   transition: color .25s var(--ease);
 }
 .nav__menu a:hover { color: var(--bone-95); }
+.nav__home { margin-left: 10px; }
 .nav__menu a.is-active { color: var(--gold); }
 .nav__menu a.is-active::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0;
