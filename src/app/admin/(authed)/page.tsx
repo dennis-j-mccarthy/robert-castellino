@@ -8,13 +8,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminHome() {
   const session = await getSession();
 
-  let isEmpty = false;
+  let showSeed = false;
   if (isDatabaseConfigured()) {
     try {
       const [m, c] = await Promise.all([prisma.musing.count(), prisma.collection.count()]);
-      isEmpty = m === 0 && c === 0;
+      showSeed = m === 0 && c === 0;
     } catch {
-      // DB unreachable — don't show seed button
+      // Tables may not exist yet — show the seed button so the user can initialise
+      showSeed = true;
     }
   }
 
@@ -32,7 +33,7 @@ export default async function AdminHome() {
         <li><Link href="/admin/collections">Manage gallery collections</Link></li>
         <li><Link href="/admin/contact">Read contact submissions</Link></li>
       </ul>
-      {isEmpty && <SeedButton />}
+      {showSeed && <SeedButton />}
     </section>
   );
 }
