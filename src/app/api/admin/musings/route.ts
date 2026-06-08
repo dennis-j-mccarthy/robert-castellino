@@ -32,8 +32,6 @@ export async function GET() {
 const CAT = ["reflections", "light", "land", "locations", "wilderness"] as const;
 
 const CreateSchema = z.object({
-  id: z.string().min(1),
-  num: z.string().min(1),
   cat: z.enum(CAT),
   title: z.string().min(1),
   date: z.string().min(1),
@@ -45,6 +43,22 @@ const CreateSchema = z.object({
   published: z.boolean().default(true),
   order: z.number().int().default(0),
 });
+
+async function generateIdAndNum(): Promise<{ id: string; num: string }> {
+  const musings = await prisma.musing.findMany({ select: { id: true, num: true } });
+  const maxId = musings
+    .map(m => parseInt(m.id.replace(/\D/g, ""), 10))
+    .filter(n => !isNaN(n))
+    .reduce((a, b) => Math.max(a, b), 0);
+  const maxNum = musings
+    .map(m => parseInt(m.num.replace(/\D/g, ""), 10))
+    .filter(n => !isNaN(n))
+    .reduce((a, b) => Math.max(a, b), 0);
+  return {
+    id: `m${String(maxId + 1).padStart(2, "0")}`,
+    num: `M.${String(maxNum + 1).padStart(3, "0")}`,
+  };
+}
 
 export async function POST(req: Request) {
   const blocked = await guard();
@@ -65,13 +79,11 @@ export async function POST(req: Request) {
   }
 
   try {
-    const musing = await prisma.musing.create({ data: parsed.data });
+    const { id, num } = await generateIdAndNum();
+    const musing = await prisma.musing.create({ data: { id, num, ...parsed.data } });
     return NextResponse.json(musing, { status: 201 });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Database error";
-    if (msg.includes("Unique constraint")) {
-      return NextResponse.json({ error: `ID "${parsed.data.id}" is already taken.` }, { status: 409 });
-    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -21,25 +21,7 @@ type MusingRow = {
 const CATS = ["reflections", "light", "land", "locations", "wilderness"] as const;
 const SIZES = ["sm", "md", "lg"] as const;
 
-function nextId(items: MusingRow[]): string {
-  const nums = items
-    .map(m => parseInt(m.id.replace(/\D/g, ""), 10))
-    .filter(n => !isNaN(n));
-  const max = nums.length ? Math.max(...nums) : 0;
-  return `m${String(max + 1).padStart(2, "0")}`;
-}
-
-function nextNum(items: MusingRow[]): string {
-  const nums = items
-    .map(m => parseInt(m.num.replace(/\D/g, ""), 10))
-    .filter(n => !isNaN(n));
-  const max = nums.length ? Math.max(...nums) : 0;
-  return `M.${String(max + 1).padStart(3, "0")}`;
-}
-
 type FormState = {
-  id: string;
-  num: string;
   cat: string;
   title: string;
   date: string;
@@ -52,10 +34,8 @@ type FormState = {
   order: number;
 };
 
-function emptyForm(items: MusingRow[]): FormState {
+function emptyForm(_items: MusingRow[]): FormState {
   return {
-    id: nextId(items),
-    num: nextNum(items),
     cat: "reflections",
     title: "",
     date: "",
@@ -71,8 +51,6 @@ function emptyForm(items: MusingRow[]): FormState {
 
 function musingToForm(m: MusingRow): FormState {
   return {
-    id: m.id,
-    num: m.num,
     cat: m.cat,
     title: m.title,
     date: m.date,
@@ -88,8 +66,6 @@ function musingToForm(m: MusingRow): FormState {
 
 function formToPayload(f: FormState) {
   return {
-    id: f.id.trim(),
-    num: f.num.trim(),
     cat: f.cat,
     title: f.title.trim(),
     date: f.date.trim(),
@@ -168,8 +144,7 @@ export default function MusingsCRUD({ initial, dbMissing }: Props) {
   async function handleUpdate(id: string) {
     setBusy(true);
     setError(null);
-    const { id: _id, ...payload } = formToPayload(form);
-    void _id;
+    const payload = formToPayload(form);
     try {
       const res = await fetch(`/api/admin/musings/${id}`, {
         method: "PUT",
@@ -326,28 +301,32 @@ type MusingFormProps = {
   onCancel: () => void;
 };
 
-function MusingForm({ form, setField, isCreate, busy, onSubmit, onCancel }: MusingFormProps) {
+function MusingForm({ form, setField, isCreate: _isCreate, busy, onSubmit, onCancel }: MusingFormProps) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json() as { url?: string; error?: string };
+      if (!res.ok) { setUploadError(data.error ?? "Upload failed."); return; }
+      setField("img", data.url ?? "");
+    } catch {
+      setUploadError("Network error.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <div>
       <div className="admin-form__grid">
-        {isCreate && (
-          <label className="admin-form__field">
-            <span className="admin-form__label">ID <span className="admin-form__hint">(e.g. m31)</span></span>
-            <input
-              className="admin-form__input"
-              value={form.id}
-              onChange={e => setField("id", e.target.value)}
-            />
-          </label>
-        )}
-        <label className="admin-form__field">
-          <span className="admin-form__label">Num <span className="admin-form__hint">(e.g. M.031)</span></span>
-          <input
-            className="admin-form__input"
-            value={form.num}
-            onChange={e => setField("num", e.target.value)}
-          />
-        </label>
         <label className="admin-form__field">
           <span className="admin-form__label">Category</span>
           <select
@@ -384,15 +363,27 @@ function MusingForm({ form, setField, isCreate, busy, onSubmit, onCancel }: Musi
             onChange={e => setField("loc", e.target.value)}
           />
         </label>
-        <label className="admin-form__field">
-          <span className="admin-form__label">Image path <span className="admin-form__hint">(optional)</span></span>
+        <div className="admin-form__field admin-form__field--wide">
+          <span className="admin-form__label">Image <span className="admin-form__hint">(optional)</span></span>
+          <label className="admin-upload">
+            <input type="file" accept="image/*" className="admin-upload__input" onChange={handleFile} disabled={busy || uploading} />
+            <span className="admin-upload__btn">{uploading ? "Uploading…" : "📷 Upload image"}</span>
+          </label>
+          {uploadError && <p className="admin-form__error" style={{ marginTop: "4px" }}>{uploadError}</p>}
+          {form.img && (
+            <div className="admin-upload__preview" style={{ marginTop: "8px" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.img} alt="preview" />
+            </div>
+          )}
           <input
             className="admin-form__input"
+            style={{ marginTop: "6px", fontSize: "11px" }}
             value={form.img}
             onChange={e => setField("img", e.target.value)}
-            placeholder="/assets/..."
+            placeholder="or paste a URL / path"
           />
-        </label>
+        </div>
         <label className="admin-form__field">
           <span className="admin-form__label">Size <span className="admin-form__hint">(optional)</span></span>
           <select
