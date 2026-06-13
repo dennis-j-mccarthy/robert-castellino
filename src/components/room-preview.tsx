@@ -26,10 +26,10 @@ type Room = {
 
 const ROOMS: Room[] = [
   { key: "hallway", label: "Hallway", src: "/assets/rooms/hallway.jpg", ar: "1500 / 861", wallRealWidthIn: 120, ax: 0.52, ay: 0.42 },
-  { key: "kitchen", label: "Kitchen", src: "/assets/rooms/kitchen.jpg", ar: "1500 / 858", wallRealWidthIn: 145, ax: 0.53, ay: 0.4 },
-  { key: "bedroom", label: "Bedroom", src: "/assets/rooms/bedroom.jpg", ar: "1500 / 867", wallRealWidthIn: 150, ax: 0.42, ay: 0.38 },
-  { key: "living", label: "Living room", src: "/assets/rooms/living.jpg", ar: "1500 / 876", wallRealWidthIn: 165, ax: 0.44, ay: 0.36 },
-  { key: "greatroom", label: "Great room", src: "/assets/rooms/greatroom.jpg", ar: "1500 / 864", wallRealWidthIn: 205, ax: 0.49, ay: 0.29, dim: 0.6 },
+  { key: "kitchen", label: "Kitchen", src: "/assets/rooms/kitchen.jpg", ar: "1500 / 858", wallRealWidthIn: 145, ax: 0.53, ay: 0.4, dim: 0.72 },
+  { key: "bedroom", label: "Bedroom", src: "/assets/rooms/bedroom.jpg", ar: "1500 / 867", wallRealWidthIn: 177, ax: 0.56, ay: 0.45, dim: 0.72 },
+  { key: "living", label: "Living room", src: "/assets/rooms/living.jpg", ar: "1500 / 876", wallRealWidthIn: 190, ax: 0.56, ay: 0.33, dim: 0.72 },
+  { key: "greatroom", label: "Great room", src: "/assets/rooms/greatroom.jpg", ar: "1500 / 864", wallRealWidthIn: 205, ax: 0.52, ay: 0.35, dim: 0.6 },
 ];
 
 /** Each print size shows in exactly one room — smallest in the hallway, up to
