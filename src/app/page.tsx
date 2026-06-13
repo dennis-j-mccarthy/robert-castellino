@@ -1,4 +1,10 @@
 import Link from "next/link";
+import { MUSINGS, CAT_META } from "@/data/musings";
+
+// Curated trio for the home-page journal teaser — one per category for variety.
+const FEATURED_MUSINGS = ["m01", "m07", "m13"]
+  .map((id) => MUSINGS.find((m) => m.id === id))
+  .filter((m): m is (typeof MUSINGS)[number] => Boolean(m));
 
 export default function Home() {
   return (
@@ -145,6 +151,55 @@ export default function Home() {
             with nature through fine art photography.
           </p>
           <Link className="btn btn--ghost" href="/about">Read his story</Link>
+        </div>
+      </section>
+
+      {/* FROM THE JOURNAL */}
+      <section className="journal">
+        <header className="section-head">
+          <div>
+            <span className="section-head__eyebrow">— From the journal</span>
+            <h2 className="section-head__title">Field notes <em>&amp; quiet essays.</em></h2>
+          </div>
+          <Link className="section-head__link" href="/musings">
+            Read all musings
+            <svg viewBox="0 0 14 14" width="11" height="11"><path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4"/></svg>
+          </Link>
+        </header>
+
+        <div className="musings-grid">
+          {FEATURED_MUSINGS.map((m) => {
+            const c = CAT_META[m.cat];
+            return (
+              <Link
+                key={m.id}
+                href={`/musings/${m.id}`}
+                className="mus mus--md mus--text"
+                data-cat={m.cat}
+              >
+                <div className="mus__body">
+                  <div className="mus__head">
+                    <span className="mus__cat" style={{ ["--c" as string]: c.color }}>
+                      <i className="mus__cat-dot" />
+                      {c.label}
+                    </span>
+                    <span className="mus__num">{m.num}</span>
+                  </div>
+                  <h3 className="mus__title">{m.title}</h3>
+                  <p className="mus__excerpt">{m.excerpt}</p>
+                  <div className="mus__foot">
+                    <span className="mus__date">{m.date}</span>
+                    <span className="mus__read">
+                      Read on
+                      <svg viewBox="0 0 14 14" width="11" height="11">
+                        <path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

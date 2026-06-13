@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { PageHero } from "@/components/page-hero";
+import { BookBuy } from "./BookBuy";
 
 export default function BookPage() {
   return (
@@ -48,9 +48,7 @@ export default function BookPage() {
             <div><dt>Price</dt><dd><span className="price">$ 75</span> <span className="price__note">+ shipping, signed +$10</span></dd></div>
           </dl>
 
-          <div className="book__cta">
-            <Link className="btn btn--gold btn--lg" href="/book">Order a signed copy</Link>
-          </div>
+          <BookBuy />
 
           <p className="book__shipnote">Shipped from the Boulder studio · usually within 3 business days.</p>
         </div>

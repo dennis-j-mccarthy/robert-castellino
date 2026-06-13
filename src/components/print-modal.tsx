@@ -1,19 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { PRINT_SIZES, type PrintSize } from "@/data/pricing";
+import { RoomPreview } from "@/components/room-preview";
 
-export type PrintSize = {
-  label: string;
-  price: number;
-};
-
-export const PRINT_SIZES: PrintSize[] = [
-  { label: "10 × 8",   price: 26.25 },
-  { label: "12 × 10",  price: 36.40 },
-  { label: "24 × 20",  price: 101.50 },
-  { label: "36 × 30",  price: 258.30 },
-  { label: "48 × 40",  price: 329.28 },
-];
+// Re-exported so existing imports of these from this module keep working.
+export { PRINT_SIZES };
+export type { PrintSize };
 
 type Props = {
   open: boolean;
@@ -30,11 +23,22 @@ type Props = {
 export function PrintModal({ open, onClose, image }: Props) {
   const [sizeIdx, setSizeIdx] = useState(2);
   const [qty, setQty] = useState(1);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [view, setView] = useState<"detail" | "wall">("detail");
+
+  // Reset transient checkout state on close, so the next open starts clean.
+  const close = useCallback(() => {
+    setBusy(false);
+    setErr(null);
+    setView("detail");
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") close();
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -43,12 +47,42 @@ export function PrintModal({ open, onClose, image }: Props) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, onClose]);
+  }, [open, close]);
 
   if (!open || !image) return null;
 
   const size = PRINT_SIZES[sizeIdx];
   const total = (size.price * qty).toFixed(2);
+
+  async function buy() {
+    if (!image) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "print",
+          title: image.title,
+          no: image.no,
+          img: image.img,
+          sizeLabel: size.label,
+          qty,
+        }),
+      });
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok || !data.url) {
+        setErr(data.error ?? "Unable to start checkout.");
+        setBusy(false);
+        return;
+      }
+      window.location.href = data.url; // hand off to Stripe's hosted page
+    } catch {
+      setErr("Network error. Please try again.");
+      setBusy(false);
+    }
+  }
 
   return (
     <div
@@ -56,13 +90,13 @@ export function PrintModal({ open, onClose, image }: Props) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
-      onClick={onClose}
+      onClick={close}
     >
       <div className="modal__panel" onClick={(e) => e.stopPropagation()}>
         <button
           type="button"
           className="modal__close"
-          onClick={onClose}
+          onClick={close}
           aria-label="Close"
         >
           <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true">
@@ -76,8 +110,38 @@ export function PrintModal({ open, onClose, image }: Props) {
         </button>
 
         <div className="modal__media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={image.img} alt={image.title} />
+          <div className="modal__view" role="group" aria-label="View">
+            <button
+              type="button"
+              className={view === "detail" ? "is-active" : ""}
+              onClick={() => setView("detail")}
+              aria-pressed={view === "detail"}
+            >
+              Detail
+            </button>
+            <button
+              type="button"
+              className={view === "wall" ? "is-active" : ""}
+              onClick={() => setView("wall")}
+              aria-pressed={view === "wall"}
+            >
+              On the wall
+            </button>
+          </div>
+
+          {view === "detail" ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={image.img} alt={image.title} />
+            </>
+          ) : (
+            <RoomPreview
+              img={image.img}
+              alt={image.title}
+              wIn={size.wIn}
+              hIn={size.hIn}
+            />
+          )}
         </div>
 
         <div className="modal__body">
@@ -114,10 +178,22 @@ export function PrintModal({ open, onClose, image }: Props) {
                 +
               </button>
             </div>
-            <button type="button" className="btn btn--gold btn--lg modal__cart">
-              Purchase with Stripe
+            <button
+              type="button"
+              className="btn btn--gold btn--lg modal__cart"
+              onClick={buy}
+              disabled={busy}
+              aria-busy={busy}
+            >
+              {busy ? "Redirecting…" : "Purchase with Stripe"}
             </button>
           </div>
+
+          {err && (
+            <p className="modal__error" role="alert">
+              {err}
+            </p>
+          )}
 
           <fieldset className="modal__field">
             <legend>
