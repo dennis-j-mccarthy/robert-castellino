@@ -5,39 +5,43 @@ import { useState } from "react";
 /**
  * To-scale "view on a wall" preview.
  *
- * The trick: each room declares the real-world size (in inches) of the wall
- * it shows, and a reference object at its true size (an 84" sofa, etc.). The
- * scene is a container-query context, so 1 inch === (100 / room.realW) cqw.
- * Everything — the print, its frame, the furniture — is sized in those units,
- * which means the print is rendered at an accurate fraction of the room and
- * scales correctly on any screen, no JS measurement needed.
+ * Each room declares the real-world size (inches) of the wall it shows plus a
+ * reference object at its true size. The scene is a container-query context,
+ * so 1 inch === (100 / room.realW) cqw and everything — print, frame,
+ * furniture — is sized in those units. The print therefore renders at an
+ * accurate fraction of the room and scales correctly on any screen.
+ *
+ * The room also AUTO-MATCHES the chosen print size (small → intimate space,
+ * large → den) so each size is shown in a space it actually suits. The viewer
+ * can still override the room manually; the override resets when the size
+ * changes.
  */
+
+type FurnKind = "counter" | "console" | "sofa" | "sectional";
 
 type Room = {
   key: string;
   label: string;
   realW: number; // inches of wall shown, horizontally
   realH: number; // inches shown, vertically
-  wall: string; // CSS background for the wall
-  floor: string; // CSS background for the floor band
-  floorIn: number; // height of the floor band, in inches
+  wall: string;
+  floor: string;
+  floorIn: number;
   artFromFloor: number; // inches from floor to the CENTER of the artwork
-  ref: { kind: "sofa" | "console" | "bench"; wIn: number; hIn: number; tint: string };
+  ref: { kind: FurnKind; wIn: number; hIn: number; noun: string; tint: string };
 };
 
 const ROOMS: Room[] = [
   {
-    key: "living",
-    label: "Living room",
-    realW: 156,
-    realH: 100,
-    wall: "radial-gradient(120% 90% at 50% 18%, #under, #shade), linear-gradient(180deg, #e9e2d4, #d8cfbd)"
-      .replace("#under", "rgba(255,250,240,0.55)")
-      .replace("#shade", "rgba(120,108,90,0.18)"),
-    floor: "linear-gradient(180deg, #b08a5e, #8a6a44)",
-    floorIn: 15,
-    artFromFloor: 62,
-    ref: { kind: "sofa", wIn: 84, hIn: 31, tint: "#6f7a72" },
+    key: "kitchen",
+    label: "Kitchen",
+    realW: 104,
+    realH: 92,
+    wall: "radial-gradient(120% 90% at 50% 16%, rgba(255,250,242,0.55), rgba(120,108,90,0.16)), linear-gradient(180deg, #e7ded0, #d6ccb9)",
+    floor: "linear-gradient(180deg, #9a7e57, #7c6242)",
+    floorIn: 6,
+    artFromFloor: 66,
+    ref: { kind: "counter", wIn: 84, hIn: 36, noun: "counter", tint: "#3b3631" },
   },
   {
     key: "hall",
@@ -48,20 +52,41 @@ const ROOMS: Room[] = [
     floor: "linear-gradient(180deg, #4d4540, #36302c)",
     floorIn: 12,
     artFromFloor: 64,
-    ref: { kind: "console", wIn: 48, hIn: 31, tint: "#2c2723" },
+    ref: { kind: "console", wIn: 48, hIn: 31, noun: "console", tint: "#2c2723" },
   },
   {
-    key: "gallery",
-    label: "Gallery",
-    realW: 170,
-    realH: 108,
-    wall: "radial-gradient(110% 85% at 50% 16%, rgba(255,255,255,0.7), rgba(200,198,193,0.25)), linear-gradient(180deg, #f1efea, #e3e0d9)",
-    floor: "linear-gradient(180deg, #cfcabf, #b7b1a4)",
+    key: "living",
+    label: "Living room",
+    realW: 156,
+    realH: 100,
+    wall: "radial-gradient(120% 90% at 50% 18%, rgba(255,250,240,0.55), rgba(120,108,90,0.18)), linear-gradient(180deg, #e9e2d4, #d8cfbd)",
+    floor: "linear-gradient(180deg, #b08a5e, #8a6a44)",
+    floorIn: 15,
+    artFromFloor: 62,
+    ref: { kind: "sofa", wIn: 84, hIn: 31, noun: "sofa", tint: "#6f7a72" },
+  },
+  {
+    key: "den",
+    label: "Den",
+    realW: 204,
+    realH: 114,
+    wall: "radial-gradient(120% 90% at 50% 16%, rgba(255,247,235,0.5), rgba(60,50,40,0.28)), linear-gradient(180deg, #b9ad99, #9c8f78)",
+    floor: "linear-gradient(180deg, #7c5c3c, #5d442c)",
     floorIn: 16,
-    artFromFloor: 60,
-    ref: { kind: "bench", wIn: 56, hIn: 17, tint: "#3a352f" },
+    artFromFloor: 64,
+    ref: { kind: "sectional", wIn: 112, hIn: 32, noun: "sectional", tint: "#54504a" },
   },
 ];
+
+/** Default room for a given print size — small prints in intimate spaces,
+ *  large prints in big ones. Keyed off the longest edge in inches. */
+function suggestedRoomKey(wIn: number, hIn: number): string {
+  const longest = Math.max(wIn, hIn);
+  if (longest <= 10) return "kitchen";
+  if (longest <= 12) return "hall";
+  if (longest <= 24) return "living";
+  return "den";
+}
 
 type Frame = {
   key: string;
@@ -81,7 +106,7 @@ const FRAMES: Frame[] = [
 
 function Furniture({ room, u }: { room: Room; u: number }) {
   const { ref } = room;
-  const common: React.CSSProperties = {
+  const style: React.CSSProperties = {
     position: "absolute",
     left: "50%",
     transform: "translateX(-50%)",
@@ -91,7 +116,7 @@ function Furniture({ room, u }: { room: Room; u: number }) {
     "--tint": ref.tint,
   } as React.CSSProperties;
 
-  return <div className={`rp-furn rp-furn--${ref.kind}`} style={common} aria-hidden="true" />;
+  return <div className={`rp-furn rp-furn--${ref.kind}`} style={style} aria-hidden="true" />;
 }
 
 export function RoomPreview({
@@ -105,10 +130,16 @@ export function RoomPreview({
   wIn: number;
   hIn: number;
 }) {
-  const [roomKey, setRoomKey] = useState(ROOMS[0].key);
+  // Manual room choice is remembered only for the size it was made on, so the
+  // room snaps back to the size-appropriate suggestion when the size changes.
+  const sizeKey = `${wIn}x${hIn}`;
+  const suggested = suggestedRoomKey(wIn, hIn);
+  const [override, setOverride] = useState<{ sizeKey: string; roomKey: string } | null>(null);
+  const roomKey = override && override.sizeKey === sizeKey ? override.roomKey : suggested;
+
   const [frameKey, setFrameKey] = useState(FRAMES[0].key);
 
-  const room = ROOMS.find((r) => r.key === roomKey) ?? ROOMS[0];
+  const room = ROOMS.find((r) => r.key === roomKey) ?? ROOMS[2];
   const frame = FRAMES.find((f) => f.key === frameKey) ?? FRAMES[0];
   const u = 100 / room.realW; // cqw per inch
 
@@ -125,17 +156,17 @@ export function RoomPreview({
           background: room.wall,
         }}
       >
-        {/* floor band */}
         <div
           className="rp-floor"
           style={{ height: `${room.floorIn * u}cqw`, background: room.floor }}
         />
-        {/* baseboard line where wall meets floor */}
-        <div className="rp-baseboard" style={{ bottom: `${room.floorIn * u}cqw`, height: `${4 * u}cqw` }} />
+        <div
+          className="rp-baseboard"
+          style={{ bottom: `${room.floorIn * u}cqw`, height: `${4 * u}cqw` }}
+        />
 
         <Furniture room={room} u={u} />
 
-        {/* the print, centered on the wall above the reference object */}
         <div
           className="rp-art"
           style={{
@@ -169,10 +200,11 @@ export function RoomPreview({
               key={r.key}
               type="button"
               className={`rp-chip ${r.key === roomKey ? "is-active" : ""}`}
-              onClick={() => setRoomKey(r.key)}
+              onClick={() => setOverride({ sizeKey, roomKey: r.key })}
               aria-pressed={r.key === roomKey}
             >
               {r.label}
+              {r.key === suggested && <span className="rp-chip-fit"> · fits</span>}
             </button>
           ))}
         </div>
@@ -200,7 +232,7 @@ export function RoomPreview({
           ))}
         </div>
         <p className="rp-scalenote">
-          Shown to scale beside an {room.ref.wIn}″ {room.ref.kind}.
+          To scale in a {room.label.toLowerCase()}, beside a {room.ref.wIn}″ {room.ref.noun}.
         </p>
       </div>
     </div>

@@ -3630,7 +3630,8 @@ select.add-input option { background: #111; }
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
   opacity: 0.97;
 }
-.rp-furn--sofa {
+.rp-furn--sofa,
+.rp-furn--sectional {
   border-radius: 10px 10px 5px 5px;
   background:
     linear-gradient(180deg,
@@ -3638,7 +3639,9 @@ select.add-input option { background: #111; }
       var(--tint) 30%);
 }
 .rp-furn--sofa::before,
-.rp-furn--sofa::after {
+.rp-furn--sofa::after,
+.rp-furn--sectional::before,
+.rp-furn--sectional::after {
   content: "";
   position: absolute;
   bottom: -7px;
@@ -3646,8 +3649,10 @@ select.add-input option { background: #111; }
   height: 7px;
   background: rgba(0, 0, 0, 0.5);
 }
-.rp-furn--sofa::before { left: 9%; }
-.rp-furn--sofa::after { right: 9%; }
+.rp-furn--sofa::before,
+.rp-furn--sectional::before { left: 9%; }
+.rp-furn--sofa::after,
+.rp-furn--sectional::after { right: 9%; }
 .rp-furn--console {
   background: transparent;
   box-shadow: none;
@@ -3664,22 +3669,15 @@ select.add-input option { background: #111; }
 }
 .rp-furn--console::before { left: 8%; }
 .rp-furn--console::after { right: 8%; }
-.rp-furn--bench {
-  border-radius: 3px;
+/* Kitchen base cabinets with a lighter countertop slab on top. */
+.rp-furn--counter {
+  border-radius: 2px 2px 0 0;
   background:
-    linear-gradient(180deg, var(--tint) 0 45%, transparent 45%);
+    linear-gradient(180deg,
+      #d8d3ca 0 10%,
+      color-mix(in srgb, var(--tint) 88%, #fff) 10% 13%,
+      var(--tint) 13%);
 }
-.rp-furn--bench::before,
-.rp-furn--bench::after {
-  content: "";
-  position: absolute;
-  top: 45%;
-  bottom: 0;
-  width: 5px;
-  background: var(--tint);
-}
-.rp-furn--bench::before { left: 12%; }
-.rp-furn--bench::after { right: 12%; }
 
 /* The framed print on the wall. */
 .rp-art {
@@ -3712,6 +3710,7 @@ select.add-input option { background: #111; }
 }
 .rp-chip:hover { color: var(--bone-95); border-color: var(--bone-70); }
 .rp-chip.is-active { color: var(--gold); border-color: var(--gold); }
+.rp-chip-fit { color: var(--gold); opacity: 0.85; }
 .rp-swatch {
   display: inline-flex;
   align-items: center;
