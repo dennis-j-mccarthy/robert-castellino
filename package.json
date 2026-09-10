@@ -14,6 +14,7 @@
     "admin:hash-password": "node -e \"console.log(require('bcryptjs').hashSync(process.argv[1], 10))\""
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.124.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@vercel/blob": "^2.4.0",

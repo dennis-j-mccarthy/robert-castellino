@@ -20,8 +20,29 @@ export default function AddClient({ collections }: { collections: CollectionOpti
   const [order, setOrder] = useState<number>(() => collections[0]?.nextOrder ?? 0);
   const [state, setState] = useState<State>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [aiBusy, setAiBusy] = useState(false);
 
   const busy = state === "uploading" || state === "saving";
+
+  async function handleAiAssist() {
+    if (!imgUrl) { setErrorMsg("Add a photo first."); return; }
+    setAiBusy(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/admin/ai-caption", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: imgUrl, title: title.trim(), loc: loc.trim() }),
+      });
+      const data = await res.json() as { caption?: string; error?: string };
+      if (!res.ok) { setErrorMsg(data.error ?? "AI assist failed."); return; }
+      if (data.caption) setBlurb(data.caption);
+    } catch {
+      setErrorMsg("Network error during AI assist.");
+    } finally {
+      setAiBusy(false);
+    }
+  }
 
   function handleCollectionChange(id: string) {
     setCollectionId(id);
@@ -158,13 +179,23 @@ export default function AddClient({ collections }: { collections: CollectionOpti
         </label>
 
         <label className="add-field">
-          <span className="add-label">Caption <span className="add-label__hint">optional</span></span>
+          <span className="add-label add-label--row">
+            <span>Caption <span className="add-label__hint">optional</span></span>
+            <button
+              type="button"
+              className="add-ai"
+              onClick={handleAiAssist}
+              disabled={busy || aiBusy || !imgUrl}
+            >
+              {aiBusy ? "Writing…" : "✨ AI assist"}
+            </button>
+          </span>
           <textarea
             className="add-input add-input--textarea"
             placeholder="A short note about this image…"
             value={blurb}
             onChange={e => setBlurb(e.target.value)}
-            disabled={busy}
+            disabled={busy || aiBusy}
             rows={3}
           />
         </label>
