@@ -1,21 +1,21 @@
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { getSession } from "@/lib/auth";
-import { isS3Configured, uploadImage } from "@/lib/s3";
+import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
-const MAX_BYTES = 20 * 1024 * 1024; // 20 MB
+const ALLOWED = /\.(jpe?g|png|webp|heic|heif|gif|tiff?)$/i;
+const MAX_BYTES = 25 * 1024 * 1024; // 25 MB in; resized down before storage
 
 export async function POST(req: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  if (!isS3Configured()) {
+  if (!isDatabaseConfigured()) {
     return NextResponse.json(
-      { error: "Image storage not configured. Set S3_BUCKET, AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY." },
+      { error: "Database not configured. Add DATABASE_URL to store images." },
       { status: 503 },
     );
   }
@@ -31,30 +31,29 @@ export async function POST(req: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
-
-  if (!ALLOWED_TYPES.includes(file.type) && !file.name.match(/\.(jpe?g|png|webp|heic|heif)$/i)) {
-    return NextResponse.json({ error: "Only JPEG, PNG, WebP, and HEIC images are accepted." }, { status: 415 });
+  if (!file.type.startsWith("image/") && !ALLOWED.test(file.name)) {
+    return NextResponse.json({ error: "That doesn't look like an image." }, { status: 415 });
   }
-
   if (file.size > MAX_BYTES) {
-    return NextResponse.json({ error: "File too large (max 20 MB)." }, { status: 413 });
+    return NextResponse.json({ error: "Image too large (max 25 MB)." }, { status: 413 });
   }
-
-  // Sanitise filename and put it in a gallery subfolder.
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-  const safe = file.name
-    .replace(/\.[^.]+$/, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .slice(0, 60);
-  const key = `gallery/${Date.now()}-${safe}.${ext}`;
 
   try {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const url = await uploadImage(key, buffer, file.type || "image/jpeg");
-    return NextResponse.json({ url });
+    const input = Buffer.from(await file.arrayBuffer());
+    // .rotate() bakes in EXIF orientation (phone photos); resize + compress
+    // so the DB row stays small. 2600px long edge keeps prints crisp on screen.
+    const { data, info } = await sharp(input)
+      .rotate()
+      .resize({ width: 2600, height: 2600, fit: "inside", withoutEnlargement: true })
+      .jpeg({ quality: 84, mozjpeg: true })
+      .toBuffer({ resolveWithObject: true });
+
+    const rec = await prisma.image.create({
+      data: { data, contentType: "image/jpeg", width: info.width, height: info.height },
+    });
+    return NextResponse.json({ url: `/api/images/${rec.id}` });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Upload failed";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    const msg = err instanceof Error ? err.message : "Could not process the image.";
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
 }

@@ -13,6 +13,17 @@ datasource db {
   provider = "postgresql"
 }
 
+// Uploaded images live in the DB (bytea) — no external storage service.
+// Served publicly from /api/images/[id]; the URL is saved on Musing.img / Photo.img.
+model Image {
+  id          String   @id @default(cuid())
+  data        Bytes
+  contentType String
+  width       Int?
+  height      Int?
+  createdAt   DateTime @default(now())
+}
+
 // ───────── MUSINGS ─────────
 enum MusingCategory {
   reflections
