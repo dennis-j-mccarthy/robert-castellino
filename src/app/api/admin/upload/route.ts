@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 import { getSession } from "@/lib/auth";
+import { isS3Configured, uploadImage } from "@/lib/s3";
 
 export const runtime = "nodejs";
 
@@ -13,9 +13,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!isS3Configured()) {
     return NextResponse.json(
-      { error: "Blob storage not configured. Add it in Vercel dashboard → Storage → Blob." },
+      { error: "Image storage not configured. Set S3_BUCKET, AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY." },
       { status: 503 },
     );
   }
@@ -40,21 +40,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "File too large (max 20 MB)." }, { status: 413 });
   }
 
-  // Sanitise filename and put it in a gallery subfolder
+  // Sanitise filename and put it in a gallery subfolder.
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const safe = file.name
     .replace(/\.[^.]+$/, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .slice(0, 60);
-  const pathname = `gallery/${Date.now()}-${safe}.${ext}`;
+  const key = `gallery/${Date.now()}-${safe}.${ext}`;
 
   try {
-    const blob = await put(pathname, file, {
-      access: "public",
-      contentType: file.type || "image/jpeg",
-    });
-    return NextResponse.json({ url: blob.url });
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const url = await uploadImage(key, buffer, file.type || "image/jpeg");
+    return NextResponse.json({ url });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Upload failed";
     return NextResponse.json({ error: msg }, { status: 500 });
