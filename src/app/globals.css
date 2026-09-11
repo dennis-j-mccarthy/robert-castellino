@@ -3703,3 +3703,7 @@ select.add-input option { background: #111; }
   color: var(--bone-70);
   opacity: 0.8;
 }
+
+/* AI-assist buttons in the musings editor */
+.admin-btn--ai { border-color: var(--gold); color: var(--gold); font-weight: 600; }
+.admin-btn--ai:hover:not(:disabled) { background: rgba(200,169,106,0.12); }

@@ -324,6 +324,42 @@ function MusingForm({ form, setField, isCreate: _isCreate, busy, onSubmit, onCan
     }
   }
 
+  const [aiBusy, setAiBusy] = useState<"" | "expand" | "meta">("");
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  async function aiExpand() {
+    if (!form.body.trim()) { setAiError("Type a few notes in the body first."); return; }
+    setAiBusy("expand"); setAiError(null);
+    try {
+      const res = await fetch("/api/admin/ai-musing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "expand", notes: form.body, title: form.title, loc: form.loc }),
+      });
+      const data = await res.json() as { text?: string; error?: string };
+      if (!res.ok) { setAiError(data.error ?? "AI assist failed."); return; }
+      if (data.text) setField("body", data.text);
+    } catch { setAiError("Network error during AI assist."); }
+    finally { setAiBusy(""); }
+  }
+
+  async function aiSuggest() {
+    if (!form.body.trim()) { setAiError("Write the musing body first."); return; }
+    setAiBusy("meta"); setAiError(null);
+    try {
+      const res = await fetch("/api/admin/ai-musing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "meta", body: form.body, title: form.title }),
+      });
+      const data = await res.json() as { title?: string; excerpt?: string; error?: string };
+      if (!res.ok) { setAiError(data.error ?? "Suggestion failed."); return; }
+      if (data.excerpt) setField("excerpt", data.excerpt);
+      if (data.title && !form.title.trim()) setField("title", data.title);
+    } catch { setAiError("Network error."); }
+    finally { setAiBusy(""); }
+  }
+
   return (
     <div>
       <div className="admin-form__grid">
@@ -415,7 +451,18 @@ function MusingForm({ form, setField, isCreate: _isCreate, busy, onSubmit, onCan
       </div>
 
       <label className="admin-form__field admin-form__field--full">
-        <span className="admin-form__label">Excerpt</span>
+        <span className="admin-form__label">
+          Excerpt
+          <button
+            type="button"
+            className="admin-btn admin-btn--ai"
+            style={{ marginLeft: 10 }}
+            onClick={aiSuggest}
+            disabled={busy || !!aiBusy || !form.body.trim()}
+          >
+            {aiBusy === "meta" ? "Thinking…" : "✨ Suggest excerpt + title"}
+          </button>
+        </span>
         <textarea
           className="admin-form__textarea admin-form__textarea--sm"
           value={form.excerpt}
@@ -427,6 +474,15 @@ function MusingForm({ form, setField, isCreate: _isCreate, busy, onSubmit, onCan
       <label className="admin-form__field admin-form__field--full">
         <span className="admin-form__label">
           Body <span className="admin-form__hint">(separate paragraphs with a blank line)</span>
+          <button
+            type="button"
+            className="admin-btn admin-btn--ai"
+            style={{ marginLeft: 10 }}
+            onClick={aiExpand}
+            disabled={busy || !!aiBusy || !form.body.trim()}
+          >
+            {aiBusy === "expand" ? "Writing…" : "✨ AI assist — expand my notes"}
+          </button>
         </span>
         <textarea
           className="admin-form__textarea"
@@ -435,6 +491,8 @@ function MusingForm({ form, setField, isCreate: _isCreate, busy, onSubmit, onCan
           required
         />
       </label>
+
+      {aiError && <p className="admin-form__error" role="alert">{aiError}</p>}
 
       <div className="admin-form__actions">
         <button className="btn btn--gold" onClick={onSubmit} disabled={busy} aria-busy={busy}>
