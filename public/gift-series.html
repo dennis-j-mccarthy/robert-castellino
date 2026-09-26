@@ -68,6 +68,10 @@
   .more{margin-left:auto;color:#3a413c;font-weight:700;letter-spacing:1px;}
   .shot{position:relative;background:#0c110e;}
   .shot img{width:100%;display:block;}
+  /* channel-accurate aspect ratios (square plates cropped to fit) */
+  .shot.ar-ig img{aspect-ratio:4/5;object-fit:cover;object-position:center;}
+  .shot.ar-fb img{aspect-ratio:1.91/1;object-fit:cover;object-position:center;}
+  .shot.ar-pin img{aspect-ratio:2/3;object-fit:cover;object-position:center;}
   .scrim{position:absolute;left:0;right:0;bottom:0;padding:78px 20px 20px;background:linear-gradient(0deg,rgba(8,14,10,.86),rgba(8,14,10,.14) 66%,transparent);}
   .ov-h{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.04;letter-spacing:-.01em;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.55);text-wrap:balance;max-width:15ch;}
   .ig-acts{padding:11px 15px 3px;font-size:20px;letter-spacing:4px;color:#262626;}
@@ -86,6 +90,7 @@
   .pin-desc{padding:2px 16px 8px;font-size:14px;line-height:1.55;color:#3a433c;}
   .em-hero{position:relative;}
   .em-hero img{width:100%;display:block;}
+  .em-hero.ar-em img{aspect-ratio:2/1;object-fit:cover;object-position:center;}
   .em-body{padding:16px 18px 20px;}
   .em-pre{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#8a938b;margin:0 0 8px;}
   .em-sub{font-family:var(--serif);font-weight:600;font-size:1.3rem;color:#161b17;line-height:1.15;margin:0 0 10px;}
@@ -125,14 +130,14 @@
   <main>
     <section class="slot"><div class="slot__meta"><span class="seq">01</span><span class="plat">Instagram · feed</span><span class="angle">Fri Nov 28 · the centerpiece</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Maroon Lake, Colorado</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/maroon-peaks.jpg" alt="Maroon Peaks over Maroon Lake"><div class="scrim"><div class="ov-h">Give someone Colorado this Christmas.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/maroon-peaks.jpg" alt="Maroon Peaks over Maroon Lake"><div class="scrim"><div class="ov-h">Give someone Colorado this Christmas.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,842 likes</div>
         <div class="cap"><b>robertcastellino</b> Fifty years of mountains, rivers, and the long Colorado sky — drawn into one 168-page monograph. The kind of book you set on the coffee table and never put away. Signed copies 15% off through Dec 19. 🏔️</div>
         <div class="tags">#Colorado #ColoradoPhotography #MaroonBells #CoffeeTableBook #ChristmasGift #RockyMountains</div><div class="time">2 hours ago</div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Maroon Peaks over Maroon Lake, near Aspen</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">02</span><span class="plat">Email · newsletter</span><span class="angle">Mon Dec 1 · season kickoff</span></div>
-      <div class="card"><div class="em-hero"><img src="/gift-series/cranes-montevista.jpg" alt="Sandhill cranes at golden hour, Monte Vista"><div class="scrim"><div class="ov-h">A gift as big as the state.</div></div></div>
+      <div class="card"><div class="em-hero ar-em"><img src="/gift-series/cranes-montevista.jpg" alt="Sandhill cranes at golden hour, Monte Vista"><div class="scrim"><div class="ov-h">A gift as big as the state.</div></div></div>
         <div class="em-body"><p class="em-pre">Preview: The Colorado gift that lasts longer than the season.</p>
           <h3 class="em-sub">A gift as big as the state.</h3>
           <p class="em-p">The holidays are here, and there's one gift I keep coming back to for the Coloradan in your life: the book. <em>Colorado: Life &amp; Light on the Land</em> gathers half a century of the state into one volume — peaks, rivers, wildlife, and the light that only shows up here.</p>
@@ -143,27 +148,27 @@
     <section class="slot"><div class="slot__meta"><span class="seq">03</span><span class="plat">Facebook · page</span><span class="angle">Wed Dec 3 · why this book</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">Robert Castellino Photography<small>3h · 🌐</small></div><span class="more">•••</span></div>
         <div class="fb-text">Half a century of light, in one volume. This is the career retrospective — 124 plates, from a sunrise at Deerlodge Park to peaks lit for less than a minute. Hand-bound, smyth-sewn, printed on archival matte. Give the Coloradan in your life the whole state at once — 15% off signed copies through Dec 19, shipped from the Boulder studio within three days.</div>
-        <div class="shot"><img src="/gift-series/hallett-dreamlake.jpg" alt="Hallett Peak over Dream Lake"><div class="scrim"><div class="ov-h">Fifty years, one volume.</div></div></div>
+        <div class="shot ar-fb"><img src="/gift-series/hallett-dreamlake.jpg" alt="Hallett Peak over Dream Lake"><div class="scrim"><div class="ov-h">Fifty years, one volume.</div></div></div>
         <div class="fb-counts">👍 ❤️ 214 · 38 comments · 22 shares</div><div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Hallett Peak over Dream Lake, Rocky Mountain National Park</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">04</span><span class="plat">Instagram · feed</span><span class="angle">Fri Dec 5 · for the skier</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Brainard Lake, Colorado</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/skier-brainard.jpg" alt="Backcountry skier gliding toward snowy peaks"><div class="scrim"><div class="ov-h">For the one who lives for the first snow.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/skier-brainard.jpg" alt="Backcountry skier gliding toward snowy peaks"><div class="scrim"><div class="ov-h">For the one who lives for the first snow.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,332 likes</div>
         <div class="cap"><b>robertcastellino</b> Skinning toward the peaks at Brainard, the whole valley to yourself. Winter is its own chapter in the book. A gift for the skier who'd rather be up high than anywhere else. 15% off signed copies thru Dec 19. ❄️</div>
         <div class="tags">#Colorado #BackcountrySkiing #Skiing #WinterInColorado #GiftsForHer #ChristmasGift #IndianPeaks</div><div class="time">3 hours ago</div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Backcountry Skier, Brainard Lake</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">05</span><span class="plat">Pinterest · pin</span><span class="angle">Sat Dec 6 · for the transplant</span></div>
-      <div class="card"><div class="shot"><img src="/gift-series/aspen-durango.jpg" alt="Golden aspen grove near Durango"><div class="scrim"><div class="ov-h">Home, on the coffee table.</div></div></div>
+      <div class="card"><div class="shot ar-pin"><img src="/gift-series/aspen-durango.jpg" alt="Golden aspen grove near Durango"><div class="scrim"><div class="ov-h">Home, on the coffee table.</div></div></div>
         <div class="pin-title">The gift for anyone who left Colorado behind</div>
         <div class="pin-desc">Aspen groves near Durango, columbine in Yankee Boy Basin, the Grand Mesa going blue at afternoon — home, gathered into one book for the friend or parent who moved away. Signed copies 15% off through Dec 19. #Colorado #Homesick #AspenTrees #GiftGuide</div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Aspen Grove near Cascade Village, Durango</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">06</span><span class="plat">Instagram · feed</span><span class="angle">Mon Dec 8 · for the adventurer</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Arkansas River, Colorado</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/kayak-numbers.jpg" alt="Kayaker in whitewater spray"><div class="scrim"><div class="ov-h">For the one who's happiest above treeline.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/kayak-numbers.jpg" alt="Kayaker in whitewater spray"><div class="scrim"><div class="ov-h">For the one who's happiest above treeline.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,109 likes</div>
         <div class="cap"><b>robertcastellino</b> Kayaking the Numbers. Skiers cutting the San Juans. Figure-eights under the Flatirons. The book carries the wild, moving side of Colorado too — the perfect gift for the person who never quite comes down off the mountain. 15% off thru Dec 19.</div>
         <div class="tags">#Colorado #Whitewater #ColoradoAdventure #ArkansasRiver #GiftsForHim #ChristmasGift</div><div class="time">5 hours ago</div></div>
@@ -171,7 +176,7 @@
 
     <section class="slot"><div class="slot__meta"><span class="seq">07</span><span class="plat">Instagram · feed</span><span class="angle">Tue Dec 9 · for the naturalist</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>San Luis Valley, Colorado</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/owl-sanluis.jpg" alt="Great horned owl perched on an old barn"><div class="scrim"><div class="ov-h">A quieter chapter of Colorado.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/owl-sanluis.jpg" alt="Great horned owl perched on an old barn"><div class="scrim"><div class="ov-h">A quieter chapter of Colorado.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">2,057 likes</div>
         <div class="cap"><b>robertcastellino</b> A great horned owl keeping watch over a San Luis barn. The wildlife plates are their own quiet chapter — cranes lifting off Monte Vista, elk in Moraine Park before the valley wakes. For the birder or wildlife-watcher on your list. 🦉 15% off thru Dec 19.</div>
         <div class="tags">#Colorado #Wildlife #WildlifePhotography #GreatHornedOwl #SanLuisValley #ChristmasGift</div><div class="time">6 hours ago</div></div>
@@ -180,19 +185,19 @@
     <section class="slot"><div class="slot__meta"><span class="seq">08</span><span class="plat">Facebook · page</span><span class="angle">Thu Dec 11 · the hard-to-shop-for</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">Robert Castellino Photography<small>2h · 🌐</small></div><span class="more">•••</span></div>
         <div class="fb-text">For the one who says he doesn't want anything. Every family has him — the dad, the grandfather, the friend who's impossible to shop for. This is the gift he'll actually keep out: a herd of elk in Moraine Park at first light, and 123 more plates of the Colorado he loves. Signed, 15% off with code COLORADO15 through Dec 19.</div>
-        <div class="shot"><img src="/gift-series/elk-moraine.jpg" alt="Elk herd in Moraine Park at dawn"><div class="scrim"><div class="ov-h">The gift he'll actually keep out.</div></div></div>
+        <div class="shot ar-fb"><img src="/gift-series/elk-moraine.jpg" alt="Elk herd in Moraine Park at dawn"><div class="scrim"><div class="ov-h">The gift he'll actually keep out.</div></div></div>
         <div class="fb-counts">👍 ❤️ 189 · 41 comments · 15 shares</div><div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Elk in Moraine Park, Rocky Mountain National Park</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">09</span><span class="plat">Pinterest · pin</span><span class="angle">Fri Dec 12 · a little summer</span></div>
-      <div class="card"><div class="shot"><img src="/gift-series/columbine-yankeeboy.jpg" alt="Colorado columbine wildflowers"><div class="scrim"><div class="ov-h">A little summer, in December.</div></div></div>
+      <div class="card"><div class="shot ar-pin"><img src="/gift-series/columbine-yankeeboy.jpg" alt="Colorado columbine wildflowers"><div class="scrim"><div class="ov-h">A little summer, in December.</div></div></div>
         <div class="pin-title">Give a Colorado summer in the middle of winter</div>
         <div class="pin-desc">Columbine and sneezeweed in Yankee Boy Basin — the high-country bloom, pressed into a book you can open on the coldest day of the year. Signed copies of <em>Life &amp; Light on the Land</em>, 15% off through Dec 19. #Colorado #Wildflowers #Columbine #GiftGuide</div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Columbine and Sneezeweed, Yankee Boy Basin, near Ouray</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">10</span><span class="plat">Instagram · feed</span><span class="angle">Sat Dec 13 · the light</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Collegiate Range, Colorado</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/columbia-sunset.jpg" alt="Golden sunset over the Collegiate Range"><div class="scrim"><div class="ov-h">Colorado gets a light no one else gets.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/columbia-sunset.jpg" alt="Golden sunset over the Collegiate Range"><div class="scrim"><div class="ov-h">Colorado gets a light no one else gets.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">2,410 likes</div>
         <div class="cap"><b>robertcastellino</b> Sunset over Columbia Peak. Fifty years chasing this light taught me it never repeats — which is the whole reason to keep a book of it. The title isn't an accident: <em>Life &amp; Light on the Land.</em> 15% off signed copies thru Dec 19.</div>
         <div class="tags">#Colorado #GoldenHour #Sunset #CollegiatePeaks #LandscapePhotography #ChristmasGift</div><div class="time">2 hours ago</div></div>
@@ -200,7 +205,7 @@
 
     <section class="slot"><div class="slot__meta"><span class="seq">11</span><span class="plat">Instagram · feed</span><span class="angle">Mon Dec 15 · stillness</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Dinosaur National Monument</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/deerlodge-sunrise.jpg" alt="Cottonwoods at sunrise, Deerlodge Park"><div class="scrim"><div class="ov-h">First light, before anyone's awake.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/deerlodge-sunrise.jpg" alt="Cottonwoods at sunrise, Deerlodge Park"><div class="scrim"><div class="ov-h">First light, before anyone's awake.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,676 likes</div>
         <div class="cap"><b>robertcastellino</b> Sunrise at Deerlodge Park — the kind of quiet the book is really about. A gift for the person who could use more of it this year. Signed copies 15% off thru Dec 19.</div>
         <div class="tags">#Colorado #Sunrise #Cottonwoods #Dinosaur #QuietMornings #ChristmasGift #CoffeeTableBook</div><div class="time">4 hours ago</div></div>
@@ -209,19 +214,19 @@
     <section class="slot"><div class="slot__meta"><span class="seq">12</span><span class="plat">Facebook · page</span><span class="angle">Tue Dec 16 · signed &amp; personalized</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">Robert Castellino Photography<small>1h · 🌐</small></div><span class="more">•••</span></div>
         <div class="fb-text">Signed, personalized, and out the door in three days. I'll sign each copy and gladly personalize it to whoever's opening it Christmas morning — just leave a note at checkout. Ships from the Boulder studio within three business days; order by Dec 19 to arrive in time, and take 15% off signed copies with code COLORADO15.</div>
-        <div class="shot"><img src="/gift-series/lonepine-redmtn.jpg" alt="A lone pine in fresh snow, Red Mountain Pass"><div class="scrim"><div class="ov-h">Signed, just for them.</div></div></div>
+        <div class="shot ar-fb"><img src="/gift-series/lonepine-redmtn.jpg" alt="A lone pine in fresh snow, Red Mountain Pass"><div class="scrim"><div class="ov-h">Signed, just for them.</div></div></div>
         <div class="fb-counts">👍 ❤️ 176 · 24 comments · 11 shares</div><div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div></div>
       <div class="foot"><div class="credit"><b>Plate:</b> Lone Pine on Red Mountain Pass</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">13</span><span class="plat">Pinterest · pin</span><span class="angle">Wed Dec 17 · styling</span></div>
-      <div class="card"><div class="shot"><img src="/gift-series/cover-sunrise.jpg" alt="Longs Peak at dawn, photographer's silhouette"><div class="scrim"><div class="ov-h">The book that anchors the room.</div></div></div>
+      <div class="card"><div class="shot ar-pin"><img src="/assets/book-table.png" alt="Colorado: Life & Light on the Land styled on a coffee table"><div class="scrim"><div class="ov-h">The book that anchors the room.</div></div></div>
         <div class="pin-title">The one coffee-table book you'll actually keep out</div>
         <div class="pin-desc">Eleven inches square, cloth-bound, and heavy in the way a good book should be. It sets the tone of a room and it's the first thing every guest picks up. <em>Colorado: Life &amp; Light on the Land</em> — signed copies 15% off through Dec 19. #CoffeeTableBook #HomeDecor #Colorado #GiftGuide</div></div>
-      <div class="foot"><div class="credit"><b>Plate:</b> Taking in the Sunrise — Moraine Park, RMNP</div><button class="copybtn" type="button">Copy caption</button></div></section>
+      <div class="foot"><div class="credit"><b>Image:</b> The book styled on a coffee table (studio lifestyle shot)</div><button class="copybtn" type="button">Copy caption</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">14</span><span class="plat">Instagram · feed</span><span class="angle">Thu Dec 18 · Colorado, the feeling</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Marshall, Colorado</small></div><span class="more">•••</span></div>
-        <div class="shot"><img src="/gift-series/ford-pickup.jpg" alt="A rusted vintage Ford pickup"><div class="scrim"><div class="ov-h">Not just the peaks.</div></div></div>
+        <div class="shot ar-ig"><img src="/gift-series/ford-pickup.jpg" alt="A rusted vintage Ford pickup"><div class="scrim"><div class="ov-h">Not just the peaks.</div></div></div>
         <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,918 likes</div>
         <div class="cap"><b>robertcastellino</b> Not only peaks. An old Ford going back to the earth in Marshall — the lived-in, weathered Colorado is in the book too. That's what makes it a gift for anyone who's ever loved this place. 15% off signed copies thru Dec 19.</div>
         <div class="tags">#Colorado #Americana #VintageTruck #ColoradoLife #ChristmasGift #FineArtPhotography</div><div class="time">1 hour ago</div></div>
@@ -236,7 +241,7 @@
       <div class="foot"><div class="credit"><b>Plates:</b> Molas Pass · Hanging Lake · Lake Isabelle · add a countdown sticker to Dec 19 + a Link sticker → /book</div><button class="copybtn" type="button">Copy frames</button></div></section>
 
     <section class="slot"><div class="slot__meta"><span class="seq">16</span><span class="plat">Email · newsletter</span><span class="angle">Fri Dec 19 · last call</span></div>
-      <div class="card"><div class="em-hero"><img src="/gift-series/grandmesa-aspen.jpg" alt="Snow-covered aspens on the Grand Mesa"><div class="scrim"><div class="ov-h">Last call before Christmas.</div></div></div>
+      <div class="card"><div class="em-hero ar-em"><img src="/gift-series/grandmesa-aspen.jpg" alt="Snow-covered aspens on the Grand Mesa"><div class="scrim"><div class="ov-h">Last call before Christmas.</div></div></div>
         <div class="em-body"><p class="em-pre">Preview: Fifty years of Colorado, in one book — 15% off signed, today only.</p>
           <h3 class="em-sub">The gift that stays on the coffee table.</h3>
           <p class="em-p">Today's the last day to order <em>Colorado: Life &amp; Light on the Land</em> in time for Christmas. Fifty years of the state — mountains, rivers, wildlife, and the light that only shows up here — in one 168-page volume.</p>
