@@ -117,8 +117,8 @@
   @media (prefers-color-scheme:dark){.copybtn{color:#0e1512}}
   .copybtn:hover{background:var(--pine-2)}
   .copybtn.ok{background:var(--accent)}
-  .resetbtn{font-family:var(--sans);font-weight:600;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:9px;padding:8px 14px;cursor:pointer;}
-  .resetbtn:hover{color:var(--ink);border-color:var(--muted)}
+  .resetbtn,.swapbtn{font-family:var(--sans);font-weight:600;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:9px;padding:8px 14px;cursor:pointer;}
+  .resetbtn:hover,.swapbtn:hover{color:var(--ink);border-color:var(--muted)}
   .editflag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:999px;padding:2px 8px;}
   [contenteditable="true"]{border-radius:6px;outline:none;cursor:text;box-shadow:inset 0 0 0 1px rgba(176,107,43,.45);}
   [contenteditable="true"]:hover{box-shadow:inset 0 0 0 1.5px rgba(176,107,43,.8);}
@@ -139,7 +139,7 @@
       <div class="offer__deal">Book sale: <b>15% off signed copies</b>, through Dec&nbsp;19.</div>
       <div class="offer__meta"><span>code <code>COLORADO15</code></span><span>$75 · signed $85</span><span><a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a></span></div>
     </div>
-    <p class="note"><b>These ads are editable.</b> Click the gold-outlined headline, caption, hashtags, or email line and type. Your changes stay in this browser. Copy uses the edited text. Reset puts that one ad back. The offer code is a placeholder — swap in the real one before launch.</p>
+    <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> replaces that ad’s photo with a file from your computer. Copy grabs the words. Then paste them into Instagram, Facebook, Pinterest, or the email, and upload the same photo there. Reset puts that one ad back. Changes stay in this browser. The offer code is a placeholder — swap in the real one before you post.</p>
   </header>
 
   <main>
@@ -597,7 +597,34 @@
       flag.textContent="Editable";
       meta.appendChild(flag);
     }
+    var pics=slot.querySelectorAll(".shot > img, .em-hero > img");
+    pics.forEach(function(img){ if(!img._origSrc) img._origSrc=img.getAttribute("src"); });
+    try{
+      var kept=localStorage.getItem("rc-gift-img-"+id);
+      if(kept) pics.forEach(function(img){ img.src=kept; });
+    }catch(e){}
     var foot=slot.querySelector(".foot");
+    if(foot && pics.length && !foot.querySelector(".swapbtn")){
+      var sb=document.createElement("button");
+      sb.type="button"; sb.className="swapbtn"; sb.textContent="Swap image";
+      var picker=document.createElement("input");
+      picker.type="file"; picker.accept="image/*"; picker.hidden=true;
+      sb.addEventListener("click",function(){ picker.click(); });
+      picker.addEventListener("change",function(){
+        var file=picker.files&&picker.files[0];
+        if(!file) return;
+        var reader=new FileReader();
+        reader.onload=function(){
+          var url=reader.result;
+          pics.forEach(function(img){ img.src=url; });
+          try{ localStorage.setItem("rc-gift-img-"+id, url); }catch(err){}
+        };
+        reader.readAsDataURL(file);
+        picker.value="";
+      });
+      foot.appendChild(sb);
+      foot.appendChild(picker);
+    }
     if(foot && !foot.querySelector(".resetbtn")){
       var rb=document.createElement("button");
       rb.type="button"; rb.className="resetbtn"; rb.textContent="Reset";
@@ -606,6 +633,8 @@
           el.innerHTML=el._orig;
           delete saved[el.dataset.edit];
         });
+        pics.forEach(function(img){ if(img._origSrc) img.src=img._origSrc; });
+        try{ localStorage.removeItem("rc-gift-img-"+id); }catch(e){}
         persist();
       });
       foot.appendChild(rb);
