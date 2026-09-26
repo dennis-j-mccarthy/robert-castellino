@@ -120,6 +120,17 @@
   .resetbtn,.swapbtn{font-family:var(--sans);font-weight:600;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:9px;padding:8px 14px;cursor:pointer;}
   .resetbtn:hover,.swapbtn:hover{color:var(--ink);border-color:var(--muted)}
   .editflag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:999px;padding:2px 8px;}
+  .lib{position:fixed;inset:0;z-index:40;background:rgba(10,16,12,.62);display:flex;align-items:flex-end;justify-content:center;padding:18px;}
+  .lib[hidden]{display:none;}
+  .lib__panel{background:var(--surface);color:var(--ink);width:min(960px,100%);max-height:min(78vh,820px);overflow:auto;border-radius:18px;padding:16px 16px 20px;box-shadow:var(--shadow);}
+  .lib__bar{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;}
+  .lib__bar h2{font-family:var(--serif);font-size:1.4rem;font-weight:560;margin:0;}
+  .lib__close{font:inherit;font-weight:600;border:1px solid var(--line);background:transparent;border-radius:9px;padding:7px 12px;cursor:pointer;}
+  .lib__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px;}
+  .lib__item{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px;cursor:pointer;text-align:left;color:inherit;}
+  .lib__item img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px;background:#ddd;}
+  .lib__item span{font-size:11px;line-height:1.3;color:var(--muted);}
+  .lib__item:hover,.lib__item:focus{border-color:var(--accent);outline:none;}
   [contenteditable="true"]{border-radius:6px;outline:none;cursor:text;box-shadow:inset 0 0 0 1px rgba(176,107,43,.45);}
   [contenteditable="true"]:hover{box-shadow:inset 0 0 0 1.5px rgba(176,107,43,.8);}
   [contenteditable="true"]:focus{background:rgba(176,107,43,.16);box-shadow:inset 0 0 0 2px var(--accent);}
@@ -139,7 +150,7 @@
       <div class="offer__deal">Book sale: <b>15% off signed copies</b>, through Dec&nbsp;19.</div>
       <div class="offer__meta"><span>code <code>COLORADO15</code></span><span>$75 · signed $85</span><span><a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a></span></div>
     </div>
-    <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> replaces that ad’s photo with a file from your computer. Copy grabs the words. Then paste them into Instagram, Facebook, Pinterest, or the email, and upload the same photo there. Reset puts that one ad back. Changes stay in this browser. The offer code is a placeholder — swap in the real one before you post.</p>
+    <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> opens the library — every photo used on these ads — and you pick one. Copy grabs the words. Then paste them into Instagram, Facebook, Pinterest, or the email, and upload that same photo. Reset puts that one ad back. Changes stay in this browser. The offer code is a placeholder — swap in the real one before you post.</p>
   </header>
 
   <main>
@@ -575,6 +586,46 @@
   try{saved=JSON.parse(localStorage.getItem(STORE)||"{}");}catch(e){saved={};}
   var fieldSel=".ov-h,.cap,.tags,.fb-text,.pin-title,.pin-desc,.em-pre,.em-sub,.em-p,.st,.angle";
   function persist(){try{localStorage.setItem(STORE,JSON.stringify(saved));}catch(e){}}
+
+  var lib=document.createElement("div");
+  lib.className="lib"; lib.hidden=true;
+  lib.innerHTML='<div class="lib__panel" role="dialog" aria-label="Image library"><div class="lib__bar"><h2>Library</h2><button type="button" class="lib__close">Close</button></div><div class="lib__grid"></div></div>';
+  document.body.appendChild(lib);
+  var libGrid=lib.querySelector(".lib__grid");
+  var libTarget=null;
+  function chooseLibraryImage(src){
+    if(!libTarget) return;
+    libTarget.src=src;
+    try{ localStorage.setItem(libTarget._imgKey, src); }catch(e){}
+    lib.hidden=true; libTarget=null;
+  }
+  function openLibrary(img){
+    libTarget=img; lib.hidden=false;
+  }
+  lib.querySelector(".lib__close").addEventListener("click",function(){ lib.hidden=true; libTarget=null; });
+  lib.addEventListener("click",function(ev){ if(ev.target===lib){ lib.hidden=true; libTarget=null; } });
+  function fillLibrary(items){
+    items.forEach(function(item){
+      var b=document.createElement("button");
+      b.type="button"; b.className="lib__item";
+      var im=document.createElement("img"); im.src=item.src; im.alt="";
+      var cap=document.createElement("span"); cap.textContent=item.name;
+      b.appendChild(im); b.appendChild(cap);
+      b.addEventListener("click",function(){ chooseLibraryImage(item.src); });
+      libGrid.appendChild(b);
+    });
+  }
+  fetch("/gift-series/library.json").then(function(r){ return r.json(); }).then(fillLibrary).catch(function(){
+    var seen={}, items=[];
+    document.querySelectorAll(".slot img").forEach(function(img){
+      var src=img._origSrc||img.getAttribute("src");
+      if(!src||seen[src]) return;
+      seen[src]=1;
+      items.push({src:src, name:img.alt||src.split("/").pop()});
+    });
+    fillLibrary(items);
+  });
+
   document.querySelectorAll(".slot").forEach(function(slot){
     var id=slot.querySelector(".seq").textContent;
     slot.querySelectorAll(fieldSel).forEach(function(el,fi){
@@ -597,33 +648,24 @@
       flag.textContent="Editable";
       meta.appendChild(flag);
     }
-    var pics=slot.querySelectorAll(".shot > img, .em-hero > img");
-    pics.forEach(function(img){ if(!img._origSrc) img._origSrc=img.getAttribute("src"); });
-    try{
-      var kept=localStorage.getItem("rc-gift-img-"+id);
-      if(kept) pics.forEach(function(img){ img.src=kept; });
-    }catch(e){}
+    var pics=slot.querySelectorAll(".shot > img, .em-hero > img, .story > img");
+    pics.forEach(function(img, pi){
+      if(!img._origSrc) img._origSrc=img.getAttribute("src");
+      img._imgKey="rc-gift-img-"+id+"-"+pi;
+      try{
+        var kept=localStorage.getItem(img._imgKey);
+        if(kept) img.src=kept;
+      }catch(e){}
+    });
     var foot=slot.querySelector(".foot");
     if(foot && pics.length && !foot.querySelector(".swapbtn")){
-      var sb=document.createElement("button");
-      sb.type="button"; sb.className="swapbtn"; sb.textContent="Swap image";
-      var picker=document.createElement("input");
-      picker.type="file"; picker.accept="image/*"; picker.hidden=true;
-      sb.addEventListener("click",function(){ picker.click(); });
-      picker.addEventListener("change",function(){
-        var file=picker.files&&picker.files[0];
-        if(!file) return;
-        var reader=new FileReader();
-        reader.onload=function(){
-          var url=reader.result;
-          pics.forEach(function(img){ img.src=url; });
-          try{ localStorage.setItem("rc-gift-img-"+id, url); }catch(err){}
-        };
-        reader.readAsDataURL(file);
-        picker.value="";
+      pics.forEach(function(img, pi){
+        var sb=document.createElement("button");
+        sb.type="button"; sb.className="swapbtn";
+        sb.textContent=pics.length>1 ? "Swap frame "+(pi+1) : "Swap image";
+        sb.addEventListener("click",function(){ openLibrary(img); });
+        foot.appendChild(sb);
       });
-      foot.appendChild(sb);
-      foot.appendChild(picker);
     }
     if(foot && !foot.querySelector(".resetbtn")){
       var rb=document.createElement("button");
@@ -633,8 +675,10 @@
           el.innerHTML=el._orig;
           delete saved[el.dataset.edit];
         });
-        pics.forEach(function(img){ if(img._origSrc) img.src=img._origSrc; });
-        try{ localStorage.removeItem("rc-gift-img-"+id); }catch(e){}
+        pics.forEach(function(img){
+          if(img._origSrc) img.src=img._origSrc;
+          try{ localStorage.removeItem(img._imgKey); }catch(e){}
+        });
         persist();
       });
       foot.appendChild(rb);
