@@ -8,7 +8,7 @@ A **Christmas-gifting social campaign** for Bob's book **_Colorado: Life & Light
 The deliverable is a **single self-contained public web page** the client (Bob) can open with no login:
 
 ### 🔗 LIVE: https://robertcastellino.com/gift-series.html
-- **18 ready-to-post posts** across Instagram, Facebook, Pinterest, Story, and Email.
+- **40 ready-to-post posts** across Instagram, Facebook, Pinterest, Story, Reel, TikTok, link ads, and Email. Each card is cropped to its channel (1:1, 4:5, 9:16, 1.91:1, 2:3, 2:1). These are on-page previews, not downloaded ad files.
 - Each post = a real "platform mockup" built on a real plate from the book, with a headline burned onto the image, editable caption + hashtags, a **Copy** button, and the plate credit.
 - Page is **unlisted** (`<meta name="robots" content="noindex,nofollow">`) — share by link only.
 - All point their CTA to **robertcastellino.com/book**.
@@ -22,11 +22,15 @@ The deliverable is a **single self-contained public web page** the client (Bob) 
 Edit `public/gift-series.html` (or images in `public/gift-series/`) → `git add/commit/push` to `main` → **Vercel auto-deploys (~90s)**. Verify by loading the live URL (CDN can lag 30–60s).
 
 ## The offer / CTA (⚠ PLACEHOLDER)
-Currently: **"15% off signed copies, code `COLORADO15`, through Dec 19."**
+Currently: **"15% off signed copies, code `COLORADO15`, through Dec 19."** Every image also carries the lockup "50 years in the field · Book sale, 15% off," and captions close with the sale plus his fifty years in the field.
 `COLORADO15` is a **placeholder** — the real promo code must replace it. It appears in the masthead offer strip, several captions, the email, and the footer. Global find/replace `COLORADO15`.
 
-## The 18 posts (order = suggested cadence; sequence auto-renumbers 01–18 in DOM order)
-1. IG — Maroon Bells reflection — "Give someone Colorado this Christmas."
+## The first 18 (order = suggested cadence; sequence auto-renumbers in DOM order)
+
+Posts 19–40 are extra cuts on the same page: Bob (only the portraits already on the site — hat, Flatirons, Jenny Lake, the about photo), the book, and lines including Rocky Mountain High, Dreaming of Colorado, Dreaming of the mountains?, and The mountains set your soul free. The other behind-the-scenes portraits in `public/assets` are not used. They are not the Bob photos on the site.
+
+## Original 18
+1. IG — Maroon Bells reflection — "Give the gift of Colorado."
 2. IG — **Bob portrait** (`/assets/portrait-hat.png`) — "Fifty years behind the lens." (meet the artist)
 3. FB — **Bob at Flatirons** (`/assets/behind-3.png`) — "The eye takes a lifetime to train." (behind the lens)
 4. Email — cranes (Monte Vista) — "A gift as big as the state." (season kickoff)
@@ -54,7 +58,7 @@ Currently: **"15% off signed copies, code `COLORADO15`, through Dec 19."**
    - **Best of all:** a real phone photo of the book on a table (none exists in the user's files — searched Downloads/Desktop/Pictures + 70 HEICs; Spotlight/mdfind is broken on the user's Mac). If one is taken, drop it in as `coffee-table.jpg`.
    - Real hi-res cover saved at `public/gift-series/book-cover-hi.jpg` (694×700) for reuse.
 2. **Real discount code** — replace `COLORADO15` everywhere.
-3. **Multi-format paid-social exports** (requested, NOT built). Export key creatives at: **1:1** (1080², FB/IG feed), **4:5** (1080×1350), **9:16** (1080×1920, Stories/Reels/TikTok), **1.91:1** (1200×628, link ads), **2:3** (1000×1500, Pinterest ads). Source plates are square (~1100px), so wide formats need center-crop or letterbox.
+3. **Multi-format paid-social exports** — the page now shows all 40 posts at the channel crop (1:1, 4:5, 9:16, 1.91:1, 2:3, 2:1). Flattened downloadable files at 1080² / 1080×1350 / 1080×1920 / 1200×628 / 1000×1500 are still not built.
 4. **Higher-res plate scans available:** `~/Downloads/CO Life and Light Pages (N).jpg` (~26 files) may be sharper than the PDF extracts — good for paid social.
 
 ## 10 campaign themes brainstormed (for more posts) — 📷 = feature Bob's photo
