@@ -117,6 +117,12 @@
   @media (prefers-color-scheme:dark){.copybtn{color:#0e1512}}
   .copybtn:hover{background:var(--pine-2)}
   .copybtn.ok{background:var(--accent)}
+  .resetbtn{font-family:var(--sans);font-weight:600;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:9px;padding:8px 14px;cursor:pointer;}
+  .resetbtn:hover{color:var(--ink);border-color:var(--muted)}
+  [contenteditable="true"]{border-radius:6px;outline:none;cursor:text;}
+  [contenteditable="true"]:hover{box-shadow:inset 0 0 0 1px rgba(176,107,43,.55);}
+  [contenteditable="true"]:focus{background:rgba(176,107,43,.14);box-shadow:inset 0 0 0 1px var(--accent);}
+  .ov-h[contenteditable="true"]:focus,.st[contenteditable="true"]:focus{background:rgba(0,0,0,.28);}
   footer{border-top:1px solid var(--line);padding-block:24px 56px;color:var(--faint);font-size:13px;}
   footer b{color:var(--muted)} footer .cta-url{color:var(--pine-2)}
   @media (max-width:460px){.offer__meta{margin-left:0;width:100%}.angle{margin-left:0}.copybtn{width:100%}}
@@ -132,7 +138,7 @@
       <div class="offer__deal">Book sale: <b>15% off signed copies</b>, through Dec&nbsp;19.</div>
       <div class="offer__meta"><span>code <code>COLORADO15</code></span><span>$75 · signed $85</span><span><a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a></span></div>
     </div>
-    <p class="note"><b>How to use:</b> the first run is the late-Nov → Dec 19 cadence. The rest are extra cuts for paid ads and other channels: square, 4:5, Stories and Reels (9:16), Facebook and link ads (1.91:1), Pinterest (2:3), and email (2:1). Each card has a Copy button. The offer code is a placeholder — swap in the real one before launch.</p>
+    <p class="note"><b>How to use:</b> click any headline, caption, hashtags, or email line and type. Edits stay in this browser. Copy takes what is on the card now. Reset puts that ad back. The offer code is a placeholder — swap in the real one before launch.</p>
   </header>
 
   <main>
@@ -562,6 +568,41 @@
   });
   // keep the sequence numbers 01..N in DOM order, whatever the source says
   document.querySelectorAll(".slot .seq").forEach(function(el,i){el.textContent=String(i+1).padStart(2,"0");});
+
+  var STORE="rc-gift-edits-v1";
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(STORE)||"{}");}catch(e){saved={};}
+  var fieldSel=".ov-h,.cap,.tags,.fb-text,.pin-title,.pin-desc,.em-pre,.em-sub,.em-p,.st,.angle";
+  function persist(){try{localStorage.setItem(STORE,JSON.stringify(saved));}catch(e){}}
+  document.querySelectorAll(".slot").forEach(function(slot){
+    var id=slot.querySelector(".seq").textContent;
+    slot.querySelectorAll(fieldSel).forEach(function(el,fi){
+      var key=id+":"+fi;
+      el.setAttribute("contenteditable","true");
+      el.setAttribute("spellcheck","true");
+      el.dataset.edit=key;
+      if(el._orig==null) el._orig=el.innerHTML;
+      if(saved[key]!=null) el.innerHTML=saved[key];
+      el.addEventListener("input",function(){
+        if(el.innerHTML===el._orig) delete saved[key];
+        else saved[key]=el.innerHTML;
+        persist();
+      });
+    });
+    var foot=slot.querySelector(".foot");
+    if(foot && !foot.querySelector(".resetbtn")){
+      var rb=document.createElement("button");
+      rb.type="button"; rb.className="resetbtn"; rb.textContent="Reset";
+      rb.addEventListener("click",function(){
+        slot.querySelectorAll("[data-edit]").forEach(function(el){
+          el.innerHTML=el._orig;
+          delete saved[el.dataset.edit];
+        });
+        persist();
+      });
+      foot.appendChild(rb);
+    }
+  });
 })();
 </script>
 </body>
