@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Colorado: Life & Light — Holiday Campaign</title>
+<meta name="description" content="A 16-post Christmas gifting social campaign for the book Colorado: Life & Light on the Land.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#e9ece6; --surface:#f8f9f4; --card:#fff;
+    --ink:#16211c; --muted:#586459; --faint:#8b968a;
+    --line:#d3d7cb; --line-soft:#e6e8df;
+    --pine:#294636; --pine-2:#35604a;
+    --accent:#b06b2b; --accent-ink:#8a5220; --accent-soft:#f0e2cf;
+    --sky:#20507e;
+    --shadow:0 20px 46px -30px rgba(20,40,30,.55);
+    --serif:"Fraunces",Georgia,serif; --sans:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    color-scheme:dark;
+    --bg:#0e1512; --surface:#161f1a; --card:#18211b;
+    --ink:#ecf0e8; --muted:#9aa89d; --faint:#6c7a70;
+    --line:#293429; --line-soft:#212b23;
+    --pine:#8bbb9d; --pine-2:#a6cdb4;
+    --accent:#d99a53; --accent-ink:#eab979; --accent-soft:#33281a;
+    --sky:#8fb3c6; --shadow:0 22px 50px -32px rgba(0,0,0,.85);
+  }}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  img{max-width:100%}
+  .wrap{max-width:720px;margin:0 auto;padding-inline:20px;padding-block:0;}
+
+  header.mast{padding-block:56px 28px;border-bottom:1px solid var(--line);}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-ink);display:flex;align-items:center;gap:10px;}
+  .kicker::before{content:"";width:26px;height:1px;background:var(--accent);}
+  h1.mast__h{font-family:var(--serif);font-weight:600;font-size:clamp(2.4rem,7.5vw,3.9rem);line-height:1;letter-spacing:-.015em;margin:.34em 0 .3em;text-wrap:balance;}
+  h1.mast__h em{font-style:italic;color:var(--pine);}
+  .mast__sub{font-size:1.05rem;color:var(--muted);max-width:56ch;margin:0;}
+  .mast__sub .bk{font-family:var(--serif);font-style:italic;color:var(--ink);}
+  .offer{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:24px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow);}
+  .offer__deal{font-family:var(--serif);font-weight:600;font-size:1.15rem;}
+  .offer__deal b{color:var(--accent-ink);}
+  .offer__meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px;margin-left:auto;}
+  .offer__meta code{background:var(--accent-soft);color:var(--accent-ink);padding:2px 8px;border-radius:5px;}
+  .cta-url{color:var(--pine-2);text-decoration:none;border-bottom:1px solid var(--line);}
+  .note{font-size:13px;color:var(--faint);margin:16px 0 0;padding-left:14px;border-left:2px solid var(--line-soft);}
+  .note b{color:var(--muted);}
+
+  main{padding-block:32px 16px;display:flex;flex-direction:column;gap:30px;}
+  .slot{display:flex;flex-direction:column;}
+  .slot__meta{display:flex;align-items:center;gap:12px;margin:0 2px 10px;flex-wrap:wrap;}
+  .seq{font-family:var(--mono);font-size:12px;color:var(--faint);}
+  .plat{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--pine-2);}
+  .angle{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--accent-ink);margin-left:auto;text-transform:uppercase;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);color:#141b17;}
+  @media (prefers-color-scheme:dark){.card{color:#0e1512}}
+  .phead{display:flex;align-items:center;gap:10px;padding:12px 14px;}
+  .ava{width:36px;height:36px;border-radius:50%;flex:0 0 auto;background:linear-gradient(135deg,#294636,#b06b2b);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:600;font-size:15px;}
+  .who{font-weight:600;font-size:14px;color:#161b17;line-height:1.15;}
+  .who small{display:block;font-weight:400;font-size:12px;color:#6b7770;}
+  .more{margin-left:auto;color:#3a413c;font-weight:700;letter-spacing:1px;}
+  .shot{position:relative;background:#0c110e;}
+  .shot img{width:100%;display:block;}
+  .scrim{position:absolute;left:0;right:0;bottom:0;padding:52px 18px 16px;background:linear-gradient(0deg,rgba(8,14,10,.82),rgba(8,14,10,.12) 62%,transparent);}
+  .ov-h{font-family:var(--serif);font-weight:600;font-size:clamp(1.35rem,4.6vw,1.75rem);line-height:1.08;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.5);text-wrap:balance;}
+  .ig-acts{padding:11px 15px 3px;font-size:20px;letter-spacing:4px;color:#262626;}
+  .ig-acts .bm{float:right;letter-spacing:0;}
+  .likes{padding:0 15px;font-weight:600;font-size:14px;color:#161b17;}
+  .cap{padding:6px 15px 2px;font-size:14px;line-height:1.55;color:#1d241f;}
+  .cap b{font-weight:600;}
+  .tags{padding:6px 15px 2px;font-size:13.5px;line-height:1.6;color:var(--sky);}
+  @media (prefers-color-scheme:dark){.tags{color:#20507e}}
+  .time{padding:8px 15px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:#8a938b;text-transform:uppercase;}
+  .fb-text{padding:4px 15px 12px;font-size:14.5px;line-height:1.6;color:#1d241f;}
+  .fb-bar{display:flex;border-top:1px solid #e9ebe4;}
+  .fb-bar span{flex:1;text-align:center;padding:10px 0;font-size:13.5px;font-weight:600;color:#5b655d;}
+  .fb-counts{padding:9px 15px;font-size:13px;color:#5b655d;border-top:1px solid #eef0e9;}
+  .pin-title{padding:12px 16px 2px;font-family:var(--serif);font-weight:600;font-size:1.1rem;color:#161b17;line-height:1.15;}
+  .pin-desc{padding:2px 16px 8px;font-size:14px;line-height:1.55;color:#3a433c;}
+  .em-hero img{width:100%;display:block;}
+  .em-body{padding:16px 18px 20px;}
+  .em-pre{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#8a938b;margin:0 0 8px;}
+  .em-sub{font-family:var(--serif);font-weight:600;font-size:1.3rem;color:#161b17;line-height:1.15;margin:0 0 10px;}
+  .em-p{font-size:14.5px;line-height:1.6;color:#20261f;margin:0 0 12px;}
+  .em-btn{display:inline-block;background:#294636;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:9px;text-decoration:none;}
+  .story-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;}
+  .story{position:relative;flex:0 0 190px;aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#0c110e;box-shadow:var(--shadow);}
+  .story img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .story .sc{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;background:linear-gradient(0deg,rgba(8,14,10,.8),rgba(8,14,10,.05) 55%,rgba(8,14,10,.35));}
+  .story .st{font-family:var(--serif);font-weight:600;font-size:1.05rem;color:#fff;line-height:1.12;text-shadow:0 2px 12px rgba(0,0,0,.55);}
+  .story .sfr{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:rgba(255,255,255,.8);text-transform:uppercase;margin-bottom:auto;}
+  .foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:12px 2px 0;}
+  .credit{font-family:var(--mono);font-size:11px;color:var(--faint);flex:1;min-width:200px;}
+  .credit b{color:var(--muted);font-weight:600;}
+  .copybtn{font-family:var(--sans);font-weight:600;font-size:13px;color:#fff;background:var(--pine);border:0;border-radius:9px;padding:9px 16px;cursor:pointer;white-space:nowrap;}
+  @media (prefers-color-scheme:dark){.copybtn{color:#0e1512}}
+  .copybtn:hover{background:var(--pine-2)}
+  .copybtn.ok{background:var(--accent)}
+  footer{border-top:1px solid var(--line);padding-block:24px 56px;color:var(--faint);font-size:13px;}
+  footer b{color:var(--muted)} footer .cta-url{color:var(--pine-2)}
+  @media (max-width:460px){.offer__meta{margin-left:0;width:100%}.angle{margin-left:0}.copybtn{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="kicker">Holiday campaign · Robert Castellino</div>
+    <h1 class="mast__h">Give someone<br><em>Colorado</em> this year.</h1>
+    <p class="mast__sub">Sixteen ready-to-post social posts for <span class="bk">Colorado: Life &amp; Light on the Land</span> — the half-century retrospective, positioned as the Christmas gift that stays on the coffee table all year. Every image is a real plate from the book.</p>
+    <div class="offer">
+      <div class="offer__deal">The offer: <b>15% off signed copies</b>, through Dec&nbsp;19.</div>
+      <div class="offer__meta"><span>code <code>COLORADO15</code></span><span>$75 · signed $85</span><span><a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a></span></div>
+    </div>
+    <p class="note"><b>How to use:</b> post on the suggested cadence (late Nov → Dec 19). Each card names the plate and has a Copy button for the caption + hashtags. The offer code is a placeholder — swap in the real one before launch.</p>
+  </header>
+
+  <main>
+    <section class="slot"><div class="slot__meta"><span class="seq">01</span><span class="plat">Instagram · feed</span><span class="angle">Fri Nov 28 · the centerpiece</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Maroon Lake, Colorado</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/maroon-peaks.jpg" alt="Maroon Peaks over Maroon Lake"><div class="scrim"><div class="ov-h">Give someone Colorado this Christmas.</div></div></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,842 likes</div>
+        <div class="cap"><b>robertcastellino</b> Fifty years of mountains, rivers, and the long Colorado sky — drawn into one 168-page monograph. The kind of book you set on the coffee table and never put away. Signed copies 15% off through Dec 19. 🏔️</div>
+        <div class="tags">#Colorado #ColoradoPhotography #MaroonBells #CoffeeTableBook #ChristmasGift #RockyMountains</div><div class="time">2 hours ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Maroon Peaks over Maroon Lake, near Aspen</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">02</span><span class="plat">Email · newsletter</span><span class="angle">Mon Dec 1 · season kickoff</span></div>
+      <div class="card"><div class="em-hero"><img src="/gift-series/cranes-montevista.jpg" alt="Sandhill cranes at golden hour, Monte Vista"></div>
+        <div class="em-body"><p class="em-pre">Preview: The Colorado gift that lasts longer than the season.</p>
+          <h3 class="em-sub">A gift as big as the state.</h3>
+          <p class="em-p">The holidays are here, and there's one gift I keep coming back to for the Coloradan in your life: the book. <em>Colorado: Life &amp; Light on the Land</em> gathers half a century of the state into one volume — peaks, rivers, wildlife, and the light that only shows up here.</p>
+          <p class="em-p">Signed copies are 15% off with code <strong>COLORADO15</strong> through Dec 19, and every order ships from the Boulder studio within three business days.</p>
+          <a class="em-btn" href="https://robertcastellino.com/book">See the book →</a></div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Whooping Crane among Sandhill Cranes, Monte Vista NWR</div><button class="copybtn" type="button">Copy email</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">03</span><span class="plat">Facebook · page</span><span class="angle">Wed Dec 3 · why this book</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">Robert Castellino Photography<small>3h · 🌐</small></div><span class="more">•••</span></div>
+        <div class="fb-text">Half a century of light, in one volume. This is the career retrospective — 124 plates, from a sunrise at Deerlodge Park to peaks lit for less than a minute. Hand-bound, smyth-sewn, printed on archival matte. Give the Coloradan in your life the whole state at once — 15% off signed copies through Dec 19, shipped from the Boulder studio within three days.</div>
+        <div class="shot"><img src="/gift-series/hallett-dreamlake.jpg" alt="Hallett Peak over Dream Lake"></div>
+        <div class="fb-counts">👍 ❤️ 214 · 38 comments · 22 shares</div><div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Hallett Peak over Dream Lake, Rocky Mountain National Park</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">04</span><span class="plat">Instagram · feed</span><span class="angle">Fri Dec 5 · for the skier</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Brainard Lake, Colorado</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/skier-brainard.jpg" alt="Backcountry skier gliding toward snowy peaks"><div class="scrim"><div class="ov-h">For the one who lives for the first snow.</div></div></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,332 likes</div>
+        <div class="cap"><b>robertcastellino</b> Skinning toward the peaks at Brainard, the whole valley to yourself. Winter is its own chapter in the book. A gift for the skier who'd rather be up high than anywhere else. 15% off signed copies thru Dec 19. ❄️</div>
+        <div class="tags">#Colorado #BackcountrySkiing #Skiing #WinterInColorado #GiftsForHer #ChristmasGift #IndianPeaks</div><div class="time">3 hours ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Backcountry Skier, Brainard Lake</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">05</span><span class="plat">Pinterest · pin</span><span class="angle">Sat Dec 6 · for the transplant</span></div>
+      <div class="card"><div class="shot"><img src="/gift-series/aspen-durango.jpg" alt="Golden aspen grove near Durango"><div class="scrim"><div class="ov-h">Home, on the coffee table.</div></div></div>
+        <div class="pin-title">The gift for anyone who left Colorado behind</div>
+        <div class="pin-desc">Aspen groves near Durango, columbine in Yankee Boy Basin, the Grand Mesa going blue at afternoon — home, gathered into one book for the friend or parent who moved away. Signed copies 15% off through Dec 19. #Colorado #Homesick #AspenTrees #GiftGuide</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Aspen Grove near Cascade Village, Durango</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">06</span><span class="plat">Instagram · feed</span><span class="angle">Mon Dec 8 · for the adventurer</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Arkansas River, Colorado</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/kayak-numbers.jpg" alt="Kayaker in whitewater spray"><div class="scrim"><div class="ov-h">For the one who's happiest above treeline.</div></div></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,109 likes</div>
+        <div class="cap"><b>robertcastellino</b> Kayaking the Numbers. Skiers cutting the San Juans. Figure-eights under the Flatirons. The book carries the wild, moving side of Colorado too — the perfect gift for the person who never quite comes down off the mountain. 15% off thru Dec 19.</div>
+        <div class="tags">#Colorado #Whitewater #ColoradoAdventure #ArkansasRiver #GiftsForHim #ChristmasGift</div><div class="time">5 hours ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Kayaking the Numbers, Rapid 6, Arkansas River</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">07</span><span class="plat">Instagram · feed</span><span class="angle">Tue Dec 9 · for the naturalist</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>San Luis Valley, Colorado</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/owl-sanluis.jpg" alt="Great horned owl perched on an old barn"></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">2,057 likes</div>
+        <div class="cap"><b>robertcastellino</b> A great horned owl keeping watch over a San Luis barn. The wildlife plates are their own quiet chapter — cranes lifting off Monte Vista, elk in Moraine Park before the valley wakes. For the birder or wildlife-watcher on your list. 🦉 15% off thru Dec 19.</div>
+        <div class="tags">#Colorado #Wildlife #WildlifePhotography #GreatHornedOwl #SanLuisValley #ChristmasGift</div><div class="time">6 hours ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Great Horned Owl on Old Barn, San Luis Valley</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">08</span><span class="plat">Facebook · page</span><span class="angle">Thu Dec 11 · the hard-to-shop-for</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">Robert Castellino Photography<small>2h · 🌐</small></div><span class="more">•••</span></div>
+        <div class="fb-text">For the one who says he doesn't want anything. Every family has him — the dad, the grandfather, the friend who's impossible to shop for. This is the gift he'll actually keep out: a herd of elk in Moraine Park at first light, and 123 more plates of the Colorado he loves. Signed, 15% off with code COLORADO15 through Dec 19.</div>
+        <div class="shot"><img src="/gift-series/elk-moraine.jpg" alt="Elk herd in Moraine Park at dawn"></div>
+        <div class="fb-counts">👍 ❤️ 189 · 41 comments · 15 shares</div><div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Elk in Moraine Park, Rocky Mountain National Park</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">09</span><span class="plat">Pinterest · pin</span><span class="angle">Fri Dec 12 · a little summer</span></div>
+      <div class="card"><div class="shot"><img src="/gift-series/columbine-yankeeboy.jpg" alt="Colorado columbine wildflowers"><div class="scrim"><div class="ov-h">A little summer, in December.</div></div></div>
+        <div class="pin-title">Give a Colorado summer in the middle of winter</div>
+        <div class="pin-desc">Columbine and sneezeweed in Yankee Boy Basin — the high-country bloom, pressed into a book you can open on the coldest day of the year. Signed copies of <em>Life &amp; Light on the Land</em>, 15% off through Dec 19. #Colorado #Wildflowers #Columbine #GiftGuide</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Columbine and Sneezeweed, Yankee Boy Basin, near Ouray</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">10</span><span class="plat">Instagram · feed</span><span class="angle">Sat Dec 13 · the light</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Collegiate Range, Colorado</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/columbia-sunset.jpg" alt="Golden sunset over the Collegiate Range"><div class="scrim"><div class="ov-h">Colorado gets a light no one else gets.</div></div></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">2,410 likes</div>
+        <div class="cap"><b>robertcastellino</b> Sunset over Columbia Peak. Fifty years chasing this light taught me it never repeats — which is the whole reason to keep a book of it. The title isn't an accident: <em>Life &amp; Light on the Land.</em> 15% off signed copies thru Dec 19.</div>
+        <div class="tags">#Colorado #GoldenHour #Sunset #CollegiatePeaks #LandscapePhotography #ChristmasGift</div><div class="time">2 hours ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Sunset over Columbia Peak, Collegiate Range</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">11</span><span class="plat">Instagram · feed</span><span class="angle">Mon Dec 15 · stillness</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Dinosaur National Monument</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/deerlodge-sunrise.jpg" alt="Cottonwoods at sunrise, Deerlodge Park"><div class="scrim"><div class="ov-h">First light, before anyone's awake.</div></div></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,676 likes</div>
+        <div class="cap"><b>robertcastellino</b> Sunrise at Deerlodge Park — the kind of quiet the book is really about. A gift for the person who could use more of it this year. Signed copies 15% off thru Dec 19.</div>
+        <div class="tags">#Colorado #Sunrise #Cottonwoods #Dinosaur #QuietMornings #ChristmasGift #CoffeeTableBook</div><div class="time">4 hours ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Deerlodge Park at Sunrise, Dinosaur National Monument</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">12</span><span class="plat">Facebook · page</span><span class="angle">Tue Dec 16 · signed &amp; personalized</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">Robert Castellino Photography<small>1h · 🌐</small></div><span class="more">•••</span></div>
+        <div class="fb-text">Signed, personalized, and out the door in three days. I'll sign each copy and gladly personalize it to whoever's opening it Christmas morning — just leave a note at checkout. Ships from the Boulder studio within three business days; order by Dec 19 to arrive in time, and take 15% off signed copies with code COLORADO15.</div>
+        <div class="shot"><img src="/gift-series/lonepine-redmtn.jpg" alt="A lone pine in fresh snow, Red Mountain Pass"></div>
+        <div class="fb-counts">👍 ❤️ 176 · 24 comments · 11 shares</div><div class="fb-bar"><span>👍 Like</span><span>💬 Comment</span><span>↪ Share</span></div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Lone Pine on Red Mountain Pass</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">13</span><span class="plat">Pinterest · pin</span><span class="angle">Wed Dec 17 · styling</span></div>
+      <div class="card"><div class="shot"><img src="/gift-series/cover-sunrise.jpg" alt="Longs Peak at dawn, photographer's silhouette"><div class="scrim"><div class="ov-h">The book that anchors the room.</div></div></div>
+        <div class="pin-title">The one coffee-table book you'll actually keep out</div>
+        <div class="pin-desc">Eleven inches square, cloth-bound, and heavy in the way a good book should be. It sets the tone of a room and it's the first thing every guest picks up. <em>Colorado: Life &amp; Light on the Land</em> — signed copies 15% off through Dec 19. #CoffeeTableBook #HomeDecor #Colorado #GiftGuide</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Taking in the Sunrise — Moraine Park, RMNP</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">14</span><span class="plat">Instagram · feed</span><span class="angle">Thu Dec 18 · Colorado, the feeling</span></div>
+      <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Marshall, Colorado</small></div><span class="more">•••</span></div>
+        <div class="shot"><img src="/gift-series/ford-pickup.jpg" alt="A rusted vintage Ford pickup"></div>
+        <div class="ig-acts">♥&nbsp;&nbsp;💬&nbsp;&nbsp;➤<span class="bm">🔖</span></div><div class="likes">1,918 likes</div>
+        <div class="cap"><b>robertcastellino</b> Not only peaks. An old Ford going back to the earth in Marshall — the lived-in, weathered Colorado is in the book too. That's what makes it a gift for anyone who's ever loved this place. 15% off signed copies thru Dec 19.</div>
+        <div class="tags">#Colorado #Americana #VintageTruck #ColoradoLife #ChristmasGift #FineArtPhotography</div><div class="time">1 hour ago</div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Rusted Old Ford Pickup, Old Town of Marshall</div><button class="copybtn" type="button">Copy caption</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">15</span><span class="plat">Instagram · story</span><span class="angle">Thu Dec 18 · 3-frame countdown</span></div>
+      <div class="story-row">
+        <div class="story"><img src="/gift-series/skier-molas.jpg" alt=""><div class="sc"><div class="sfr">Frame 1</div><div class="st">Still shopping for someone impossible?</div></div></div>
+        <div class="story"><img src="/gift-series/hanging-lake.jpg" alt=""><div class="sc"><div class="sfr">Frame 2</div><div class="st">Give them Colorado — 168 pages of it.</div></div></div>
+        <div class="story"><img src="/gift-series/lake-isabelle.jpg" alt=""><div class="sc"><div class="sfr">Frame 3</div><div class="st">15% off signed copies · thru Dec 19 · tap the link 🎁</div></div></div>
+      </div>
+      <div class="foot"><div class="credit"><b>Plates:</b> Molas Pass · Hanging Lake · Lake Isabelle · add a countdown sticker to Dec 19 + a Link sticker → /book</div><button class="copybtn" type="button">Copy frames</button></div></section>
+
+    <section class="slot"><div class="slot__meta"><span class="seq">16</span><span class="plat">Email · newsletter</span><span class="angle">Fri Dec 19 · last call</span></div>
+      <div class="card"><div class="em-hero"><img src="/gift-series/grandmesa-aspen.jpg" alt="Snow-covered aspens on the Grand Mesa"></div>
+        <div class="em-body"><p class="em-pre">Preview: Fifty years of Colorado, in one book — 15% off signed, today only.</p>
+          <h3 class="em-sub">The gift that stays on the coffee table.</h3>
+          <p class="em-p">Today's the last day to order <em>Colorado: Life &amp; Light on the Land</em> in time for Christmas. Fifty years of the state — mountains, rivers, wildlife, and the light that only shows up here — in one 168-page volume.</p>
+          <p class="em-p">Signed copies are $85, <strong>15% off today</strong> with code <strong>COLORADO15</strong>, and every order ships from the Boulder studio within three business days.</p>
+          <a class="em-btn" href="https://robertcastellino.com/book">Order the book →</a></div></div>
+      <div class="foot"><div class="credit"><b>Plate:</b> Shadow Aspen on the Grand Mesa, near Grand Junction</div><button class="copybtn" type="button">Copy email</button></div></section>
+  </main>
+
+  <footer><p>16 posts · Instagram, Facebook, Pinterest, Story &amp; email · every one built on a real plate from the book and pointing to <a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a>. Offer &amp; code (<b>COLORADO15</b>) are placeholders — confirm before launch.</p></footer>
+</div>
+<script>
+(function(){
+  function textOf(card){
+    var parts=[],q=function(s){var e=card.querySelector(s);return e?e.textContent.trim():"";};
+    var ov=q(".ov-h"); if(ov)parts.push(ov);
+    var sub=q(".em-sub"); if(sub)parts.push("Subject: "+sub);
+    var pin=q(".pin-title"); if(pin)parts.push(pin);
+    var body=card.querySelector(".cap")||card.querySelector(".fb-text")||card.querySelector(".pin-desc");
+    if(body)parts.push(body.textContent.trim());
+    card.querySelectorAll(".em-p").forEach(function(p){parts.push(p.textContent.trim());});
+    card.querySelectorAll(".story .st").forEach(function(s,i){parts.push("Frame "+(i+1)+": "+s.textContent.trim());});
+    var tags=q(".tags"); if(tags)parts.push("\n"+tags);
+    return parts.join("\n\n").replace(/\n{3,}/g,"\n\n").trim();
+  }
+  function flash(b){var o=b.textContent;b.textContent="Copied ✓";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1500);}
+  document.querySelectorAll(".copybtn").forEach(function(btn){btn.addEventListener("click",function(){
+    var slot=btn.closest(".slot"),card=slot.querySelector(".card")||slot,t=textOf(card);
+    try{navigator.clipboard.writeText(t).then(function(){flash(btn);},function(){fb(t,btn);});}catch(e){fb(t,btn);}
+  });});
+  function fb(t,b){try{var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();document.execCommand("copy");document.body.removeChild(a);flash(b);}catch(e){b.textContent="Select & copy";}}
+})();
+</script>
+</body>
+</html>
