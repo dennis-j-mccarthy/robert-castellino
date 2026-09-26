@@ -150,7 +150,8 @@
       <div class="offer__deal">Book sale: <b>15% off signed copies</b>, through Dec&nbsp;19.</div>
       <div class="offer__meta"><span>code <code>COLORADO15</code></span><span>$75 · signed $85</span><span><a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a></span></div>
     </div>
-    <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> opens the library — every photo used on these ads — and you pick one. Copy grabs the words. Then paste them into Instagram, Facebook, Pinterest, or the email, and upload that same photo. Reset puts that one ad back. Changes stay in this browser. The offer code is a placeholder — swap in the real one before you post.</p>
+    <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> opens the library — every photo used on these ads — and you pick one. <b>Save</b> stores the page for everyone, after you sign in. Copy grabs the words. Reset puts that one ad back. The offer code is a placeholder — swap in the real one before you post.</p>
+    <p class="note"><button type="button" id="save-ads" class="copybtn">Save</button> <span id="save-status" style="font-size:13px;color:var(--muted)"></span></p>
   </header>
 
   <main>
@@ -615,6 +616,65 @@
       libGrid.appendChild(b);
     });
   }
+  var saveBtn=document.getElementById("save-ads");
+  var saveStatus=document.getElementById("save-status");
+  var signedIn=false;
+  function applyDraft(data){
+    var edits=data&&data.edits||{};
+    var images=data&&data.images||{};
+    document.querySelectorAll("[data-edit]").forEach(function(el){
+      if(typeof edits[el.dataset.edit]==="string") el.innerHTML=edits[el.dataset.edit];
+    });
+    document.querySelectorAll(".slot img").forEach(function(img){
+      if(img._imgKey && typeof images[img._imgKey]==="string") img.setAttribute("src", images[img._imgKey]);
+    });
+  }
+  function collectDraft(){
+    var edits={}, images={};
+    document.querySelectorAll("[data-edit]").forEach(function(el){
+      if(el.innerHTML!==el._orig) edits[el.dataset.edit]=el.innerHTML;
+    });
+    document.querySelectorAll(".slot img").forEach(function(img){
+      if(!img._imgKey||!img._origSrc) return;
+      var src=img.getAttribute("src")||"";
+      if(src.indexOf("http")===0){ try{ src=new URL(src).pathname; }catch(e){} }
+      if(src && src!==img._origSrc) images[img._imgKey]=src;
+    });
+    return {edits:edits, images:images};
+  }
+  if(saveBtn){
+    saveBtn.addEventListener("click",function(){
+      if(!signedIn){
+        window.location.assign("/admin/login?next="+encodeURIComponent("/gift-series.html"));
+        return;
+      }
+      saveBtn.disabled=true;
+      if(saveStatus) saveStatus.textContent="Saving…";
+      fetch("/api/gift-series",{
+        method:"PUT",
+        credentials:"same-origin",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(collectDraft())
+      }).then(function(res){
+        if(res.status===401){
+          window.location.assign("/admin/login?next="+encodeURIComponent("/gift-series.html"));
+          return null;
+        }
+        return res.json().then(function(data){ return {ok:res.ok, data:data}; });
+      }).then(function(result){
+        if(!result) return;
+        if(saveStatus) saveStatus.textContent=result.ok ? "Saved. Bob will see this too." : (result.data&&result.data.error)||"Could not save.";
+      }).catch(function(){
+        if(saveStatus) saveStatus.textContent="Could not save.";
+      }).finally(function(){ saveBtn.disabled=false; });
+    });
+  }
+  fetch("/api/gift-series",{credentials:"same-origin"}).then(function(r){ return r.json(); }).then(function(data){
+    signedIn=!!(data&&data.signedIn);
+    if(saveBtn) saveBtn.textContent=signedIn ? "Save" : "Sign in to save";
+    applyDraft(data);
+  }).catch(function(){});
+
   fetch("/gift-series/library.json").then(function(r){ return r.json(); }).then(fillLibrary).catch(function(){
     var seen={}, items=[];
     document.querySelectorAll(".slot img").forEach(function(img){

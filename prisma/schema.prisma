@@ -15,6 +15,14 @@ datasource db {
 
 // Uploaded images live in the DB (bytea) — no external storage service.
 // Served publicly from /api/images/[id]; the URL is saved on Musing.img / Photo.img.
+// One row: the gift-series ad overrides (headlines, captions, chosen photos).
+model GiftDraft {
+  id        String   @id
+  edits     Json
+  images    Json
+  updatedAt DateTime @updatedAt
+}
+
 model Image {
   id          String   @id @default(cuid())
   data        Bytes
