@@ -73,9 +73,11 @@
   .shot.ar-sq img{aspect-ratio:1/1;object-fit:cover;object-position:center;}
   .shot.ar-fb img{aspect-ratio:1.91/1;object-fit:cover;object-position:center;}
   .shot.ar-pin img{aspect-ratio:2/3;object-fit:cover;object-position:center;}
-  .shot.ar-reel{max-width:340px;}
-  .shot.ar-reel img{aspect-ratio:9/16;object-fit:cover;object-position:center;}
-  .shot.ar-reel .ov-h{font-size:1.55rem;max-width:14ch;}
+  .slot:has(.shot.ar-reel) .card{max-width:380px;margin-inline:auto;}
+  .shot.ar-reel{width:100%;}
+  .shot.ar-reel img{width:100%;aspect-ratio:9/16;object-fit:cover;object-position:center;}
+  .shot.ar-reel .ov-h{font-size:1.7rem;max-width:12ch;}
+  .shot.ar-reel .scrim::before{content:"50 years · 15% off";letter-spacing:.08em;font-size:11px;}
   .scrim{position:absolute;left:0;right:0;bottom:0;padding:78px 20px 20px;background:linear-gradient(0deg,rgba(8,14,10,.86),rgba(8,14,10,.14) 66%,transparent);}
   .scrim::before,.story .sc::before{content:"50 years in the field  ·  Book sale, 15% off";display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#f3e6d4;margin:0 0 8px;text-shadow:0 1px 8px rgba(0,0,0,.65);}
   .story .sc::before{font-size:8.5px;letter-spacing:.06em;margin:0;}
