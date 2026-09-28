@@ -1,80 +1,64 @@
-# HANDOFF — Robert Castellino Holiday "Gift Series" campaign
+# Handoff — Castellino gift-series ads
 
-_Last updated: 2026-09-26. Repo: `/Users/dennis.mccarthy/robert-castellino` · branch `main` · latest commit `b9f4848` (all pushed, working tree clean)._
+_Updated 2026-09-28 for a switch to Claude. Repo: `/Users/dennis.mccarthy/robert-castellino`. Branch `main`, pushed. Latest commit `2640a00`._
 
-## What this is
-A **Christmas-gifting social campaign** for Bob's book **_Colorado: Life & Light on the Land_** (career retrospective, 168 pp, 124 plates, $75 / signed $85, ships from the Boulder studio in ~3 business days).
+Dennis is doing the work. Bob (Robert Castellino) is the client. Do not treat Dennis as Bob.
 
-The deliverable is a **single self-contained public web page** the client (Bob) can open with no login:
+## Live page
 
-### 🔗 LIVE: https://robertcastellino.com/gift-series.html
-- **40 ready-to-post posts** across Instagram, Facebook, Pinterest, Story, Reel, TikTok, link ads, and Email. Each card is cropped to its channel (1:1, 4:5, 9:16, 1.91:1, 2:3, 2:1). These are on-page previews, not downloaded ad files.
-- Each post = a real "platform mockup" built on a real plate from the book, with a headline burned onto the image, editable caption + hashtags, a **Copy** button, and the plate credit.
-- Page is **unlisted** (`<meta name="robots" content="noindex,nofollow">`) — share by link only.
-- All point their CTA to **robertcastellino.com/book**.
+https://robertcastellino.com/gift-series.html
 
-## Files
-- **Page:** `public/gift-series.html` (plain static HTML served from Next.js `/public`, NOT a route). Full doc with inline `<style>` + `<script>` (copy buttons + auto-renumber).
-- **Images:** `public/gift-series/*.jpg` (23 files). Also uses `public/assets/portrait-hat.png` and `public/assets/behind-3.png` (Bob).
-- **Book PDF (source, local only, git-ignored):** `resources/colorado-life-and-light-book.pdf` — the 168-page interior; plates were extracted from it.
+Unlisted (`noindex, nofollow`). Share by link. It is a draft deck, not the ad publisher and not the click destination. Ads should click through to https://robertcastellino.com/book.
+
+50 posts. Channel crops: 1:1, 4:5, 9:16, 1.91:1, 2:3, 2:1. 9:16 cards are phone-width and centered. Sequence numbers are rewritten from DOM order.
+
+Campaign line: **Give the gift of Colorado.** Every image has the lockup “50 years in the field · Book sale, 15% off.” Captions close with the sale and his fifty years.
+
+`COLORADO15` is a **placeholder**. Do not tell Bob it is a real code. Global replace when the real code exists. Book price on the site is $75, signed $85, ships from Boulder in about three business days. The book is **11 × 11 inches, 168 pages** — a thin square hardcover, not a binder.
+
+## What Bob can be told
+
+OK to share the link as a draft. Plates and his real portraits are real. Hearts and like-counts are mock chrome. The coffee-table pictures are stand-ins, not a photo of his book.
+
+## Editing, library, save
+
+Page: `public/gift-series.html` (static file in `public/`, not a Next route).
+
+- Click gold-outlined text to edit. **Copy** reads the current words. **Reset** restores that one ad.
+- **Swap image** opens the library. Catalog: `public/gift-series/library.json` (every photo already used on the ads). Story row has Swap frame 1/2/3.
+- Until Save, edits live only in `localStorage` in that browser (`rc-gift-edits-v1`, `rc-gift-img-…`). Bob does not see them.
+- **Save** (top of the page) writes one JSON row to Postgres. Public `GET /api/gift-series` loads it for everyone. `PUT` requires the existing admin session. Unsigned visitors see the button **Sign in to save**, which goes to `/admin/login?next=/gift-series.html` and returns.
+- Table `GiftDraft`, id `current`, fields `edits` and `images`. Migration `prisma/migrations/0003_gift_draft`. Route `src/app/api/gift-series/route.ts`.
+- One admin login already exists and production uses it (`/admin` redirects to `/admin/login`). It is Bob’s single admin account. The password is in Vercel env (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_JWT_SECRET`), not in the repo. Setup notes: `docs/admin-setup.md`. Suggested email there is `rlcatellino@gmail.com`; confirm before assuming that is the live address.
+
+## Book pictures — do not inset these
+
+Dennis’s rule: do **not** put a generated book on the plate ads until a photo of the real book looks right. None of the generated ones cleared that bar (too thick, not square, pasted-on, or wrong type).
+
+When a real photo exists, inset it small on a few plate ads with a caption beside it. The landscape stays the picture.
+
+Ask Bob (or Dennis) for three phone frames:
+
+1. Book flat on a coffee table, room visible.
+2. Lower angle so the page edge is a thin strip.
+3. Book square to the camera, filling the frame, for the inset.
+
+Real cover file, for reference only: `public/gift-series/book-cover-hi.jpg` (694×700).
+
+Current stand-in scenes, already on the page and not good enough to treat as finished: `scene-morning.jpg`, `scene-evening.jpg`, `scene-cabin.jpg`. Older composites (`coffee-table.jpg`, `coffee-table-grok.jpg`, `book-morning*.jpg`, `book-evening*.jpg`, `book-cabin*.jpg`) are leftovers. Do not wire those back in.
+
+Bob photos that are actually him: `public/assets/portrait-hat.png`, `behind-3.png`, `home-teaser.jpg` (Jenny Lake), `about-hero.png`. Do **not** use `behind-1.png`, `behind-2.png`, `behind-4.png`, or `portrait-flatirons.png` as Bob. They are different people.
 
 ## Deploy
-Edit `public/gift-series.html` (or images in `public/gift-series/`) → `git add/commit/push` to `main` → **Vercel auto-deploys (~90s)**. Verify by loading the live URL (CDN can lag 30–60s).
 
-## The offer / CTA (⚠ PLACEHOLDER)
-Currently: **"15% off signed copies, code `COLORADO15`, through Dec 19."** Every image also carries the lockup "50 years in the field · Book sale, 15% off," and captions close with the sale plus his fifty years in the field.
-`COLORADO15` is a **placeholder** — the real promo code must replace it. It appears in the masthead offer strip, several captions, the email, and the footer. Global find/replace `COLORADO15`.
+`git add/commit/push` to `main`. Vercel builds with `prisma migrate deploy && prisma generate && next build`. A deploy fails closed if Postgres is unreachable. Latest successful production deploy of this work is `2640a00`.
 
-## The first 18 (order = suggested cadence; sequence auto-renumbers in DOM order)
+Uncommitted right now: local edits to `book-cabin.jpg`, `book-evening.jpg`, `book-morning.jpg` (not the live scene files). Untracked: `docs/creative-brief.md`.
 
-Posts 19–40 are extra cuts on the same page: Bob (only the portraits already on the site — hat, Flatirons, Jenny Lake, the about photo), the book, and lines including Rocky Mountain High, Dreaming of Colorado, Dreaming of the mountains?, and The mountains set your soul free. The other behind-the-scenes portraits in `public/assets` are not used. They are not the Bob photos on the site.
+## Strategy already written
 
-## Original 18
-1. IG — Maroon Bells reflection — "Give the gift of Colorado."
-2. IG — **Bob portrait** (`/assets/portrait-hat.png`) — "Fifty years behind the lens." (meet the artist)
-3. FB — **Bob at Flatirons** (`/assets/behind-3.png`) — "The eye takes a lifetime to train." (behind the lens)
-4. Email — cranes (Monte Vista) — "A gift as big as the state." (season kickoff)
-5. FB — Hallett Peak / Dream Lake — "Fifty years, one volume."
-6. IG — Brainard skier — "For the one who lives for the first snow."
-7. Pinterest — Durango aspens — "Home, on the coffee table."
-8. IG — kayaker (Arkansas) — "For the one who's happiest above treeline."
-9. IG — owl on barn (San Luis) — "A quieter chapter of Colorado."
-10. FB — elk (Moraine Park) — "The gift he'll actually keep out."
-11. Pinterest — Lake Isabelle cascade + wildflowers — "A little summer, in December." _(replaced an earlier soft columbine macro)_
-12. IG — Collegiate sunset — "Colorado gets a light no one else gets."
-13. IG — Deerlodge sunrise — "First light, before anyone's awake."
-14. FB — lone pine in snow — "Signed, just for them."
-15. **Pinterest — coffee-table shot (`coffee-table.jpg`) — "The book that anchors the room."**
-16. IG — old Ford pickup — "Not just the peaks."
-17. IG Story — 3 frames (Molas / Hanging Lake / Snowmass) — Dec-19 countdown
-18. **Email — coffee-table shot (`coffee-table.jpg`) — "Last call before Christmas."**
+`docs/creative-brief.md` (not committed). Paid social creates the want. Search catches people already looking. Three ad campaigns: the place, the photographer, the object. Only the object ads lead with price. Holiday burst is early November through December 19, after the real code exists. Always-on has no fake discount. Do not spend to rank “Rocky Mountain High”; that line is for ads only.
 
-(Numbers may shift slightly; the `.seq` labels are auto-generated by DOM order via the inline script.)
+## Posting
 
-## ⚠ OPEN ITEMS / TODO
-1. **Coffee-table image — client dislikes the current composite.** The live `coffee-table.jpg` is the REAL cover (`CO Book Cover (1).jpg`, hi-res) perspective-warped onto a low-res stock coffee-table mockup (`public/assets/book-table.png`, only 509×501). The low-res/rendered background makes it look flat/pasted. Two ready paths:
-   - **A) Clean framed cover (built, NOT wired):** `public/gift-series/coffee-pin.jpg` (2:3) and `coffee-email.jpg` (2:1) = the sharp real cover on a warm matte with a soft shadow. To use: point post 15 img → `/gift-series/coffee-pin.jpg`, post 18 hero img → `/gift-series/coffee-email.jpg`, and set those `<img>` to `object-fit:contain` (or just swap src; they're already the right aspect).
-   - **B) Generate a real high-res room scene** and composite the real cover. RC has **no OpenAI key**. The working OpenAI endpoint is on the OTHER site: `fluidpathways.com/api/admin/generate-image` (needs FP admin login **bob / fp_2026**; POST `{prompt, size:"landscape|square|portrait"}`, returns `{id}`, image served at `fluidpathways.com/api/images/{id}`). Then composite the real cover with the PIL perspective method used in git history (commits 215aab7 / c9177b2).
-   - **Best of all:** a real phone photo of the book on a table (none exists in the user's files — searched Downloads/Desktop/Pictures + 70 HEICs; Spotlight/mdfind is broken on the user's Mac). If one is taken, drop it in as `coffee-table.jpg`.
-   - Real hi-res cover saved at `public/gift-series/book-cover-hi.jpg` (694×700) for reuse.
-2. **Real discount code** — replace `COLORADO15` everywhere.
-3. **Multi-format paid-social exports** — the page now shows all 40 posts at the channel crop (1:1, 4:5, 9:16, 1.91:1, 2:3, 2:1). Flattened downloadable files at 1080² / 1080×1350 / 1080×1920 / 1200×628 / 1000×1500 are still not built.
-4. **Higher-res plate scans available:** `~/Downloads/CO Life and Light Pages (N).jpg` (~26 files) may be sharper than the PDF extracts — good for paid social.
-
-## 10 campaign themes brainstormed (for more posts) — 📷 = feature Bob's photo
-Selling Bob: 1) 📷 "Fifty years behind the lens." (used) · 2) 📷 "The eye takes a lifetime to train." (used) · 3) 📷 "He waited fifty seconds for the light — and fifty years to see it." · 4) 📷 "Not snapshots. Fine art."
-Feeling/place: 5) "The light only Colorado gets." · 6) "Homesick? It's all in here." · 7) "Colorado, standing perfectly still." · 8) "From his lens to your wall." (prints)
-Gift: 9) "Give the mountains. They outlast the snow." · 10) "The gift that never leaves the coffee table."
-Client's own lines to weave in: "Dreaming of the mountains?", "Rocky Mountain High" (John Denver / CO state song), "Experience Colorado through the eye of an artist", "Fine mountain photography for over 50 years".
-
-## Print-on-demand (asked about, not started)
-Site already has `/book` + `/checkout` (Stripe). For selling one-off "legacy" titles: **manual fulfillment** (list product → Stripe → you print/ship) ≈ half a day; **automated POD** via Lulu API ≈ 1–2 days + a print-ready interior+cover PDF per title.
-
-## Tech notes for whoever edits next
-- Aspect-ratio classes on each post image: `ar-ig` (4:5), `ar-fb` (1.91:1), `ar-pin` (2:3), `ar-em` (2:1); Story frames are 9:16. All use `object-fit:cover` on the square source plates.
-- Headline overlay = `<div class="scrim"><div class="ov-h">…</div></div>` inside `.shot` / `.em-hero`.
-- Inline `<script>` handles Copy buttons and auto-renumbers `.seq` spans by DOM order — so you can reorder/insert posts without hand-numbering.
-- Design: Fraunces (serif display) + Instrument Sans + IBM Plex Mono, alpine palette, light/dark aware.
-
-## Related (separate project, for context)
-The **Fluid Pathways** site (`/Users/dennis.mccarthy/fluid-pathways`, fluidpathways.com) is Bob's craniosacral site. Its admin has the OpenAI image endpoint used above and a full content/social studio. Recent fixes there (post padding, multi-file upload, Change-image picker, headline persistence) are all live. Login: **bob / fp_2026**.
+The page does not publish. Copy the words, upload the same photo in Instagram, Facebook, Pinterest, or email. Paid ads go in Ads Manager, link to `/book`.
