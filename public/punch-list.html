@@ -302,6 +302,10 @@
   .cbx-ip:has(input:checked) input{accent-color:#34c759 !important;}
   .cbx-done:has(input:checked) input{accent-color:#007aff !important;}
 
+
+  /* gold star on items that have a reviewable link */
+  .item.has-review .t::before{content:"\2605\00a0";color:#d4a017;}
+
 </style>
 
 <header>
@@ -712,6 +716,7 @@
     var role=r.querySelector(".asrole"); role.textContent=who?("as "+(who==="B"?"Bob":"Dennis")):"↑ pick who you are";
     var rl=r.querySelector(".rev-link"), lb=r.querySelector(".link-btn");
     if(rl&&lb){ if(s.link){ rl.hidden=false; rl.href=s.link; lb.textContent="Edit link"; } else { rl.hidden=true; lb.textContent="+ Link"; } }
+    r.classList.toggle("has-review", !!s.link);
   }
 
   function delNote(id,idx){var s=cur(id); if(!s.notes||idx<0||idx>=s.notes.length) return; s.notes.splice(idx,1); renderItem(id); persist(id);}
