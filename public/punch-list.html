@@ -306,6 +306,13 @@
   /* gold star on items that have a reviewable link */
   .item.has-review .t::before{content:"\2605\00a0";color:#d4a017;}
 
+
+  /* make a comment obvious: filled teal badge with white icon + count */
+  .notes-btn.has{background:var(--water) !important;border-color:var(--water) !important;color:#fff !important;font-weight:600;}
+  .notes-btn.has .cicn{stroke:#fff !important;}
+  .notes-btn.has .ncount{color:#fff !important;}
+  .item:has(.notes-btn.has){box-shadow:inset 3px 0 0 var(--water);}
+
 </style>
 
 <header>
