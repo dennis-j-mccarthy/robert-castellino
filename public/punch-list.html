@@ -317,6 +317,22 @@
   .acc__stars{font-family:ui-monospace,monospace;font-size:.72rem;color:#d4a017;font-weight:600;margin-right:10px;white-space:nowrap;}
   .item.has-review .t::before{content:"\2605\00a0";color:#d4a017;font-size:1.05em;}
 
+
+  .item{position:relative;padding-bottom:30px;}
+  .item-actions{position:absolute;right:14px;bottom:9px;display:flex;gap:12px;}
+  .iconbtn{background:transparent;border:0;padding:2px;margin:0;cursor:pointer;color:var(--ink-faint);opacity:.6;line-height:0;}
+  .iconbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block;}
+  .iconbtn:hover{opacity:1;}
+  .item-edit.iconbtn:hover{color:var(--water);}
+  .item-del.iconbtn:hover{color:#8b1a1a;}
+  .item-del.iconbtn.arm{opacity:1;color:#fff !important;background:#8b1a1a;border-radius:50%;padding:3px;}
+
+
+  .grp > h3{cursor:pointer;user-select:none;}
+  .grp > h3::after{content:"\25B8";margin-left:auto;color:var(--ink-faint);transition:transform .2s ease;}
+  .grp.gopen > h3::after{transform:rotate(90deg);}
+  .grp:not(.gopen) > :not(h3){display:none !important;}
+
 </style>
 
 <header>
@@ -668,10 +684,12 @@
     bar.appendChild(lip); bar.appendChild(ldn); bar.appendChild(nu); bar.appendChild(nb);
     var rl=document.createElement("a"); rl.className="rev-link"; rl.target="_blank"; rl.rel="noopener"; rl.textContent="Review \u2197"; rl.hidden=true; bar.appendChild(rl);
     var lb=document.createElement("button"); lb.type="button"; lb.className="link-btn"; lb.textContent="+ Link"; bar.appendChild(lb);
-    var ie=document.createElement("button"); ie.type="button"; ie.className="item-edit"; ie.textContent="Edit"; ie.title="Edit task"; ie.addEventListener("click",function(){editTitle(id);});
-    var idel=document.createElement("button"); idel.type="button"; idel.className="item-del"; idel.textContent="Delete"; idel.title="Delete item";
-    idel.addEventListener("click",function(){ if(idel.dataset.arm==="1"){ delItem(id); return; } idel.dataset.arm="1"; idel.textContent="Delete?"; idel.classList.add("arm"); setTimeout(function(){ idel.dataset.arm=""; idel.textContent="Delete"; idel.classList.remove("arm"); },3000); });
-    bar.appendChild(ie); bar.appendChild(idel);
+    var PEN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+    var TRASH='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>';
+    var ie=document.createElement("button"); ie.type="button"; ie.className="item-edit iconbtn"; ie.innerHTML=PEN; ie.title="Edit task"; ie.setAttribute("aria-label","Edit task"); ie.addEventListener("click",function(){editTitle(id);});
+    var idel=document.createElement("button"); idel.type="button"; idel.className="item-del iconbtn"; idel.innerHTML=TRASH; idel.title="Delete item"; idel.setAttribute("aria-label","Delete item");
+    idel.addEventListener("click",function(){ if(idel.dataset.arm==="1"){ delItem(id); return; } idel.dataset.arm="1"; idel.classList.add("arm"); idel.title="Click again to delete"; setTimeout(function(){ idel.dataset.arm=""; idel.classList.remove("arm"); idel.title="Delete item"; },3000); });
+    var acts=document.createElement("div"); acts.className="item-actions"; acts.appendChild(ie); acts.appendChild(idel); r.appendChild(acts);
     task.appendChild(bar);
     var lrow=document.createElement("div"); lrow.className="linkrow"; lrow.hidden=true;
     var lin=document.createElement("input"); lin.className="linkin"; lin.type="url"; lin.placeholder="https:// link to review\u2026"; lin.setAttribute("aria-label","review link");
@@ -814,6 +832,7 @@
 
   // accordion
   [].forEach.call(document.querySelectorAll(".acc__head"),function(h){h.addEventListener("click",function(){var acc=h.parentElement,open=acc.classList.contains("open");[].forEach.call(document.querySelectorAll(".acc"),function(a){a.classList.remove("open");a.querySelector(".acc__head").setAttribute("aria-expanded","false");});if(!open){acc.classList.add("open");h.setAttribute("aria-expanded","true");}});});
+  document.addEventListener("click",function(e){ var h3=e.target.closest?e.target.closest("h3"):null; if(!h3) return; var g=h3.parentElement; if(!g||!g.classList.contains("grp")) return; var willOpen=!g.classList.contains("gopen"); [].forEach.call(document.querySelectorAll(".grp.gopen"),function(x){x.classList.remove("gopen");}); if(willOpen) g.classList.add("gopen"); });
 
   // boot (website): load from the site API, render, then poll for the other person's changes
   var saveT=null, lastLocal=0;
