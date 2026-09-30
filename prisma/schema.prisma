@@ -109,3 +109,9 @@ model ContactSubmission {
 
   @@index([read, archived, createdAt])
 }
+
+model PunchList {
+  id        String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+}
