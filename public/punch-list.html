@@ -313,6 +313,10 @@
   .notes-btn.has .ncount{color:#fff !important;}
   .item:has(.notes-btn.has){box-shadow:inset 3px 0 0 var(--water);}
 
+
+  .acc__stars{font-family:ui-monospace,monospace;font-size:.72rem;color:#d4a017;font-weight:600;margin-right:10px;white-space:nowrap;}
+  .item.has-review .t::before{content:"\2605\00a0";color:#d4a017;font-size:1.05em;}
+
 </style>
 
 <header>
@@ -773,9 +777,14 @@
     document.getElementById("pct").textContent=pct+"%";
     document.getElementById("count").textContent=done+" / "+total;
     [].forEach.call(document.querySelectorAll(".acc__count"),function(c){
-      var pre=c.getAttribute("data-acc")+"-",t=0,d=0;
-      ids.forEach(function(id){if(id.indexOf(pre)===0){t++;if(state[id]&&state[id].status==="done")d++;}});
-      c.textContent=d+" / "+t;
+      var acc=c.getAttribute("data-acc");
+      var all=document.querySelectorAll("#body-"+acc+" .item").length;
+      var d=document.querySelectorAll("#body-"+acc+" .item.done").length;
+      c.textContent=d+" / "+all;
+      var head=c.parentElement, sb=head.querySelector(".acc__stars");
+      if(!sb){ sb=document.createElement("span"); sb.className="acc__stars"; c.insertAdjacentElement("beforebegin",sb); }
+      var n=document.querySelectorAll("#body-"+acc+" .item.has-review").length;
+      sb.textContent=n?("\u2605 "+n):"";
     });
   }
 
