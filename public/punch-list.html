@@ -319,7 +319,7 @@
   <div class="wrap">
     <div class="eyebrow"><span class="dot"></span>Visibility Punch Lists · Castellino</div>
     <h1>Two brands. Two lists.</h1>
-    <p class="sub">One list per site — all lists open below. Two states per item (<b>In progress</b> · <b>Done</b>), a <b>Dennis ↔ Bob</b> note thread on each, and <b>+ Add item</b>. Everything is shared live between you both when signed in.</p>
+    <p class="sub">One list per site — tap a header to open one at a time. Two states per item (<b>In progress</b> · <b>Done</b>), a <b>Dennis ↔ Bob</b> note thread on each, and <b>+ Add item</b>. Everything is shared live between you both when signed in.</p>
     <div class="legend">
       <span class="lab">Legend:</span>
       <span class="pill p1">P1 now</span>
@@ -804,8 +804,7 @@
   function setSync(){var el=document.getElementById("sync"),t=document.getElementById("synctxt");if(!el)return;if(mode==="db"&&canWrite){el.classList.remove("local");t.textContent="synced with Bob";}else if(mode==="db"){el.classList.add("local");t.textContent="view only";}else{el.classList.add("local");t.textContent="local only — sign in to share";}}
 
   // accordion
-  [].forEach.call(document.querySelectorAll(".acc__head"),function(h){h.addEventListener("click",function(){var acc=h.parentElement;var willOpen=!acc.classList.contains("open");acc.classList.toggle("open",willOpen);h.setAttribute("aria-expanded",willOpen?"true":"false");});});
-  [].forEach.call(document.querySelectorAll(".acc"),function(a){a.classList.add("open");var hh=a.querySelector(".acc__head");if(hh)hh.setAttribute("aria-expanded","true");});
+  [].forEach.call(document.querySelectorAll(".acc__head"),function(h){h.addEventListener("click",function(){var acc=h.parentElement,open=acc.classList.contains("open");[].forEach.call(document.querySelectorAll(".acc"),function(a){a.classList.remove("open");a.querySelector(".acc__head").setAttribute("aria-expanded","false");});if(!open){acc.classList.add("open");h.setAttribute("aria-expanded","true");}});});
 
   // boot (website): load from the site API, render, then poll for the other person's changes
   var saveT=null, lastLocal=0;
