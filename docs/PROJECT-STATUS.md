@@ -1,8 +1,26 @@
 # Project status — Castellino / Fluid Pathways
 
-_Updated 2026-10-01. Repo: `/Users/dennis.mccarthy/robert-castellino`, branch `main`, pushed to origin. Latest commit at writing: `d2e6509`._
+_Updated 2026-10-02. Repo: `/Users/dennis.mccarthy/robert-castellino`, branch `main`, pushed to origin. Latest commit before this doc: `bb3bea7` (SEO + ad exports)._
 
 Two workstreams right now: the **gift-series ads** and the **punch list**. Separate from this repo there's also the **Fluid Pathways** site, which has the content/post engine.
+
+## Status & priority (2026-10-02)
+
+### Done this session
+- **SEO** — metadata + OpenGraph/Twitter, `src/app/robots.ts`, `src/app/sitemap.ts`, Person JSON-LD (Bob) sitewide, Book JSON-LD on `/book`. Verified live (`/robots.txt`, `/sitemap.xml`, schema on home + book). Marked done on the punch list.
+- **Multi-format ad exports** — 30 files (6 hero plates × 5 sizes) in `public/gift-series/ads/` + README. Clean crops; 9:16/2:3 are upscaled from ~1100px source (reshoot for final paid). Marked done.
+
+### Two decisions to make first (priority)
+1. **Which punch-list copy is canonical** — claude.ai (complete, where I've been marking things done) vs website (`robertcastellino.com/punch-list.html`, seeded once). They're separate databases and drift. Pick one; I'll keep everything there and re-sync the other.
+2. **Real discount code** — replace the `COLORADO15` placeholder across the gift-series page.
+
+### Ready to peel solo next (no Bob, no outside account)
+Clean: homepage holiday banner → `/book`; bring the 26 hi-res page scans into the repo + gift-series library; draft the first few mailings; set the mailing cadence; mine the book PDF into a content-source file; a homepage "latest work" section; verify + mark the editable/saveable posts tool (the gift-series already edits + saves to Postgres).
+Bigger builds: admin CRUD for musings/collections; a post-library page.
+Write-ups only: print-on-demand options; paid-campaign scope.
+
+### Blocked (need Dennis/Bob or an account)
+Real code, Stripe discount, the book photo (shoot), list-quality audit, Ads Manager, scheduler/auto-post, any ESP-dependent capture/welcome/newsletter, GA4 + Search Console (need IDs/verification), and actually launching/posting.
 
 ## Remote / how to sync on the satellite device
 
