@@ -1,9 +1,32 @@
 import { PageHero } from "@/components/page-hero";
 import { BookBuy } from "./BookBuy";
 
+const bookLd = {
+  "@context": "https://schema.org",
+  "@type": "Book",
+  name: "Colorado: Life and Light on the Land",
+  author: { "@type": "Person", name: "Robert Castellino" },
+  bookFormat: "https://schema.org/Hardcover",
+  numberOfPages: 168,
+  isbn: "978-0-9972290-0-4",
+  inLanguage: "en",
+  image: "https://robertcastellino.com/gift-series/book-cover-hi.jpg",
+  offers: {
+    "@type": "Offer",
+    price: "75",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    url: "https://robertcastellino.com/book",
+  },
+};
+
 export default function BookPage() {
   return (
     <section className="route route--book">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bookLd) }}
+      />
       <PageHero
         img="/assets/maroon-bells.jpg"
         alt="Maroon Bells, Summer's End"
