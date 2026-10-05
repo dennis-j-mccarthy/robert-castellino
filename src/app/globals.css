@@ -3827,3 +3827,22 @@ select.add-input option { background: #111; }
   .tst__quote { animation: none; }
   .tst__arrow, .tst__dot { transition: none; }
 }
+
+/* ===== Book page — praise ===== */
+.book-praise { max-width: 1100px; margin: 0 auto; padding: clamp(44px, 6vw, 88px) var(--col-pad); }
+.book-praise .kicker { display: block; text-align: center; margin-bottom: clamp(24px, 3vw, 38px); }
+.book-praise__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 72px); }
+.book-praise__q { margin: 0; text-align: center; position: relative; }
+.book-praise__q::before {
+  content: "\201C"; font-family: var(--serif); color: var(--gold); opacity: 0.5;
+  font-size: 2.8rem; line-height: 0.6; display: block; margin-bottom: 0.3em;
+}
+.book-praise__q p {
+  margin: 0; font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.1rem, 1.6vw, 1.42rem); line-height: 1.5;
+  color: var(--bone-85); text-wrap: balance;
+}
+.book-praise__q figcaption { margin-top: 20px; display: flex; flex-direction: column; gap: 4px; }
+.book-praise__name { font-family: var(--serif); color: var(--ember); font-size: 1.05rem; letter-spacing: 0.01em; }
+.book-praise__role { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bone-50); }
+@media (max-width: 720px) { .book-praise__grid { grid-template-columns: 1fr; gap: 40px; } }

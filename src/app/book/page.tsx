@@ -77,6 +77,34 @@ export default function BookPage() {
         </div>
       </div>
 
+      {/* PRAISE */}
+      <section className="book-praise">
+        <span className="kicker kicker--gold">— On the work</span>
+        <div className="book-praise__grid">
+          <figure className="book-praise__q">
+            <p>
+              His work — particularly his books — provides an unparalleled record
+              of the beauty, uniqueness and historical richness of the Colorado
+              Front Range.
+            </p>
+            <figcaption>
+              <span className="book-praise__name">Stewart Shayah Sallo</span>
+              <span className="book-praise__role">Owner, Boulder Weekly</span>
+            </figcaption>
+          </figure>
+          <figure className="book-praise__q">
+            <p>
+              His ability to tell a story through his photography — his love of the
+              subject, his knowledge of the setting, the historical. He is a master.
+            </p>
+            <figcaption>
+              <span className="book-praise__name">Jim Williams</span>
+              <span className="book-praise__role">Dean of Libraries, CU Boulder</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section className="spreads">
         <header className="section-head">
           <div>
