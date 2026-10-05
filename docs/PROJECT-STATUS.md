@@ -1,6 +1,11 @@
 # Project status — Castellino / Fluid Pathways
 
-_Updated 2026-10-02. Repo: `/Users/dennis.mccarthy/robert-castellino`, branch `main`, pushed to origin. Latest commit before this doc: `bb3bea7` (SEO + ad exports)._
+_Updated 2026-10-05. Repo: `/Users/dennis.mccarthy/robert-castellino`, branch `main`, pushed to origin. Latest: `5968b9c` (hi-res plates + ad crops). Prior: `bb3bea7` (SEO + ad exports)._
+
+### Done 2026-10-05 (Streams run rmuvlokp4)
+- **Holiday gift banner** — site-wide `.promo` bar → `/book` ("Give the gift of Colorado"), live and verified (desktop/mobile/inner page); hidden on `/admin`. No discount code shown (still a placeholder — see decision #2). `src/components/gift-banner.tsx`.
+- **Hi-res scans into the pipeline** — 18 photographic plates from the 1651px `CO Life & Light` page scans brought into `gift-series/` (15 new + aspen-durango/sievers-snowmass/lake-isabelle upgraded), captions trimmed, square ~1400px, added to `library.json`; regenerated the 5-size ad crops (now native/downscaled, not upscaled). The "26 scans" = 22 jpgs + 4 PDFs; of the 22, 4 are text pages (excluded). Full-res originals stay in `~/Downloads` (not git).
+
 
 Two workstreams right now: the **gift-series ads** and the **punch list**. Separate from this repo there's also the **Fluid Pathways** site, which has the content/post engine.
 
@@ -15,7 +20,7 @@ Two workstreams right now: the **gift-series ads** and the **punch list**. Separ
 2. **Real discount code** — replace the `COLORADO15` placeholder across the gift-series page.
 
 ### Ready to peel solo next (no Bob, no outside account)
-Clean: homepage holiday banner → `/book`; bring the 26 hi-res page scans into the repo + gift-series library; draft the first few mailings; set the mailing cadence; mine the book PDF into a content-source file; a homepage "latest work" section; verify + mark the editable/saveable posts tool (the gift-series already edits + saves to Postgres).
+Clean: draft the first few mailings; set the mailing cadence; mine the book PDF into a content-source file; a homepage "latest work" section; verify + mark the editable/saveable posts tool (the gift-series already edits + saves to Postgres). _(Done 2026-10-05: holiday banner; hi-res scans → gift-series.)_
 Bigger builds: admin CRUD for musings/collections; a post-library page.
 Write-ups only: print-on-demand options; paid-campaign scope.
 
