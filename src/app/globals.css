@@ -727,10 +727,14 @@ a  { color: inherit; text-decoration: none; }
 .page-hero {
   position: relative;
   width: 100%;
-  height: 45vh;
-  min-height: 320px;
+  min-height: 56vh;
   overflow: hidden;
-  margin-top: 0;
+  display: flex;
+  align-items: flex-end;
+  /* Top padding reserves space for the fixed banner + nav so a tall title can
+     never slide under them; min-height lets the hero grow for long titles. */
+  padding: calc(var(--promo-h, 0px) + 104px) var(--col-pad) 12vh;
+  box-sizing: border-box;
 }
 .page-hero__media {
   position: absolute; inset: 0;
@@ -762,10 +766,8 @@ a  { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .page-hero__chrome {
-  position: absolute;
-  left: var(--col-pad);
-  right: var(--col-pad);
-  bottom: 12vh;
+  position: relative;
+  width: 100%;
   max-width: var(--col-max);
   z-index: 2;
 }
@@ -801,8 +803,7 @@ a  { color: inherit; text-decoration: none; }
   text-shadow: 0 2px 20px rgba(0,0,0,0.6);
 }
 @media (max-width: 980px) {
-  .page-hero { height: 56vh; min-height: 420px; }
-  .page-hero__chrome { bottom: 8vh; }
+  .page-hero { min-height: 52vh; padding-top: calc(var(--promo-h, 0px) + 84px); padding-bottom: 8vh; }
 }
 
 /* ============================================================
