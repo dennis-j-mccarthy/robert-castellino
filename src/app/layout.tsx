@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import { Aurora } from "@/components/aurora";
+import { GiftBanner } from "@/components/gift-banner";
 import { Nav } from "@/components/nav";
 import { Ticker } from "@/components/ticker";
 import { Footer } from "@/components/footer";
@@ -85,6 +86,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }}
         />
+        <GiftBanner />
         <Aurora />
         <Nav />
         <main className="stage">{children}</main>
