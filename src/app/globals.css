@@ -3874,3 +3874,7 @@ select.add-input option { background: #111; }
   .promo { font-size: 12px; gap: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .promo, .promo__cta svg { transition: none; } }
+/* The holiday banner is public-site chrome only — keep it off the admin tool,
+   where the sticky admin-shell header (z-30) would otherwise scroll under it. */
+body:has(.admin-shell) { --promo-h: 0px; }
+body:has(.admin-shell) .promo { display: none; }
