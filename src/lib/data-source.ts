@@ -34,6 +34,28 @@ export type { Musing, MusingCategory, Collection, Photo };
 
 // ───────── MUSINGS ─────────
 
+/** Map a Prisma Musing row to the shared Musing shape (nulls → undefined, dates → ISO). */
+export function rowToMusing(r: {
+  id: string; num: string; cat: string; title: string; date: string;
+  loc: string | null; img: string | null; size: string | null;
+  excerpt: string; body: string[]; createdAt: Date; updatedAt: Date;
+}): Musing {
+  return {
+    id: r.id,
+    num: r.num,
+    cat: r.cat as MusingCategory,
+    title: r.title,
+    date: r.date,
+    loc: r.loc ?? undefined,
+    img: r.img ?? undefined,
+    size: (r.size as "sm" | "md" | "lg" | null) ?? undefined,
+    excerpt: r.excerpt,
+    body: r.body,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
+}
+
 export async function getAllMusings(): Promise<Musing[]> {
   if (!isDatabaseConfigured()) return STATIC_MUSINGS;
   try {
@@ -42,18 +64,7 @@ export async function getAllMusings(): Promise<Musing[]> {
       orderBy: [{ order: "asc" }, { id: "asc" }],
     });
     if (rows.length === 0) return STATIC_MUSINGS;
-    return rows.map((r) => ({
-      id: r.id,
-      num: r.num,
-      cat: r.cat as MusingCategory,
-      title: r.title,
-      date: r.date,
-      loc: r.loc ?? undefined,
-      img: r.img ?? undefined,
-      size: (r.size as "sm" | "md" | "lg" | undefined) ?? undefined,
-      excerpt: r.excerpt,
-      body: r.body,
-    }));
+    return rows.map(rowToMusing);
   } catch {
     return STATIC_MUSINGS;
   }

@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma, isDatabaseConfigured } from "@/lib/prisma";
+import { rowToMusing } from "@/lib/data-source";
+import { revalidateMusings, onMusingPublished } from "@/lib/publish-hooks";
 import { MUSINGS } from "@/data/musings";
 
 export const runtime = "nodejs";
@@ -81,6 +83,12 @@ export async function POST(req: Request) {
   try {
     const { id, num } = await generateIdAndNum();
     const musing = await prisma.musing.create({ data: { id, num, ...parsed.data } });
+    // Publish side effects: only when the new post is actually published.
+    if (musing.published) {
+      revalidateMusings(musing.id);
+      const m = rowToMusing(musing);
+      after(() => onMusingPublished(m));
+    }
     return NextResponse.json(musing, { status: 201 });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Database error";
