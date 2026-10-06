@@ -194,5 +194,53 @@
   {
     "src": "/gift-series/union-station-fireworks.jpg",
     "name": "Holiday fireworks over Union Station, Denver"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-street-1890.jpg",
+    "name": "Pearl Street, circa 1890 (archival · Rocky Mountain Joe / Carnegie Library)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Joseph Bevier Sturtevant 'Rocky Mountain Joe' — Carnegie Branch Library for Local History"
+  },
+  {
+    "src": "/gift-series/boulder-yt/sunset-hill-1905.jpg",
+    "name": "Boulder from Sunset Hill, Summer 1905 (archival · Carnegie Library)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Unidentified — Carnegie Branch Library for Local History, Boulder Historical Society Collection"
+  },
+  {
+    "src": "/gift-series/boulder-yt/sunset-hill-2005.jpg",
+    "name": "Boulder from Sunset Hill, 2005 (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
+  },
+  {
+    "src": "/gift-series/boulder-yt/beautiful-boulder-postcard.jpg",
+    "name": "Beautiful Boulder, Colo. — vintage hand-colored view (Pine & Coulson)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Pine & Coulson (vintage)"
+  },
+  {
+    "src": "/gift-series/boulder-yt/flagstaff-star-1980s.jpg",
+    "name": "Star on Flagstaff & city lights, circa 1980s (Vern Walker)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Vern Walker — Marsha Walker Collection"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-holiday-lights-2004.jpg",
+    "name": "Snow & holiday lights, Pearl Street, 2004 (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-star-flagstaff-2003.jpg",
+    "name": "Pearl Street & the Flagstaff star, December 2003 (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-street-fountain.jpg",
+    "name": "Pearl Street fountain at dusk (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
   }
 ]
