@@ -115,3 +115,19 @@ model PunchList {
   data      Json
   updatedAt DateTime @updatedAt
 }
+
+// ───────── NEWSLETTER SUBSCRIBERS ─────────
+// Captured by the list-capture modal / journal CTA. Storage-only for now; a
+// provider (Resend audience, etc.) can sync from here later.
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String? // "popup" | "musings" | ...
+  userAgent String?
+  ipHash    String?
+  confirmed Boolean  @default(false)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([active, createdAt])
+}

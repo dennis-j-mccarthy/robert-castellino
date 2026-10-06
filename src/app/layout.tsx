@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import { Aurora } from "@/components/aurora";
 import { GiftBanner } from "@/components/gift-banner";
+import { SubscribeModal } from "@/components/subscribe-modal";
 import { Nav } from "@/components/nav";
 import { Ticker } from "@/components/ticker";
 import { Footer } from "@/components/footer";
@@ -92,6 +93,7 @@ export default function RootLayout({
         <main className="stage">{children}</main>
         <Footer />
         <Ticker />
+        <SubscribeModal />
       </body>
     </html>
   );

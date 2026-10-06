@@ -3879,3 +3879,58 @@ select.add-input option { background: #111; }
    where the sticky admin-shell header (z-30) would otherwise scroll under it. */
 body:has(.admin-shell) { --promo-h: 0px; }
 body:has(.admin-shell) .promo { display: none; }
+
+/* ============================================================
+   SUBSCRIBE MODAL (list-capture popup)
+============================================================ */
+.submodal {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: rgba(5,6,8,0.72);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: submodalFade 0.3s var(--ease) both;
+}
+.submodal__card {
+  position: relative;
+  width: 100%; max-width: 440px;
+  padding: 40px 36px 30px;
+  background: linear-gradient(180deg, rgba(22,20,16,0.98), rgba(10,11,14,0.98));
+  border: 1px solid rgba(200,169,106,0.28);
+  border-radius: 18px;
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,0.8), 0 0 60px -20px rgba(200,169,106,0.18);
+  animation: submodalRise 0.35s var(--ease) both;
+}
+.submodal__card .display { font-size: clamp(30px, 4vw, 40px); margin: 6px 0 12px; }
+.submodal__lede { color: var(--bone-70); line-height: 1.6; margin: 0 0 22px; }
+.submodal__form { display: flex; flex-direction: column; gap: 10px; }
+.submodal__input {
+  width: 100%; box-sizing: border-box;
+  padding: 13px 15px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--rule); border-radius: 10px;
+  color: var(--bone-95); font-family: var(--sans); font-size: 15px;
+}
+.submodal__input:focus-visible { outline: none; border-color: var(--gold); }
+.submodal__form .btn--gold { justify-content: center; }
+.submodal__err { color: var(--amber, #d97a3a); font-size: 13px; margin: 10px 0 0; }
+.submodal__skip {
+  display: block; margin: 16px auto 0;
+  background: none; border: none; cursor: pointer;
+  color: var(--bone-50); font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.submodal__skip:hover { color: var(--bone-70); }
+.submodal__close {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer; color: var(--bone-50); border-radius: 8px;
+}
+.submodal__close:hover { color: var(--bone-95); background: rgba(255,255,255,0.06); }
+.submodal__done { text-align: center; }
+.submodal__done p { color: var(--bone-70); line-height: 1.6; margin: 0 0 20px; }
+@keyframes submodalFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes submodalRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .submodal, .submodal__card { animation: none; }
+}
