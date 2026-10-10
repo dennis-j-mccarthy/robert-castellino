@@ -135,6 +135,73 @@
   [contenteditable="true"]:hover{box-shadow:inset 0 0 0 1.5px rgba(176,107,43,.8);}
   [contenteditable="true"]:focus{background:rgba(176,107,43,.16);box-shadow:inset 0 0 0 2px var(--accent);}
   .ov-h[contenteditable="true"]:focus,.st[contenteditable="true"]:focus{background:rgba(0,0,0,.28);}
+  .mp-part{padding-block:44px 8px;border-bottom:1px solid var(--line);}
+  .mp-part__n{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.1em;}
+  .mp h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.7rem,4.5vw,2.3rem);line-height:1.05;margin:.2em 0 .4em;}
+  .mp h3{font-family:var(--serif);font-weight:600;font-size:1.25rem;margin:30px 0 10px;}
+  .mp h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine-2);margin:18px 0 6px;}
+  .mp p{margin:0 0 12px;}
+  .mp-lede{color:var(--muted);max-width:66ch;}
+  .mp-flag{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:14.5px;}
+  .mp-flag b{color:var(--accent-ink);}
+  .mp-flag.mp-red{background:var(--bad-soft);border-left-color:var(--bad);}
+  .mp-flag.mp-red b{color:var(--bad);}
+
+  .mp-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin:12px 0;}
+  .mp-card__top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-bottom:8px;}
+  .mp-card__name{font-family:var(--serif);font-weight:600;font-size:1.15rem;}
+  .mp-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border-radius:6px;padding:2px 8px;background:var(--surface);border:1px solid var(--line);color:var(--muted);}
+  .mp-tag.mp-goal{color:var(--pine-2);}
+  dl.mp-def{display:grid;grid-template-columns:minmax(90px,140px) 1fr;gap:6px 14px;margin:0;font-size:14.5px;}
+  dl.mp-def dt{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);padding-top:3px;}
+  dl.mp-def dd{margin:0;}
+  @media (max-width:520px){dl.mp-def{grid-template-columns:1fr;gap:2px;}dl.mp-def dd{margin-bottom:8px;}}
+
+  .mp-tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);margin:10px 0;}
+  .mp table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  .mp th,.mp td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;}
+  .mp th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:500;background:var(--surface);white-space:nowrap;}
+  .mp tr:last-child td{border-bottom:0;}
+  .mp td.mp-num,.mp th.mp-num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .mp td.mp-pend{color:var(--faint);font-family:var(--mono);font-size:12px;}
+
+  .mp-ads{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+  .mp-ad{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px;display:flex;flex-direction:column;gap:8px;}
+  .mp-ad .mp-v{font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;}
+  .mp-ad .mp-pt{color:var(--ink);}
+  .mp-ad .mp-hl{font-family:var(--serif);font-weight:600;font-size:1.05rem;line-height:1.2;}
+  .mp-ad .mp-cta{font-family:var(--mono);font-size:11px;color:var(--accent-ink);margin-top:auto;}
+
+  ol.mp-steps,ul.mp-list{padding-left:22px;margin:6px 0 12px;}
+  ol.mp-steps li,ul.mp-list li{margin-bottom:8px;}
+  ul.mp-check{list-style:none;padding:0;margin:6px 0 12px;}
+  ul.mp-check li{padding-left:28px;position:relative;margin-bottom:9px;}
+  ul.mp-check li::before{content:"";position:absolute;left:2px;top:4px;width:15px;height:15px;border:1.5px solid var(--muted);border-radius:4px;}
+  .mp code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);color:var(--accent-ink);padding:1px 6px;border-radius:5px;}
+
+  .mp-wl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+  .mp-wl .mp-card{margin:0;}
+  .mp-wl h4{margin-top:0;}
+  .mp-wl .mp-win h4{color:var(--good);}
+  .mp-wl .mp-lose h4{color:var(--bad);}
+  .mp-slotline{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:8px 0;font-size:13.5px;color:var(--faint);}
+  .mp-slotline:last-of-type{border-bottom:0;}
+  .mp-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0;}
+  .mp-kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;}
+  .mp-kpi .mp-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+  .mp-kpi .mp-n{font-family:var(--serif);font-weight:600;font-size:1.6rem;color:var(--faint);}
+  :root{--good:#2f6b45;--good-soft:#dcebdf;--bad:#9b3b2e;--bad-soft:#f3dcd7;}
+  @media (prefers-color-scheme:dark){:root{--good:#8fcca2;--good-soft:#1c2e22;--bad:#e59a8c;--bad-soft:#35201c;}}
+  nav.mp-toc{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px;font-family:var(--mono);font-size:12px;}
+  nav.mp-toc a{color:var(--pine-2);text-decoration:none;border-bottom:1px solid var(--line);}
+  .mp-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .mp-pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;color:var(--muted);}
+  .mp-pill.wait{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
+  .mp-pill.no{border-color:var(--bad);color:var(--bad);background:var(--bad-soft);}
+  .mp details.mp-more{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:4px 16px;margin:12px 0;}
+  .mp details.mp-more summary{cursor:pointer;font-family:var(--serif);font-weight:600;font-size:1.1rem;padding:10px 0;}
+  .mp details.mp-more[open]{padding-bottom:14px;}
+  #have.mp-part{border-bottom:0;padding-bottom:0;}
   footer{border-top:1px solid var(--line);padding-block:24px 56px;color:var(--faint);font-size:13px;}
   footer b{color:var(--muted)} footer .cta-url{color:var(--pine-2)}
   @media (max-width:460px){.offer__meta{margin-left:0;width:100%}.angle{margin-left:0}.copybtn{width:100%}}
@@ -152,7 +219,104 @@
     </div>
     <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> opens the library — every photo used on these ads — and you pick one. <b>Save</b> stores the page for everyone, after you sign in. Copy grabs the words. Reset puts that one ad back. The offer code is a placeholder — swap in the real one before you post.</p>
     <p class="note"><button type="button" id="save-ads" class="copybtn">Save</button> <span id="save-status" style="font-size:13px;color:var(--muted)"></span></p>
+    <nav class="mp-toc">
+      <a href="#audience">1 · Audience</a>
+      <a href="#have">2 · What we have now</a>
+      <a href="#running">3 · What's running</a>
+      <a href="#performance">4 · Performance</a>
+    </nav>
+    <div class="mp-status">
+      <span class="mp-pill">Page 134235743309639</span>
+      <span class="mp-pill wait">Page insights: waiting on access</span>
+      <span class="mp-pill wait">Ad account: not shared yet</span>
+      <span class="mp-pill no">Pixel: not on the site</span>
+      <span class="mp-pill no">Checkout can't take a code yet</span>
+    </div>
   </header>
+
+<section class="mp mp-part" id="audience">
+    <div class="mp-part__n">01</div>
+    <h2>Audience</h2>
+    <p class="mp-lede">Who already follows Bob, and the five audiences we'll pay to reach.</p>
+
+    <h3>Who follows Bob now</h3>
+    <div class="mp-flag"><b>Waiting on Page access.</b> Filled in from Page and Instagram insights. Blank until we can read them.</div>
+    <div class="mp-tbl"><table>
+      <tr><th>Field</th><th>Facebook</th><th>Instagram</th></tr>
+      <tr><td>Followers</td><td class="mp-pend">pending</td><td class="mp-pend">pending</td></tr>
+      <tr><td>Top cities</td><td class="mp-pend">pending</td><td class="mp-pend">pending</td></tr>
+      <tr><td>Share in Colorado</td><td class="mp-pend">pending</td><td class="mp-pend">pending</td></tr>
+      <tr><td>Age and gender split</td><td class="mp-pend">pending</td><td class="mp-pend">pending</td></tr>
+    </table></div>
+
+    <h3>The Page itself</h3>
+    <div class="mp-flag"><b>Waiting on Page access.</b> Should match the site: Boulder studio, based in Lafayette, robertcastellino.com.</div>
+    <div class="mp-tbl"><table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Category · About · Website</td><td class="mp-pend">pending</td></tr>
+      <tr><td>Contact (email, phone, address)</td><td class="mp-pend">pending</td></tr>
+      <tr><td>Instagram linked · handle · account type</td><td class="mp-pend">pending (needs business or creator for ads)</td></tr>
+      <tr><td>Posts per week (90 days) · longest gap</td><td class="mp-pend">pending</td></tr>
+      <tr><td>Fluid Pathways Page exists, not accessible</td><td class="mp-pend">pending, flag only</td></tr>
+    </table></div>
+
+
+    <h3>Who we'll reach</h3>
+    <p class="mp-lede">Five audiences. All of them are specs only, and nothing gets created until Bob shares the account. Interest names change in Ads Manager, so check each one on day one and drop any that no longer exist.</p>
+
+    <div class="mp-card">
+      <div class="mp-card__top"><span class="mp-card__name">A · Warm: Page and Instagram engagers</span><span class="mp-tag">Custom</span><span class="mp-tag mp-goal">Book · prints</span></div>
+      <dl class="mp-def">
+        <dt>Definition</dt><dd>Anyone who engaged with the Facebook Page or the Instagram account in the last 365 days. That covers likes, comments, saves, shares, messages and profile visits. Combine both sources into one audience.</dd>
+        <dt>Why</dt><dd>These people already know Bob's work. They're the cheapest place to sell the book, and the best source for the lookalike.</dd>
+        <dt>Limits</dt><dd>Instagram engagers only work if the account is a business or creator account linked to the Page. If the audience comes in small, merge it with D rather than running it alone.</dd>
+      </dl>
+    </div>
+
+    <div class="mp-card">
+      <div class="mp-card__top"><span class="mp-card__name">B · Lookalike of A</span><span class="mp-tag">Lookalike</span><span class="mp-tag mp-goal">Book</span></div>
+      <dl class="mp-def">
+        <dt>Definition</dt><dd>1% lookalike of audience A, United States. Swap the source to purchasers once the pixel has logged enough sales.</dd>
+        <dt>Why</dt><dd>It finds new people who look like Bob's existing fans. That's the main way to reach people outside Colorado who'd want the book.</dd>
+        <dt>Limits</dt><dd>The source needs at least 100 people in one country. Meta increasingly treats lookalikes as a suggestion and widens them on its own, so judge it on cost per sale, not reach.</dd>
+      </dl>
+    </div>
+
+    <div class="mp-card">
+      <div class="mp-card__top"><span class="mp-card__name">C · Cold: Colorado, landscape and home</span><span class="mp-tag">Saved</span><span class="mp-tag mp-goal">Book · prints</span></div>
+      <dl class="mp-def">
+        <dt>Definition</dt><dd>People living in Colorado, ages 30–65+. Interests (match any): landscape photography, fine-art photography, Rocky Mountain National Park, hiking, coffee table books, interior design, art collecting.</dd>
+        <dt>Why</dt><dd>The brief's core buyer: someone who lives here and wants the place in the house. This is the audience for prints as well as the book.</dd>
+        <dt>Limits</dt><dd>With Advantage+ audience switched on, interests are only a suggestion and Meta can go wider. Excluding interests is no longer available, so exclude A and E by audience list instead.</dd>
+      </dl>
+    </div>
+
+    <div class="mp-card">
+      <div class="mp-card__top"><span class="mp-card__name">D · Cold: Colorado gift buyers, nationwide</span><span class="mp-tag">Saved</span><span class="mp-tag mp-goal">Book (holiday)</span></div>
+      <dl class="mp-def">
+        <dt>Definition</dt><dd>United States, ages 35–65+. Interests (match any): Colorado, Denver, Rocky Mountain National Park, Aspen, Telluride, ski resorts. Narrow further (must also match): gifts, holiday shopping, or the "engaged shoppers" behavior. Runs Nov 3 – Dec 17.</dd>
+        <dt>Why</dt><dd>It reaches people who left Colorado, and family of Coloradans, at gift time. The brief's line for them: "Homesick? It's all in here."</dd>
+        <dt>Limits</dt><dd>"Former Colorado resident" can't be targeted directly; interest in Colorado is the closest available stand-in. Expect this to be the most expensive of the five.</dd>
+      </dl>
+    </div>
+
+    <div class="mp-card">
+      <div class="mp-card__top"><span class="mp-card__name">E · Retarget: site visitors who didn't buy</span><span class="mp-tag">Custom (website)</span><span class="mp-tag mp-goal">Book · prints</span></div>
+      <dl class="mp-def">
+        <dt>Definition</dt><dd>Visited <code>/book</code> or opened a print in the last 14 days, minus anyone who purchased in the last 30 days.</dd>
+        <dt>Why</dt><dd>The brief says to retarget for two weeks with the object ads only: the book on a table, a print on a wall, and the price.</dd>
+        <dt>Limits</dt><dd>It can't exist until the Meta Pixel is on robertcastellino.com, and it fills slowly at Bob's traffic levels. Start the pixel now, even before ads, so this audience is filling.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="mp mp-part" id="have">
+    <div class="mp-part__n">02</div>
+    <h2>What we have now</h2>
+    <p class="mp-lede">The 50 posts below, sized for each channel. In ads, every one links to <code>/book</code> or the print, never to this page.</p>
+    <div class="mp-flag mp-red"><b>Fix before any ad mentions a discount.</b> Checkout on robertcastellino.com (Stripe) has nowhere for a customer to type a code. <code>COLORADO15</code> is also still a placeholder. Until Bob confirms a real offer and the site can accept codes, the ads below don't mention a discount. They sell the signed book at $85.</div>
+
+  </section>
 
   <main>
     <section class="slot"><div class="slot__meta"><span class="seq">01</span><span class="plat">Instagram · feed</span><span class="angle">Fri Nov 28 · the centerpiece</span></div>
@@ -545,6 +709,150 @@
         <div class="tags">#RobertCastellino #FineArtPhotography #Colorado #BookSale</div><div class="time">6 hours ago</div></div>
       <div class="foot"><div class="credit"><b>Photo:</b> Robert, from the about page · square</div><button class="copybtn" type="button">Copy caption</button></div></section>
   </main>
+
+<section class="mp mp-part" id="running">
+    <div class="mp-part__n">03</div>
+    <h2>What's running</h2>
+    <div class="mp-flag"><b>Nothing is running yet.</b> This is the plan the first 30 days will run on. Statuses switch to live from Bob's ad account.</div>
+    <h3>Schedule and budget</h3>
+    <div class="mp-tbl"><table>
+      <tr><th>Dates</th><th>Campaign</th><th>Ad sets</th><th class="mp-num">Daily budget</th></tr>
+      <tr><td>Oct 13 – Nov 2</td><td>None. Organic warm-up only (calendar below) while the pixel goes in.</td><td>—</td><td class="mp-num">$0</td></tr>
+      <tr><td>Nov 3 – Nov 16</td><td><b>Book &amp; prints · Sales</b>. Optimize for purchases if the pixel is firing. Until then, optimize for landing-page views.</td><td>A, B, C (D if budget allows)</td><td class="mp-num">$30–50</td></tr>
+      <tr><td>Nov 17 – Dec 12</td><td>Same campaign, holiday creative swapped in, plus <b>Retarget</b></td><td>A, B, C, D · E</td><td class="mp-num">$50–90</td></tr>
+    </table></div>
+    <p class="mp-lede"><b>Why these amounts.</b> A signed book is $85 plus $12 shipping, so one sale is roughly a $97 order. At $30–50 a day the account can test three or four ad sets for two weeks without spreading thin, which the brief warns against. Raise money only where a sale is cheaper than Bob's margin on the book. <b>Ask Bob for that margin before launch.</b> It sets the cost per sale at which we stop spending. Stop holiday prospecting around Dec 12 so orders ship from Boulder before Christmas. Bob needs to confirm the real order-by date.</p>
+
+
+    <h3>Ads by audience</h3>
+    <div class="mp-tbl"><table>
+      <tr><th>Ad set</th><th>Audience</th><th>Ads</th><th>Links to</th><th>Dates</th><th>Status</th></tr>
+      <tr><td>A · Warm</td><td>Page + IG engagers, 365 days</td><td>A1 · A2 · A3</td><td>/book, gallery</td><td>Nov 3 →</td><td class="mp-pend">not built</td></tr>
+      <tr><td>B · Lookalike</td><td>1% US lookalike of A</td><td>B1 · B2 · B3</td><td>/book</td><td>Nov 3 →</td><td class="mp-pend">not built</td></tr>
+      <tr><td>C · Colorado</td><td>Colorado, 30–65+, landscape and home</td><td>C1 · C2 · C3</td><td>/book, gallery</td><td>Nov 3 →</td><td class="mp-pend">not built</td></tr>
+      <tr><td>D · Gift, US</td><td>US, 35–65+, Colorado + gifting</td><td>D1 · D2 · D3</td><td>/book</td><td>Nov 3 – Dec 12</td><td class="mp-pend">not built</td></tr>
+      <tr><td>E · Retarget</td><td>Visited /book or a print, 14 days, no purchase</td><td>E1 · E2 · E3</td><td>/book, the print</td><td>Nov 17 → (needs pixel)</td><td class="mp-pend">not built</td></tr>
+    </table></div>
+    <details class="mp-more"><summary>Ad copy · three versions per audience</summary>
+    <h4>A · Warm engagers</h4>
+    <div class="mp-ads">
+      <div class="mp-ad"><span class="mp-v">A1</span><span class="mp-pt">You've seen the photographs here for years. The book holds 124 of them, 11 by 11 inches, cloth-bound. Signed copies ship from the Boulder studio in about three business days.</span><span class="mp-hl">The book is ready. Signed, $85.</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">A2</span><span class="mp-pt">Fifty years of Colorado, from the plains to the San Juans, in one square book. Bob signs every copy you order from his site.</span><span class="mp-hl">Colorado: Life &amp; Light on the Land</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">A3</span><span class="mp-pt">The Maroon Bells, Dream Lake, a lone pine on Red Mountain Pass. If one of these has stayed with you, it comes as a signed print or a page in the book.</span><span class="mp-hl">Prints and the book, from the photographer</span><span class="mp-cta">CTA · Learn more</span></div>
+    </div>
+
+    <h4>B · Lookalike</h4>
+    <div class="mp-ads">
+      <div class="mp-ad"><span class="mp-v">B1</span><span class="mp-pt">Robert Castellino has photographed Colorado for fifty years. This is the book of that work: 168 pages, 124 plates, 11 inches square.</span><span class="mp-hl">Fifty years of Colorado in one book</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">B2</span><span class="mp-pt">Six winters visiting the same tree before the photograph was right. The book is full of photographs made that way.</span><span class="mp-hl">A photographer who waits for the light</span><span class="mp-cta">CTA · Learn more</span></div>
+      <div class="mp-ad"><span class="mp-v">B3</span><span class="mp-pt">A square book that stays on the coffee table all year. Signed by the photographer and shipped from Boulder.</span><span class="mp-hl">Signed copies, $85</span><span class="mp-cta">CTA · Shop now</span></div>
+    </div>
+
+    <h4>C · Colorado, landscape and home</h4>
+    <div class="mp-ads">
+      <div class="mp-ad"><span class="mp-v">C1</span><span class="mp-pt">Made in Colorado by a photographer who lives here. Signed prints from 10×8 to 48×40, printed and checked by hand in the Boulder studio.</span><span class="mp-hl">Colorado prints, signed</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">C2</span><span class="mp-pt">Hanging Lake, Mount Sopris, Pawnee Buttes. The places you drive past, photographed over fifty years and gathered in one book.</span><span class="mp-hl">Your Colorado, in one book</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">C3</span><span class="mp-pt">A print for the wall, or the book for the table. Every photograph is a real place in this state, made by someone who has been out there for fifty years.</span><span class="mp-hl">For the wall or the table</span><span class="mp-cta">CTA · Learn more</span></div>
+    </div>
+
+    <h4>D · Gift buyers, nationwide (holiday)</h4>
+    <div class="mp-ads">
+      <div class="mp-ad"><span class="mp-v">D1</span><span class="mp-pt">For the person who left Colorado and still talks about it. 124 photographs of the mountains, lakes and plains, signed by the photographer.</span><span class="mp-hl">Give the gift of Colorado</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">D2</span><span class="mp-pt">Hard to shop for? If they love Colorado, this is the answer. A signed, 11-inch square book, shipped from Boulder in about three business days.</span><span class="mp-hl">A gift for the one who loves Colorado</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">D3</span><span class="mp-pt">Order by [Bob's cutoff date] for delivery before Christmas. Signed copies of Colorado: Life &amp; Light on the Land, $85.</span><span class="mp-hl">Order by [date] for Christmas</span><span class="mp-cta">CTA · Shop now</span></div>
+    </div>
+
+    <h4>E · Retarget visitors</h4>
+    <div class="mp-ads">
+      <div class="mp-ad"><span class="mp-v">E1</span><span class="mp-pt">Still thinking about the book? Signed copies are $85 and ship from Boulder in about three business days.</span><span class="mp-hl">The book you looked at</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">E2</span><span class="mp-pt">11 by 11 inches, 168 pages, 124 plates, cloth hardcover. It's built to stay on the table.</span><span class="mp-hl">Signed, $85, ships in days</span><span class="mp-cta">CTA · Shop now</span></div>
+      <div class="mp-ad"><span class="mp-v">E3</span><span class="mp-pt">The print you opened comes signed, in sizes from 10×8 to 48×40, printed in the Boulder studio.</span><span class="mp-hl">That print, on your wall</span><span class="mp-cta">CTA · Shop now</span></div>
+    </div>
+
+
+    </details>
+    <details class="mp-more"><summary>Organic warm-up · 4 weeks before ads</summary>
+    <p class="mp-lede">Three posts a week on the Page and Instagram. This builds the engagers in audience A so the warm ads have someone to reach. Captions come from the gift-series deck, without the discount line. Bob approves each post before it goes out.</p>
+    <div class="mp-tbl"><table>
+      <tr><th>Week</th><th>Mon</th><th>Wed</th><th>Fri</th></tr>
+      <tr><td>Oct 13</td><td>Meet the artist: hat portrait, fifty years in the field</td><td>Plate: Maroon Bells, with the story behind it</td><td>Plate: Dream Lake, where and when it was made</td></tr>
+      <tr><td>Oct 20</td><td>Behind the lens: Bob at work (behind-3)</td><td>Plate: lone pine, "six winters, one tree"</td><td>The book: what's in it, the size, 124 plates</td></tr>
+      <tr><td>Oct 27</td><td>Plate: Pawnee Buttes, the plains</td><td>Question post: "Which Colorado place should be next?"</td><td>Print on a wall: sizes and where prints are made</td></tr>
+      <tr><td>Nov 3 (ads start)</td><td>The book on the table: signed copies are here</td><td>Plate: Hanging Lake</td><td>Jenny Lake portrait: why he still goes out</td></tr>
+    </table></div>
+
+
+    </details>
+    <details class="mp-more"><summary>Site tracking · checklist for whoever manages robertcastellino.com</summary>
+    <p class="mp-lede">For whoever manages robertcastellino.com. Right now there's no Meta Pixel and no analytics on the site. Checkout runs through Stripe's hosted page, and buyers return to <code>/checkout/success</code>.</p>
+    <ul class="mp-check">
+      <li>Add the Meta Pixel base code to the site layout (<code>src/app/layout.tsx</code>) so it loads on every page.</li>
+      <li><b>ViewContent</b> on <code>/book</code> and when a print opens in the gallery. Include the product name and price.</li>
+      <li><b>InitiateCheckout</b> when Buy is clicked, before going to Stripe (<code>BookBuy.tsx</code>, <code>print-modal.tsx</code>).</li>
+      <li><b>Purchase</b> on <code>/checkout/success</code>, using the order total and currency from the Stripe session. Set <code>event_id</code> to the Stripe session ID.</li>
+      <li><b>Conversions API:</b> add a Stripe webhook (<code>checkout.session.completed</code>) that sends the same Purchase to Meta from the server, with the same <code>event_id</code> so Meta doesn't count it twice. Send the buyer's email hashed, never in plain text.</li>
+      <li>Verify the robertcastellino.com domain in Bob's Meta Business settings, and set Purchase as the top-priority web event.</li>
+      <li>Add UTM tags to every ad link: <code>utm_source=meta&amp;utm_campaign=&lt;set&gt;&amp;utm_content=&lt;ad&gt;</code>.</li>
+      <li>If there's a real offer: create the coupon in Stripe and turn on promotion codes in checkout (<code>src/app/api/checkout/route.ts</code>).</li>
+      <li>Add a short privacy line saying the site uses the Meta Pixel.</li>
+      <li>Test with Meta's Test Events tool: one book purchase and one print purchase, each counted once.</li>
+    </ul>
+
+    </details>
+    <details class="mp-more"><summary>Day one · the moment Bob shares the ad account</summary>
+    <p class="mp-lede">Nothing goes live without Bob's sign-off.</p>
+    <ol class="mp-steps">
+      <li><b>Verify ownership.</b> Confirm the account belongs to Bob's business and is connected to Page 134235743309639. Don't touch any other account this login can see.</li>
+      <li><b>Check billing.</b> Make sure a payment method is in Bob's name, then note the currency, time zone and any spending limit. Change nothing.</li>
+      <li><b>Check the pixel.</b> Confirm it's linked to the account and that Purchase events from the site are arriving.</li>
+      <li><b>Run the Page audit</b> in section 1 and fill in the blanks.</li>
+      <li><b>Build audiences A–E</b> exactly as specified in section 1. Record each one's ID and size.</li>
+      <li><b>Build the campaign and ad sets PAUSED</b>, with the copy from section 2 and the deck images, linking to <code>/book</code> or the print, with UTMs.</li>
+      <li><b>Report back</b> with every ID (audiences, campaign, ad sets, ads), a preview link for each ad, and the daily budget. Then wait for your review and Bob's approval before anything is switched on.</li>
+    </ol>
+    </details>
+  </section>
+
+<section class="mp mp-part" id="performance">
+    <div class="mp-part__n">04</div>
+    <h2>Performance</h2>
+    <div class="mp-flag"><b>Empty until the ad account is shared.</b> Every number comes from Bob's ad account. Nothing here is a projection.</div>
+    <div class="mp-kpis">
+      <div class="mp-kpi"><div class="mp-l">Spend</div><div class="mp-n">—</div></div>
+      <div class="mp-kpi"><div class="mp-l">Visits to /book</div><div class="mp-n">—</div></div>
+      <div class="mp-kpi"><div class="mp-l">Book orders</div><div class="mp-n">—</div></div>
+      <div class="mp-kpi"><div class="mp-l">Print orders</div><div class="mp-n">—</div></div>
+      <div class="mp-kpi"><div class="mp-l">Cost per sale</div><div class="mp-n">—</div></div>
+      <div class="mp-kpi"><div class="mp-l">Return on spend</div><div class="mp-n">—</div></div>
+    </div>
+
+    <h3>Performance by ad</h3>
+    <div class="mp-tbl"><table>
+      <tr><th>Ad set</th><th>Ad</th><th class="mp-num">Spend</th><th class="mp-num">Reach</th><th class="mp-num">CTR</th><th class="mp-num">CPC</th><th class="mp-num">Page views</th><th class="mp-num">Checkouts</th><th class="mp-num">Sales</th><th class="mp-num">Cost / sale</th></tr>
+      <tr><td>A · Warm</td><td>A1 · A2 · A3</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td></tr>
+      <tr><td>B · Lookalike</td><td>B1 · B2 · B3</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td></tr>
+      <tr><td>C · Colorado</td><td>C1 · C2 · C3</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td></tr>
+      <tr><td>D · Gift, US</td><td>D1 · D2 · D3</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td></tr>
+      <tr><td>E · Retarget</td><td>E1 · E2 · E3</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td><td class="mp-num mp-pend">—</td></tr>
+    </table></div>
+    <p class="mp-lede">The brief says to keep book orders and print orders separate, so the report splits them.</p>
+
+    <h3>Winners and losers</h3>
+    <div class="mp-wl">
+      <div class="mp-card mp-win"><h4>Winners · scale</h4>
+        <div class="mp-slotline"><span>1 ·</span><span>waiting on data</span></div>
+        <div class="mp-slotline"><span>2 ·</span><span>waiting on data</span></div>
+        <div class="mp-slotline"><span>3 ·</span><span>waiting on data</span></div>
+        <p style="font-size:13px;color:var(--muted);margin-top:10px">Lowest cost per sale, with at least 3 sales. Raise its budget 20% at most every 3 days.</p>
+      </div>
+      <div class="mp-card mp-lose"><h4>Losers · cut</h4>
+        <div class="mp-slotline"><span>1 ·</span><span>waiting on data</span></div>
+        <div class="mp-slotline"><span>2 ·</span><span>waiting on data</span></div>
+        <div class="mp-slotline"><span>3 ·</span><span>waiting on data</span></div>
+        <p style="font-size:13px;color:var(--muted);margin-top:10px">Pause an ad when it has spent twice Bob's margin with no sale, or when it gets cheap clicks but few visits to the product page. The brief calls this out.</p>
+      </div>
+    </div>
+  </section>
 
   <footer><p>50 posts · square, 4:5, 9:16, 1.91:1, 2:3, and email · plates from the book, Robert’s own portraits, and the square book on three coffee tables, each one pointing to <a class="cta-url" href="https://robertcastellino.com/book">robertcastellino.com/book</a>. Offer &amp; code (<b>COLORADO15</b>) are placeholders — confirm before launch. These are channel-sized previews on the page, not downloaded ad files.</p></footer>
 </div>
