@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma, isDatabaseConfigured } from "@/lib/prisma";
+import { rowToMusing } from "@/lib/data-source";
+import { revalidateMusings, onMusingPublished } from "@/lib/publish-hooks";
 
 export const runtime = "nodejs";
 
@@ -45,7 +47,18 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   try {
+    // Read prior state so publish side effects fire only on the
+    // unpublished → published transition, not on every edit of a live post.
+    const before = await prisma.musing.findUnique({ where: { id }, select: { published: true } });
     const musing = await prisma.musing.update({ where: { id }, data: parsed.data });
+    if (musing.published && !before?.published) {
+      revalidateMusings(musing.id);
+      const m = rowToMusing(musing);
+      after(() => onMusingPublished(m));
+    } else if (musing.published) {
+      // Content edit to an already-live post: refresh caches, no re-ping.
+      revalidateMusings(musing.id);
+    }
     return NextResponse.json(musing);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Database error";

@@ -62,15 +62,26 @@ export default async function MusingDetailPage({
   const { prev, next } = neighbors;
   const c = CAT_META[m.cat];
 
-  // JSON-LD Article schema for SEO
+  // JSON-LD BlogPosting schema for SEO. Dates are emitted only when real ISO
+  // timestamps exist (DB-backed rows); the static "Spring 2024"-style date is
+  // not valid schema.org and is intentionally omitted. undefined keys are
+  // dropped by JSON.stringify.
+  const url = `https://robertcastellino.com/musings/${m.id}`;
+  const image = m.img
+    ? [m.img.startsWith("/") ? `https://robertcastellino.com${m.img}` : m.img]
+    : undefined;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: m.title,
     description: m.excerpt.replace(/<[^>]+>/g, ""),
     author: { "@type": "Person", name: "Robert Castellino" },
-    image: m.img ? [`https://robertcastellino.com${m.img}`] : undefined,
-    datePublished: m.date,
+    publisher: { "@type": "Person", name: "Robert Castellino" },
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    image,
+    datePublished: m.createdAt,
+    dateModified: m.updatedAt ?? m.createdAt,
   };
 
   return (

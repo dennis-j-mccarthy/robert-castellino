@@ -109,3 +109,44 @@ model ContactSubmission {
 
   @@index([read, archived, createdAt])
 }
+
+model PunchList {
+  id        String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+// ───────── NEWSLETTER SUBSCRIBERS ─────────
+// Captured by the list-capture modal / journal CTA. Storage-only for now; a
+// provider (Resend audience, etc.) can sync from here later.
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String? // "popup" | "musings" | ...
+  userAgent String?
+  ipHash    String?
+  confirmed Boolean  @default(false)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([active, createdAt])
+}
+
+// ───────── SOCIAL POST DRAFTS ─────────
+// Auto-generated from a published musing (one row per platform). Drafts for
+// review, not auto-posted — no platform API credentials are wired.
+model SocialDraft {
+  id        String   @id @default(cuid())
+  musingId  String
+  platform  String // "instagram" | "facebook" | "pinterest" | "reel" | "email"
+  caption   String
+  hashtags  String?
+  link      String
+  image     String?
+  status    String   @default("draft") // draft | approved | posted
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([musingId, platform])
+  @@index([status, createdAt])
+}

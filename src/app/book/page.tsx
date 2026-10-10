@@ -1,9 +1,32 @@
 import { PageHero } from "@/components/page-hero";
 import { BookBuy } from "./BookBuy";
 
+const bookLd = {
+  "@context": "https://schema.org",
+  "@type": "Book",
+  name: "Colorado: Life and Light on the Land",
+  author: { "@type": "Person", name: "Robert Castellino" },
+  bookFormat: "https://schema.org/Hardcover",
+  numberOfPages: 168,
+  isbn: "978-0-9972290-0-4",
+  inLanguage: "en",
+  image: "https://robertcastellino.com/gift-series/book-cover-hi.jpg",
+  offers: {
+    "@type": "Offer",
+    price: "75",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    url: "https://robertcastellino.com/book",
+  },
+};
+
 export default function BookPage() {
   return (
     <section className="route route--book">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bookLd) }}
+      />
       <PageHero
         img="/assets/maroon-bells.jpg"
         alt="Maroon Bells, Summer's End"
@@ -53,6 +76,34 @@ export default function BookPage() {
           <p className="book__shipnote">Shipped from the Boulder studio · usually within 3 business days.</p>
         </div>
       </div>
+
+      {/* PRAISE */}
+      <section className="book-praise">
+        <span className="kicker kicker--gold">— On the work</span>
+        <div className="book-praise__grid">
+          <figure className="book-praise__q">
+            <p>
+              His work — particularly his books — provides an unparalleled record
+              of the beauty, uniqueness and historical richness of the Colorado
+              Front Range.
+            </p>
+            <figcaption>
+              <span className="book-praise__name">Stewart Shayah Sallo</span>
+              <span className="book-praise__role">Owner, Boulder Weekly</span>
+            </figcaption>
+          </figure>
+          <figure className="book-praise__q">
+            <p>
+              His ability to tell a story through his photography — his love of the
+              subject, his knowledge of the setting, the historical. He is a master.
+            </p>
+            <figcaption>
+              <span className="book-praise__name">Jim Williams</span>
+              <span className="book-praise__role">Dean of Libraries, CU Boulder</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
 
       <section className="spreads">
         <header className="section-head">

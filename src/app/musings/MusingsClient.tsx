@@ -100,7 +100,13 @@ export default function MusingsClient({ musings }: { musings: Musing[] }) {
             occasional plates, and dates for the next workshop on the passes.
           </p>
         </div>
-        <a className="btn btn--gold" href="#">Get the letter</a>
+        <button
+          type="button"
+          className="btn btn--gold"
+          onClick={() => window.dispatchEvent(new Event("rc-open-subscribe"))}
+        >
+          Get the letter
+        </button>
       </aside>
     </section>
   );

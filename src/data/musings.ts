@@ -17,6 +17,9 @@ export type Musing = {
   excerpt: string;
   /** Paragraphs may contain inline <em>...</em> HTML — rendered with dangerouslySetInnerHTML. */
   body: string[];
+  /** ISO timestamps, present only for DB-backed rows (used for JSON-LD + sitemap). */
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export const CAT_META: Record<

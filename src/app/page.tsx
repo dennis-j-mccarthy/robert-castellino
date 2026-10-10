@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MUSINGS, CAT_META } from "@/data/musings";
+import { Testimonials } from "@/components/testimonials";
 
 // Curated trio for the home-page journal teaser — one per category for variety.
 const FEATURED_MUSINGS = ["m01", "m07", "m13"]
@@ -153,6 +154,9 @@ export default function Home() {
           <Link className="btn btn--ghost" href="/about">Read his story</Link>
         </div>
       </section>
+
+      {/* TESTIMONIALS */}
+      <Testimonials />
 
       {/* FROM THE JOURNAL */}
       <section className="journal">

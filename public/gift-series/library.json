@@ -73,7 +73,7 @@
   },
   {
     "src": "/gift-series/sievers-snowmass.jpg",
-    "name": "sievers snowmass"
+    "name": "Sievers Mountain, Maroon Bells-Snowmass Wilderness"
   },
   {
     "src": "/gift-series/coffee-email.jpg",
@@ -134,5 +134,113 @@
   {
     "src": "/gift-series/scene-cabin.jpg",
     "name": "Square book on a rustic cabin coffee table"
+  },
+  {
+    "src": "/gift-series/boulder-creek-fog.jpg",
+    "name": "Sunrise fog over Boulder Creek, Erie"
+  },
+  {
+    "src": "/gift-series/turquoise-lake-sunrise.jpg",
+    "name": "Canoe at sunrise, Turquoise Lake"
+  },
+  {
+    "src": "/gift-series/garden-of-the-gods.jpg",
+    "name": "South Gateway Rock, Garden of the Gods"
+  },
+  {
+    "src": "/gift-series/high-plains-bluff.jpg",
+    "name": "Sandstone bluff on the high plains"
+  },
+  {
+    "src": "/gift-series/winter-sunburst.jpg",
+    "name": "Winter sunburst over a snow-covered meadow"
+  },
+  {
+    "src": "/gift-series/flatirons-winter.jpg",
+    "name": "The Flatirons under fresh snow, Boulder"
+  },
+  {
+    "src": "/gift-series/aspen-leaves-brainard.jpg",
+    "name": "Dew on fallen aspen leaves, Brainard Lake"
+  },
+  {
+    "src": "/gift-series/gore-creek-vail.jpg",
+    "name": "Snow pillows along Gore Creek, Vail"
+  },
+  {
+    "src": "/gift-series/old-main-cu.jpg",
+    "name": "Flag flies above Old Main, CU Boulder"
+  },
+  {
+    "src": "/gift-series/flatirons-chautauqua.jpg",
+    "name": "Spring Flatirons, Chautauqua Meadow, Boulder"
+  },
+  {
+    "src": "/gift-series/rainbow-valley.jpg",
+    "name": "Rainbow over a Colorado mountain valley"
+  },
+  {
+    "src": "/gift-series/owl-flight-sanluis.jpg",
+    "name": "Great horned owl takes flight, San Luis Valley"
+  },
+  {
+    "src": "/gift-series/skier-chautauqua.jpg",
+    "name": "Figure-eights under the Flatirons, Chautauqua Park"
+  },
+  {
+    "src": "/gift-series/yampa-canyon-sunrise.jpg",
+    "name": "Sunrise on the canyon wall, Yampa River, Dinosaur National Monument"
+  },
+  {
+    "src": "/gift-series/union-station-fireworks.jpg",
+    "name": "Holiday fireworks over Union Station, Denver"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-street-1890.jpg",
+    "name": "Pearl Street, circa 1890 (archival · Rocky Mountain Joe / Carnegie Library)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Joseph Bevier Sturtevant 'Rocky Mountain Joe' — Carnegie Branch Library for Local History"
+  },
+  {
+    "src": "/gift-series/boulder-yt/sunset-hill-1905.jpg",
+    "name": "Boulder from Sunset Hill, Summer 1905 (archival · Carnegie Library)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Unidentified — Carnegie Branch Library for Local History, Boulder Historical Society Collection"
+  },
+  {
+    "src": "/gift-series/boulder-yt/sunset-hill-2005.jpg",
+    "name": "Boulder from Sunset Hill, 2005 (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
+  },
+  {
+    "src": "/gift-series/boulder-yt/beautiful-boulder-postcard.jpg",
+    "name": "Beautiful Boulder, Colo. — vintage hand-colored view (Pine & Coulson)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Pine & Coulson (vintage)"
+  },
+  {
+    "src": "/gift-series/boulder-yt/flagstaff-star-1980s.jpg",
+    "name": "Star on Flagstaff & city lights, circa 1980s (Vern Walker)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Vern Walker — Marsha Walker Collection"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-holiday-lights-2004.jpg",
+    "name": "Snow & holiday lights, Pearl Street, 2004 (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-star-flagstaff-2003.jpg",
+    "name": "Pearl Street & the Flagstaff star, December 2003 (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
+  },
+  {
+    "src": "/gift-series/boulder-yt/pearl-street-fountain.jpg",
+    "name": "Pearl Street fountain at dusk (Robert Castellino)",
+    "book": "Boulder: Yesterday & Today",
+    "credit": "Robert Castellino"
   }
 ]
