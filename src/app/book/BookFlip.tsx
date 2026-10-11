@@ -2,40 +2,34 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-// A quick look inside the book: a two-page spread per plate, turned with a
-// page-flip animation. Plates are photographs that appear in the book.
-const PLATES = [
-  { src: "/gift-series/maroon-peaks.jpg", name: "Maroon Peaks over Maroon Lake" },
-  { src: "/gift-series/hallett-dreamlake.jpg", name: "Hallett Peak over Dream Lake" },
-  { src: "/gift-series/aspen-durango.jpg", name: "Golden aspen grove near Durango" },
-  { src: "/gift-series/elk-moraine.jpg", name: "Elk in Moraine Park at dawn" },
-  { src: "/gift-series/lake-isabelle.jpg", name: "Summer wildflowers at Lake Isabelle" },
-  { src: "/gift-series/columbia-sunset.jpg", name: "Sunset over the Collegiate Range" },
-  { src: "/gift-series/deerlodge-sunrise.jpg", name: "Cottonwoods at sunrise, Deerlodge Park" },
-  { src: "/gift-series/lonepine-redmtn.jpg", name: "A lone pine in fresh snow, Red Mountain" },
-  { src: "/gift-series/cranes-montevista.jpg", name: "Sandhill cranes, Monte Vista" },
-  { src: "/gift-series/skier-brainard.jpg", name: "Backcountry skier near Brainard Lake" },
+// A look inside the real book: 15 two-page spreads rendered from the print PDF
+// (resources/colorado-life-and-light-book.pdf, kept local) into
+// public/book-preview. A preview only — about a quarter of the book.
+const SPREADS: [number, number][] = [
+  [7, 8], [9, 10], [11, 12], [23, 24], [29, 30], [37, 38], [43, 44], [53, 54],
+  [63, 64], [73, 74], [79, 80], [87, 88], [97, 98], [111, 112], [113, 114],
 ];
+const src = (n: number) => `/book-preview/p${String(n).padStart(3, "0")}.jpg`;
 
-const TURN_MS = 650;
+const TURN_MS = 700;
 
 export function BookFlip() {
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(0);
+  const [i, setI] = useState(0);
   const [turning, setTurning] = useState<null | "next" | "prev">(null);
 
   const go = useCallback(
     (dir: "next" | "prev") => {
       if (turning) return;
-      const to = dir === "next" ? page + 1 : page - 1;
-      if (to < 0 || to >= PLATES.length) return;
+      const to = dir === "next" ? i + 1 : i - 1;
+      if (to < 0 || to >= SPREADS.length) return;
       setTurning(dir);
       window.setTimeout(() => {
-        setPage(to);
+        setI(to);
         setTurning(null);
       }, TURN_MS);
     },
-    [page, turning],
+    [i, turning],
   );
 
   useEffect(() => {
@@ -54,13 +48,34 @@ export function BookFlip() {
     };
   }, [open, go]);
 
-  const plate = PLATES[page];
-  const nextPlate = PLATES[page + 1];
-  const prevPlate = PLATES[page - 1];
+  // Warm the cache for the neighbouring spreads so a turn never shows a blank page.
+  useEffect(() => {
+    if (!open) return;
+    for (const s of [SPREADS[i + 1], SPREADS[i - 1]]) {
+      if (s) s.forEach((n) => { new Image().src = src(n); });
+    }
+  }, [open, i]);
+
+  const [l, r] = SPREADS[i];
+  const next = SPREADS[i + 1];
+  const prev = SPREADS[i - 1];
+  // What sits underneath the turning leaf.
+  const leftUnder = turning === "prev" && prev ? prev[0] : l;
+  const rightUnder = turning === "next" && next ? next[1] : r;
+
+  function close() {
+    setOpen(false);
+  }
+
+  function order() {
+    setOpen(false);
+    document.querySelector<HTMLButtonElement>(".offer-card__cta")?.focus();
+    document.querySelector(".offer-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 
   return (
     <>
-      <button type="button" className="flip-open" onClick={() => { setPage(0); setOpen(true); }}>
+      <button type="button" className="flip-open" onClick={() => { setI(0); setOpen(true); }}>
         Flip through the book
         <svg viewBox="0 0 14 14" width="10" height="10" aria-hidden="true">
           <path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -68,54 +83,41 @@ export function BookFlip() {
       </button>
 
       {open && (
-        <div className="flip" role="dialog" aria-modal="true" aria-label="Look inside the book" onClick={() => setOpen(false)}>
+        <div className="flip" role="dialog" aria-modal="true" aria-label="Look inside the book" onClick={close}>
           <div className="flip__stage" onClick={(e) => e.stopPropagation()}>
+            {/* eslint-disable @next/next/no-img-element */}
             <div className="flip__spread">
-              {/* Left page: the caption for the current plate (or the previous one while turning back). */}
-              <div className="flip__page flip__page--left">
-                <Caption plate={turning === "prev" && prevPlate ? prevPlate : plate} n={turning === "prev" ? page : page + 1} />
-              </div>
-              {/* Right page: the photograph (or the next one underneath while turning forward). */}
-              <div className="flip__page flip__page--right">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={(turning === "next" && nextPlate ? nextPlate : plate).src} alt={(turning === "next" && nextPlate ? nextPlate : plate).name} />
-              </div>
+              <div className="flip__page flip__page--left"><img src={src(leftUnder)} alt={`Page ${leftUnder}`} /></div>
+              <div className="flip__page flip__page--right"><img src={src(rightUnder)} alt={`Page ${rightUnder}`} /></div>
 
-              {turning === "next" && nextPlate && (
+              {turning === "next" && next && (
                 <div className="flip__leaf flip__leaf--next" style={{ animationDuration: `${TURN_MS}ms` }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <div className="flip__face flip__face--front"><img src={plate.src} alt="" /></div>
-                  <div className="flip__face flip__face--back"><Caption plate={nextPlate} n={page + 2} /></div>
+                  <div className="flip__face flip__face--front"><img src={src(r)} alt="" /></div>
+                  <div className="flip__face flip__face--back"><img src={src(next[0])} alt="" /></div>
                 </div>
               )}
-              {turning === "prev" && prevPlate && (
+              {turning === "prev" && prev && (
                 <div className="flip__leaf flip__leaf--prev" style={{ animationDuration: `${TURN_MS}ms` }}>
-                  <div className="flip__face flip__face--front"><Caption plate={plate} n={page + 1} /></div>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <div className="flip__face flip__face--back"><img src={prevPlate.src} alt="" /></div>
+                  <div className="flip__face flip__face--front"><img src={src(l)} alt="" /></div>
+                  <div className="flip__face flip__face--back"><img src={src(prev[1])} alt="" /></div>
                 </div>
               )}
             </div>
+            {/* eslint-enable @next/next/no-img-element */}
 
             <div className="flip__controls">
-              <button type="button" onClick={() => go("prev")} disabled={page === 0 || !!turning} aria-label="Previous page">←</button>
-              <span>{page + 1} / {PLATES.length}</span>
-              <button type="button" onClick={() => go("next")} disabled={page === PLATES.length - 1 || !!turning} aria-label="Next page">→</button>
+              <button type="button" onClick={() => go("prev")} disabled={i === 0 || !!turning} aria-label="Previous spread">←</button>
+              <span>Pages {l}–{r} · {i + 1} of {SPREADS.length}</span>
+              <button type="button" onClick={() => go("next")} disabled={i === SPREADS.length - 1 || !!turning} aria-label="Next spread">→</button>
             </div>
-            <button type="button" className="flip__close" onClick={() => setOpen(false)} aria-label="Close">×</button>
+            <div className="flip__foot">
+              <span>A 30-page preview of the book.</span>
+              <button type="button" className="flip__order" onClick={order}>Order a signed copy</button>
+            </div>
+            <button type="button" className="flip__close" onClick={close} aria-label="Close">×</button>
           </div>
         </div>
       )}
     </>
-  );
-}
-
-function Caption({ plate, n }: { plate: { name: string }; n: number }) {
-  return (
-    <div className="flip__caption">
-      <span className="flip__plate">Plate {String(n).padStart(2, "0")}</span>
-      <p>{plate.name}</p>
-      <span className="flip__credit">Colorado: Life &amp; Light on the Land</span>
-    </div>
   );
 }
