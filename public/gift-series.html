@@ -205,6 +205,43 @@
   footer{border-top:1px solid var(--line);padding-block:24px 56px;color:var(--faint);font-size:13px;}
   footer b{color:var(--muted)} footer .cta-url{color:var(--pine-2)}
   @media (max-width:460px){.offer__meta{margin-left:0;width:100%}.angle{margin-left:0}.copybtn{width:100%}}
+
+  /* ---------- accordions + ad tracking ---------- */
+  .h2sub{display:block;font-family:var(--sans,inherit);font-size:15px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:4px;}
+  .acc-head{all:unset;cursor:pointer;display:flex;align-items:flex-start;gap:12px;width:100%;}
+  .acc-head:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:6px;}
+  .acc-head .chev{margin-top:14px;transition:transform .2s;font-size:14px;color:var(--muted);}
+  .acc-closed .acc-head .chev{transform:rotate(-90deg);}
+  .acc-closed > .acc-body{display:none;}
+  details.pgroup{border:1px solid var(--line);border-radius:12px;margin:14px 0;background:var(--surface);}
+  details.pgroup > summary{cursor:pointer;padding:14px 18px;font-weight:600;display:flex;gap:10px;align-items:center;flex-wrap:wrap;list-style:none;}
+  details.pgroup > summary::-webkit-details-marker{display:none;}
+  details.pgroup > summary::before{content:"▸";color:var(--muted);transition:transform .2s;}
+  details.pgroup[open] > summary::before{transform:rotate(90deg);}
+  details.pgroup > .pgroup__body{padding:0 12px 16px;display:flex;flex-direction:column;gap:30px;}
+  .pg-count{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;}
+  .pg-count b{color:var(--accent-ink);}
+  .adbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 10px;padding:8px 10px;border:1px dashed var(--line);border-radius:10px;font-size:13px;}
+  .adbar label{display:inline-flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;}
+  .adbar select,.adbar input[type=text]{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:inherit;}
+  .adbar input[type=text]{width:13ch;font-family:var(--mono);}
+  .adbar .adsave{font-size:12px;color:var(--muted);margin-left:auto;}
+  .adbar[data-off] select,.adbar[data-off] input[type=text]{display:none;}
+  .adpill{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;border:1px solid var(--line);color:var(--muted);background:var(--surface);}
+  .adpill.marked{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
+  .adpill.built{border-color:#5b7fa6;color:#2f4f73;background:#e7eef6;}
+  .adpill.running{border-color:#2e7d4f;color:#1e5c38;background:#e3f3e8;}
+  .adpill.stopped{border-color:var(--bad);color:var(--bad);background:var(--bad-soft);}
+  .slot.is-ad{outline:2px solid var(--accent);outline-offset:6px;border-radius:14px;}
+  .slot.is-ad.running{outline-color:#2e7d4f;}
+  .adtrack{margin:18px 0 6px;}
+  .adtrack table{width:100%;border-collapse:collapse;font-size:14px;}
+  .adtrack th,.adtrack td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .adtrack th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+  .adtrack a{color:inherit;}
+  .adtrack .chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .adtrack .note{font-size:13px;color:var(--muted);margin:8px 2px;}
+  @media (max-width:640px){.adtrack table,.adtrack thead,.adtrack tbody,.adtrack tr,.adtrack th,.adtrack td{display:block;} .adtrack thead{display:none;} .adtrack td{border:0;padding:4px 0;} .adtrack tr{border-bottom:1px solid var(--line);padding:8px 0;}}
 </style>
 </head>
 <body>
@@ -220,9 +257,9 @@
     <p class="note"><b>These ads are editable.</b> Click the gold-outlined text and type. <b>Swap image</b> opens the library — every photo used on these ads — and you pick one. <b>Save</b> stores the page for everyone, after you sign in. Copy grabs the words. Reset puts that one ad back. The offer code is a placeholder — swap in the real one before you post.</p>
     <p class="note"><button type="button" id="save-ads" class="copybtn">Save</button> <span id="save-status" style="font-size:13px;color:var(--muted)"></span></p>
     <nav class="mp-toc">
-      <a href="#audience">1 · Audience</a>
-      <a href="#have">2 · What we have now</a>
-      <a href="#running">3 · What's running</a>
+      <a href="#audience">1 · Audiences</a>
+      <a href="#have">2 · Posts &amp; ads</a>
+      <a href="#running">3 · Ad plan</a>
       <a href="#performance">4 · Performance</a>
     </nav>
     <div class="mp-status">
@@ -238,7 +275,7 @@
 
 <section class="mp mp-part" id="audience">
     <div class="mp-part__n">01</div>
-    <h2>Audience</h2>
+    <h2>Audiences <span class="h2sub">who the ads reach</span></h2>
     <p class="mp-lede">Who already follows Bob, and the four ad sets we'll pay to reach.</p>
 
     <h3>Who follows Bob now</h3>
@@ -324,12 +361,11 @@
 
   <section class="mp mp-part" id="have">
     <div class="mp-part__n">02</div>
-    <h2>What we have now</h2>
+    <h2>Posts &amp; ads <span class="h2sub">all 50 posts · mark the ones to run as ads</span></h2>
     <p class="mp-lede">The 50 posts below, sized for each channel. In ads, every one links to <code>/book</code> or the print, never to this page.</p>
     <div class="mp-flag"><b>The offer.</b> Signed copy, list $60, $49.95 with code <code>10OFF</code>. The code box is on robertcastellino.com/book, and ad links use <code>/book?code=10OFF</code> so it is already filled in.</div>
 
-  </section>
-
+    <div id="ad-tracker" class="adtrack" aria-live="polite"></div>
   <main>
     <section class="slot"><div class="slot__meta"><span class="seq">01</span><span class="plat">Instagram · feed</span><span class="angle">Fri Nov 28 · the centerpiece</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Maroon Lake, Colorado</small></div><span class="more">•••</span></div>
@@ -721,10 +757,11 @@
         <div class="tags">#RobertCastellino #FineArtPhotography #Colorado #BookSale</div><div class="time">6 hours ago</div></div>
       <div class="foot"><div class="credit"><b>Photo:</b> Robert, from the about page · square</div><button class="copybtn" type="button">Copy caption</button></div></section>
   </main>
+  </section>
 
 <section class="mp mp-part" id="running">
     <div class="mp-part__n">03</div>
-    <h2>What's running</h2>
+    <h2>Ad plan <span class="h2sub">budget, schedule, ad copy</span></h2>
     <div class="mp-flag"><b>Nothing is running yet.</b> This is the plan the first 30 days will run on. Statuses switch to live from Bob's ad account.</div>
     <h3>Schedule and budget</h3>
     <div class="mp-tbl"><table>
@@ -827,7 +864,7 @@
 
 <section class="mp mp-part" id="performance">
     <div class="mp-part__n">04</div>
-    <h2>Performance</h2>
+    <h2>Performance <span class="h2sub">results once ads run</span></h2>
     <div class="mp-flag"><b>Empty until the ad account is shared.</b> Every number comes from Bob's ad account. Nothing here is a projection.</div>
     <div class="mp-kpis">
       <div class="mp-kpi"><div class="mp-l">Spend</div><div class="mp-n">—</div></div>
@@ -1063,6 +1100,152 @@
       });
       foot.appendChild(rb);
     }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  // ---------- section accordions ----------
+  var OPEN_KEY="rc-gift-open-v1", openState={};
+  try{openState=JSON.parse(localStorage.getItem(OPEN_KEY)||"{}");}catch(e){}
+  function keepOpen(){try{localStorage.setItem(OPEN_KEY,JSON.stringify(openState));}catch(e){}}
+  document.querySelectorAll("section.mp-part").forEach(function(sec){
+    var h2=sec.querySelector(":scope > h2"); if(!h2) return;
+    var body=document.createElement("div"); body.className="acc-body";
+    var n=h2.nextSibling;
+    while(n){ var next=n.nextSibling; body.appendChild(n); n=next; }
+    var btn=document.createElement("button"); btn.type="button"; btn.className="acc-head";
+    btn.setAttribute("aria-expanded","true");
+    var chev=document.createElement("span"); chev.className="chev"; chev.textContent="▾";
+    h2.parentNode.insertBefore(btn,h2); btn.appendChild(chev); btn.appendChild(h2);
+    sec.appendChild(body);
+    var id=sec.id, open = id in openState ? openState[id] : (id==="have");
+    function set(o){ sec.classList.toggle("acc-closed",!o); btn.setAttribute("aria-expanded",String(o)); openState[id]=o; keepOpen(); }
+    set(open);
+    btn.addEventListener("click",function(){ set(sec.classList.contains("acc-closed")); });
+  });
+  // TOC links open their section
+  document.querySelectorAll('.mp-toc a[href^="#"]').forEach(function(a){
+    a.addEventListener("click",function(){ var sec=document.querySelector(a.getAttribute("href")); if(sec&&sec.classList.contains("acc-closed")) sec.querySelector(".acc-head").click(); });
+  });
+
+  // ---------- post groups ----------
+  var main=document.querySelector("#have main");
+  var slots=[].slice.call(document.querySelectorAll("#have main > .slot"));
+  var GROUPS=[
+    {name:"Holiday calendar posts", from:1, to:18},
+    {name:"Evergreen posts", from:19, to:40},
+    {name:"The book on a table", from:41, to:46},
+    {name:"Robert", from:47, to:99}
+  ];
+  var GROUP_KEY="rc-gift-groups-v1", groupOpen={};
+  try{groupOpen=JSON.parse(localStorage.getItem(GROUP_KEY)||"{}");}catch(e){}
+  var groupEls=GROUPS.map(function(g,gi){
+    var d=document.createElement("details"); d.className="pgroup"; d.open=!!groupOpen[gi];
+    var sm=document.createElement("summary");
+    var title=document.createElement("span"); title.textContent=g.name+" · posts "+g.from+"–"+Math.min(g.to,slots.length);
+    var cnt=document.createElement("span"); cnt.className="pg-count";
+    sm.appendChild(title); sm.appendChild(cnt); d.appendChild(sm);
+    var body=document.createElement("div"); body.className="pgroup__body"; d.appendChild(body);
+    d.addEventListener("toggle",function(){ groupOpen[gi]=d.open; try{localStorage.setItem(GROUP_KEY,JSON.stringify(groupOpen));}catch(e){} });
+    main.appendChild(d);
+    return {g:g, el:d, body:body, cnt:cnt};
+  });
+  slots.forEach(function(slot,i){
+    var n=i+1, num=String(n).padStart(2,"0");
+    slot.id="post-"+num; slot.dataset.post=num;
+    var grp=groupEls.find(function(x){return n>=x.g.from && n<=x.g.to;}); grp.body.appendChild(slot);
+  });
+
+  // ---------- ad state ----------
+  var AD_SETS={
+    "1":"1 · Warm (Page fans)", "2":"2 · Lookalike", "3":"3 · Colorado home",
+    "4":"4 · Homesick gift buyers (Nov 17–Dec 12)", "5":"5 · Photo-book people (US)", "6":"6 · Boulder County"
+  };
+  var STATUS={marked:"Marked · to build", built:"Built · paused", running:"Running", stopped:"Stopped"};
+  // Ads already in Meta that don't come from a post on this page (built Oct 11, all paused).
+  var BUILT_ELSEWHERE={"1":["B3 coffee table","B1 fifty years"],"2":["B1","B3"],"3":["B1","B3"],"4":["D1 gift of Colorado","B3"],"5":["B1","B3"],"6":["B1","B3"]};
+  var ads={}, signedIn=false, bars={};
+
+  function pill(status){ var sp=document.createElement("span"); sp.className="adpill "+(status||""); sp.textContent=status?STATUS[status]:"Not an ad"; return sp; }
+
+  function render(){
+    // per post
+    slots.forEach(function(slot){
+      var num=slot.dataset.post, st=ads[num], bar=bars[num]; if(!bar) return;
+      bar.cb.checked=!!st; bar.cb.disabled=!signedIn;
+      if(st){ bar.root.removeAttribute("data-off"); } else { bar.root.setAttribute("data-off",""); }
+      bar.set.value=st?st.adSet:""; bar.status.value=st?st.status:"marked"; bar.adId.value=st?st.adId:"";
+      [bar.set,bar.status,bar.adId].forEach(function(c){ c.disabled=!signedIn; });
+      bar.pillWrap.replaceChildren(pill(st&&st.status));
+      slot.classList.toggle("is-ad",!!st); slot.classList.toggle("running",!!st&&st.status==="running");
+    });
+    // group counts
+    groupEls.forEach(function(x){
+      var marked=0;
+      x.body.querySelectorAll(".slot").forEach(function(sl){ if(ads[sl.dataset.post]) marked++; });
+      x.cnt.innerHTML=marked ? "<b>"+marked+" marked as ads</b>" : "no ads marked";
+    });
+    // tracker table
+    var t=document.getElementById("ad-tracker"); if(!t) return;
+    var rows=Object.keys(AD_SETS).map(function(k){
+      var mine=Object.keys(ads).filter(function(p){return ads[p].adSet===k;}).sort();
+      var chips=mine.map(function(p){ var st=ads[p]; return '<a href="#post-'+p+'" class="adpill '+st.status+'">#'+p+' · '+STATUS[st.status]+'</a>'; }).join("");
+      var elsewhere=(BUILT_ELSEWHERE[k]||[]).map(function(n){return '<span class="adpill built">'+n+' · Built · paused</span>';}).join("");
+      return "<tr><td><b>"+AD_SETS[k]+"</b></td><td><div class=\"chips\">"+(chips||'<span class="adpill">no posts marked</span>')+"</div></td><td><div class=\"chips\">"+elsewhere+"</div></td></tr>";
+    }).join("");
+    var unassigned=Object.keys(ads).filter(function(p){return !ads[p].adSet;}).sort().map(function(p){ return '<a href="#post-'+p+'" class="adpill '+ads[p].status+'">#'+p+'</a>'; }).join("");
+    t.innerHTML='<h3>Ads tracker</h3>'+
+      '<p class="note">Tick <b>Run as ad</b> on any post below and pick its ad set. It saves for everyone straight away. <b>Marked</b> = queued for Claude to build in Meta; <b>Built · paused</b> = exists in Meta, not spending; <b>Running</b> = live. Statuses are set here when ads are built or published; they are not yet synced from Meta automatically.</p>'+
+      '<table><thead><tr><th>Ad set</th><th>Posts from this page</th><th>Already built in Meta</th></tr></thead><tbody>'+rows+
+      (unassigned?'<tr><td><b>No ad set chosen</b></td><td colspan="2"><div class="chips">'+unassigned+'</div></td></tr>':'')+
+      '</tbody></table>'+(signedIn?'':'<p class="note"><a href="/admin/login?next=/gift-series.html">Sign in</a> to mark posts as ads.</p>');
+  }
+
+  function save(num,state,bar){
+    if(!signedIn){ window.location.assign("/admin/login?next="+encodeURIComponent("/gift-series.html#post-"+num)); return; }
+    bar.msg.textContent="Saving…";
+    fetch("/api/gift-series/ads",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({post:num,state:state})})
+      .then(function(r){ return r.json().then(function(d){return {ok:r.ok,d:d};}); })
+      .then(function(res){
+        if(res.ok){ ads=res.d.ads||{}; bar.msg.textContent="Saved ✓"; setTimeout(function(){bar.msg.textContent="";},1500); render(); }
+        else { bar.msg.textContent=(res.d&&res.d.error)||"Could not save"; }
+      }).catch(function(){ bar.msg.textContent="Could not save"; });
+  }
+
+  slots.forEach(function(slot){
+    var num=slot.dataset.post;
+    var root=document.createElement("div"); root.className="adbar";
+    var lab=document.createElement("label"); var cb=document.createElement("input"); cb.type="checkbox";
+    lab.appendChild(cb); lab.appendChild(document.createTextNode("Run as ad"));
+    var set=document.createElement("select"); set.setAttribute("aria-label","Ad set");
+    set.innerHTML='<option value="">Choose ad set…</option>'+Object.keys(AD_SETS).map(function(k){return '<option value="'+k+'">'+AD_SETS[k]+'</option>';}).join("");
+    var status=document.createElement("select"); status.setAttribute("aria-label","Status");
+    status.innerHTML=Object.keys(STATUS).map(function(k){return '<option value="'+k+'">'+STATUS[k]+'</option>';}).join("");
+    var adId=document.createElement("input"); adId.type="text"; adId.placeholder="Meta ad ID"; adId.inputMode="numeric"; adId.setAttribute("aria-label","Meta ad ID");
+    var pillWrap=document.createElement("span"); var msg=document.createElement("span"); msg.className="adsave";
+    root.appendChild(lab); root.appendChild(set); root.appendChild(status); root.appendChild(adId); root.appendChild(pillWrap); root.appendChild(msg);
+    var meta=slot.querySelector(".slot__meta"); meta.parentNode.insertBefore(root, meta.nextSibling);
+    var bar={root:root,cb:cb,set:set,status:status,adId:adId,pillWrap:pillWrap,msg:msg}; bars[num]=bar;
+    function current(){ return {adSet:set.value,status:status.value,adId:adId.value.replace(/\D/g,""),note:""}; }
+    cb.addEventListener("change",function(){ save(num, cb.checked ? {adSet:set.value,status:"marked",adId:"",note:""} : null, bar); });
+    set.addEventListener("change",function(){ save(num,current(),bar); });
+    status.addEventListener("change",function(){ save(num,current(),bar); });
+    adId.addEventListener("change",function(){ save(num,current(),bar); });
+  });
+
+  fetch("/api/gift-series/ads",{credentials:"same-origin"}).then(function(r){return r.json();}).then(function(d){
+    ads=(d&&d.ads)||{}; signedIn=!!(d&&d.signedIn); render();
+    if(location.hash.indexOf("#post-")===0){ var el=document.querySelector(location.hash); if(el){ var det=el.closest("details"); if(det) det.open=true; el.scrollIntoView({block:"start"}); } }
+  }).catch(function(){ render(); });
+  render();
+
+  // tracker chips open the right group before jumping
+  document.addEventListener("click",function(e){
+    var a=e.target.closest && e.target.closest('a[href^="#post-"]'); if(!a) return;
+    var el=document.querySelector(a.getAttribute("href")); if(!el) return;
+    var det=el.closest("details"); if(det) det.open=true;
   });
 })();
 </script>
