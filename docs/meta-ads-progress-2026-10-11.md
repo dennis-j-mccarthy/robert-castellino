@@ -26,11 +26,13 @@ Supersedes the Oct 10 note. Read `docs/HANDOFF-meta-ads.md` first for the asset 
 | Ad set 2 · Lookalike | 120251354162580171 | 45–65 suggestion, excludes Warm |
 | Ad set 3 · Colorado home | 120251354163940171 | Colorado residents, 45–65, 6 interests (unpublished edit in Ads Manager) |
 | Ad set 4 · Homesick gift buyers | 120251354164530171 | US 45–65, Colorado/Aspen/Broncos/ski resort, Nov 17–Dec 12 (unpublished edit) |
+| Ad set 5 · Photo-book people | 120251356932420171 | US 45–65, landscape/fine-art photography, national parks, RMNP, mountains (unpublished edit) |
+| Ad set 6 · Boulder County locals | 120251356932940171 | Boulder County 45–65, broad (unpublished edit); ads 120251356955050171, 120251356956920171 |
 | (archived) old ad set 1 | 120251354162120171 | goal mismatch, ignore |
 | Creative B3 coffee table | 3457574887756474 | "Signed copy, $49.95" |
 | Creative B1 fifty years | 1893219345177368 | |
 | Creative D1 gift of Colorado | 4563542123889937 | |
-| Ads (8, paused) | 120251354246610171, …246660171, …246730171, …247020171, …247340171, …247480171, …247630171, …247710171 | 2 per ad set |
+| Ads (8 + 4 for sets 5/6: …356954220171, …356954540171, …356955050171, …356956920171), paused | 120251354246610171, …246660171, …246730171, …247020171, …247340171, …247480171, …247630171, …247710171 | 2 per ad set |
 
 ## Gotchas learned
 - API-created ad sets get the retired location type → publish blocked (#1870194). Set
