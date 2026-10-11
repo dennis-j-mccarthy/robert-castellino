@@ -1107,7 +1107,7 @@
 <script>
 (function(){
   // ---------- section accordions ----------
-  var OPEN_KEY="rc-gift-open-v1", openState={};
+  var OPEN_KEY="rc-gift-open-v2", openState={};
   try{openState=JSON.parse(localStorage.getItem(OPEN_KEY)||"{}");}catch(e){}
   function keepOpen(){try{localStorage.setItem(OPEN_KEY,JSON.stringify(openState));}catch(e){}}
   document.querySelectorAll("section.mp-part").forEach(function(sec){
@@ -1120,7 +1120,7 @@
     var chev=document.createElement("span"); chev.className="chev"; chev.textContent="▾";
     h2.parentNode.insertBefore(btn,h2); btn.appendChild(chev); btn.appendChild(h2);
     sec.appendChild(body);
-    var id=sec.id, open = id in openState ? openState[id] : (id==="have");
+    var id=sec.id, open = id in openState ? openState[id] : false;
     function set(o){ sec.classList.toggle("acc-closed",!o); btn.setAttribute("aria-expanded",String(o)); openState[id]=o; keepOpen(); }
     set(open);
     btn.addEventListener("click",function(){ set(sec.classList.contains("acc-closed")); });
@@ -1139,7 +1139,7 @@
     {name:"The book on a table", from:41, to:46},
     {name:"Robert", from:47, to:99}
   ];
-  var GROUP_KEY="rc-gift-groups-v1", groupOpen={};
+  var GROUP_KEY="rc-gift-groups-v2", groupOpen={};
   try{groupOpen=JSON.parse(localStorage.getItem(GROUP_KEY)||"{}");}catch(e){}
   var groupEls=GROUPS.map(function(g,gi){
     var d=document.createElement("details"); d.className="pgroup"; d.open=!!groupOpen[gi];
