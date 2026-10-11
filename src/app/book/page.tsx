@@ -1,4 +1,3 @@
-import { PageHero } from "@/components/page-hero";
 import { BookBuy } from "./BookBuy";
 
 const bookLd = {
@@ -33,20 +32,7 @@ export default async function BookPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(bookLd) }}
       />
-      <PageHero
-        img="/assets/maroon-bells.jpg"
-        alt="Maroon Bells, Summer's End"
-        index="05 — The Monograph"
-        title={<>Life &amp; <em>Light</em> on the Land.</>}
-        sub={
-          <>
-            The career retrospective — half a century of mountains, streams,
-            light, land, and the long Colorado sky, drawn together in a single
-            volume.
-          </>
-        }
-      />
-      <div className="book">
+      <div className="book book--landing">
         <div className="book__art">
           <div className="book__halo" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -58,28 +44,23 @@ export default async function BookPage({
         </div>
 
         <div className="book__copy">
-          <span className="page-head__index">05 — The Monograph</span>
+          <span className="page-head__index">Signed by Robert Castellino · shipped from Boulder</span>
           <h1 className="book__title">
             <em>Colorado</em><br />Life &amp; Light on the Land.
           </h1>
           <p className="book__deck">
-            The career retrospective. Half a century of mountains, streams, light,
-            land, and the long Colorado sky, drawn together in a 168-page
-            monograph. Hand-bound, smyth-sewn, printed on 157gsm archival matte
-            stock.
+            Fifty years of Colorado in one 168-page volume, signed by the man who
+            made every photograph.
           </p>
+
+          <BookBuy initialCode={initialCode} />
 
           <dl className="book__specs">
             <div><dt>Format</dt><dd>11 × 11″ hardcover · cloth bound</dd></div>
             <div><dt>Extent</dt><dd>168 pages · 124 plates</dd></div>
             <div><dt>Paper</dt><dd>157gsm archival matte, FSC</dd></div>
-            <div><dt>Printing</dt><dd>Fifth edition · signed copies available</dd></div>
-            <div><dt>Price</dt><dd><span className="price">$ 60</span> <span className="price__note">+ shipping · $49.95 with code 10OFF · signed at no extra charge</span></dd></div>
+            <div><dt>Printing</dt><dd>Fifth edition · hand-bound, smyth-sewn</dd></div>
           </dl>
-
-          <BookBuy initialCode={initialCode} />
-
-          <p className="book__shipnote">Shipped from the Boulder studio · usually within 3 business days.</p>
         </div>
       </div>
 
@@ -152,58 +133,6 @@ export default async function BookPage({
               </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="prints">
-        <header className="section-head section-head--center">
-          <div>
-            <span className="section-head__eyebrow">— Also from the studio</span>
-            <h2 className="section-head__title">Limited edition prints.</h2>
-            <p className="section-head__sub">
-              Each photograph is offered in four finishes, signed and editioned.
-              Edition sizes vary by format and image.
-            </p>
-          </div>
-        </header>
-
-        <div className="prints__grid">
-          <article className="print">
-            <div className="print__media">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/print-canvas.png" alt="Canvas print" /></div>
-            <div className="print__body">
-              <span className="print__kind">Gallery Canvas</span>
-              <h4>Cotton canvas · stretched on poplar</h4>
-              <p>Sizes 16×24&quot; to 40×60&quot;. Edition of 75.</p>
-              <span className="print__price">from $475</span>
-            </div>
-          </article>
-          <article className="print">
-            <div className="print__media">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/print-metal.png" alt="Metal print" /></div>
-            <div className="print__body">
-              <span className="print__kind">Aluminum</span>
-              <h4>Dye-infused on brushed metal</h4>
-              <p>Sizes 16×24&quot; to 40×60&quot;. Edition of 50.</p>
-              <span className="print__price">from $625</span>
-            </div>
-          </article>
-          <article className="print">
-            <div className="print__media">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/print-acrylic.png" alt="Acrylic print" /></div>
-            <div className="print__body">
-              <span className="print__kind">TruLife Acrylic</span>
-              <h4>Face-mount, glare-free</h4>
-              <p>Sizes 16×24&quot; to 40×60&quot;. Edition of 25.</p>
-              <span className="print__price">from $1,250</span>
-            </div>
-          </article>
-          <article className="print">
-            <div className="print__media">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/print-on-wall.png" alt="Paper print on wall" /></div>
-            <div className="print__body">
-              <span className="print__kind">Archival Paper</span>
-              <h4>Hahnemühle Photo Rag 308</h4>
-              <p>Sizes 11×14&quot; to 30×40&quot;. Edition of 100.</p>
-              <span className="print__price">from $185</span>
-            </div>
-          </article>
         </div>
       </section>
     </section>

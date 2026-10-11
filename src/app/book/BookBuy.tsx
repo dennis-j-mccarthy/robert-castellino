@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { BOOK, bookUnitPrice, isBookPromo } from "@/data/pricing";
+import { BOOK, SHIPPING, bookUnitPrice, isBookPromo } from "@/data/pricing";
+
+const usd = (n: number) => `$${n.toFixed(2).replace(/\.00$/, "")}`;
 
 /** `initialCode` comes from /book?code=…, so ad links arrive with the discount applied. */
 export function BookBuy({ initialCode = "" }: { initialCode?: string }) {
@@ -36,41 +38,54 @@ export function BookBuy({ initialCode = "" }: { initialCode?: string }) {
   }
 
   return (
-    <div className="book__cta">
+    <div className="offer-card">
+      <span className="offer-card__tag">Signed copy offer</span>
+
+      <div className="offer-card__price">
+        {promoOn ? (
+          <>
+            <s>{usd(BOOK.listPrice)}</s>
+            <strong>{usd(price)}</strong>
+          </>
+        ) : (
+          <strong>{usd(price)}</strong>
+        )}
+        <span className="offer-card__ship">+ {usd(SHIPPING.book)} shipping</span>
+      </div>
+
+      {promoOn ? (
+        <p className="offer-card__code offer-card__code--on">
+          ✓ Code <b>{BOOK.promo.code}</b> applied. You save {usd(BOOK.listPrice - BOOK.promo.price)}.
+        </p>
+      ) : (
+        <p className="offer-card__code">
+          Use code <b>{BOOK.promo.code}</b> for {usd(BOOK.promo.price)}.{" "}
+          <button type="button" className="offer-card__apply" onClick={() => setCode(BOOK.promo.code)}>
+            Apply
+          </button>
+        </p>
+      )}
+
+      <button
+        type="button"
+        className="btn btn--gold btn--lg offer-card__cta"
+        onClick={buy}
+        disabled={busy}
+        aria-busy={busy}
+      >
+        {busy ? "Redirecting…" : `${signed ? "Order a signed copy" : "Order the book"} — ${usd(price)}`}
+      </button>
+
       <label className="book__signed">
         <input
           type="checkbox"
           checked={signed}
           onChange={(e) => setSigned(e.target.checked)}
         />
-        <span>
-          Signed copy <span className="book__signed-note">(no extra charge)</span>
-        </span>
+        <span>Signed by Robert (no extra charge)</span>
       </label>
 
-      <label className="book__signed">
-        <span>Promo code</span>
-        <input
-          type="text"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder={BOOK.promo.code}
-          autoCapitalize="characters"
-          spellCheck={false}
-          style={{ width: "8em", marginLeft: "0.5em", textTransform: "uppercase" }}
-        />
-        {promoOn && <span className="book__signed-note"> ${BOOK.listPrice} → ${BOOK.promo.price}</span>}
-      </label>
-
-      <button
-        type="button"
-        className="btn btn--gold btn--lg"
-        onClick={buy}
-        disabled={busy}
-        aria-busy={busy}
-      >
-        {busy ? "Redirecting…" : `Order — $${price.toFixed(2).replace(/\.00$/, "")} + shipping`}
-      </button>
+      <p className="offer-card__note">Ships from the Boulder studio, usually within 3 business days.</p>
 
       {err && (
         <p className="modal__error" role="alert">

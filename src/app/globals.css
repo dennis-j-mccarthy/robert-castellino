@@ -3314,6 +3314,53 @@ select.add-input option { background: #111; }
   color: #e2a08a;
 }
 
+/* /book as an ad landing page: no hero, cover beside the offer. */
+.book--landing {
+  padding-top: calc(var(--promo-h, 0px) + 112px);
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 88px);
+}
+.book--landing .book__art { padding: 24px; }
+.book--landing .book__cover { max-width: min(100%, 520px); }
+.book--landing .book__title { font-size: clamp(40px, 4.6vw, 68px); margin: 16px 0 16px; }
+.book--landing .book__deck { font-size: 19px; margin-bottom: 24px; }
+.book--landing .book__specs { margin: 28px 0 0; padding: 12px 0; }
+
+.offer-card {
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  padding: 24px 26px 20px;
+  background: linear-gradient(160deg, rgba(216,170,84,0.14), rgba(216,170,84,0.03));
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.offer-card__tag {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold);
+}
+.offer-card__price {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 14px;
+  margin: 8px 0 4px;
+  font-family: var(--serif);
+}
+.offer-card__price s { font-size: 30px; color: var(--bone-70); }
+.offer-card__price strong { font-size: clamp(52px, 6vw, 72px); font-weight: 400; color: var(--bone-95); line-height: 1; }
+.offer-card__ship { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--bone-70); }
+.offer-card__code { font-family: var(--mono); font-size: 13px; color: var(--bone-85); margin: 4px 0 18px; }
+.offer-card__code b { color: var(--gold); letter-spacing: 0.08em; }
+.offer-card__code--on { color: var(--gold); }
+.offer-card__apply {
+  margin-left: 6px; padding: 3px 12px; border-radius: 999px;
+  border: 1px solid var(--gold); background: transparent; color: var(--gold);
+  font: inherit; cursor: pointer;
+}
+.offer-card__cta { width: 100%; justify-content: center; margin-bottom: 14px; }
+.offer-card .book__signed { margin-bottom: 6px; }
+.offer-card__note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--bone-70); margin: 0; }
+@media (max-width: 980px) {
+  .book--landing { padding-top: calc(var(--promo-h, 0px) + 110px); }
+  .book--landing .book__art { order: 2; }
+}
+
 /* Book "signed copy" toggle, sits above the order button. */
 .book__signed {
   display: inline-flex;
@@ -3879,6 +3926,9 @@ select.add-input option { background: #111; }
    where the sticky admin-shell header (z-30) would otherwise scroll under it. */
 body:has(.admin-shell) { --promo-h: 0px; }
 body:has(.admin-shell) .promo { display: none; }
+/* /book is the ad landing page: the banner only points back to it. */
+body:has(.route--book) { --promo-h: 0px; }
+body:has(.route--book) .promo { display: none; }
 
 /* ============================================================
    SUBSCRIBE MODAL (list-capture popup)
