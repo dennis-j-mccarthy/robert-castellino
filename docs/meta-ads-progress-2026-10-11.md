@@ -54,3 +54,13 @@ Supersedes the Oct 10 note. Read `docs/HANDOFF-meta-ads.md` first for the asset 
 4. Review the 8 ads + targeting, then **Publish** in Ads Manager.
 5. The Book Works ad account still not shared (needs Bob).
 6. Organic posts: captions in `public/gift-series.html`; post or schedule from Business Suite.
+
+## Saved audiences (Ads Manager → Audiences → Saved audiences)
+| Name | ID | Est. size |
+|---|---|---|
+| Colorado home · 45+ · photography & outdoors | 120251356987660171 | 1.7–2.0M |
+| Homesick gift buyers · US 45+ · Colorado interests | 120251356989240171 | 100–118M |
+| Photo-book people · US 45+ · landscape & mountains | 120251356989790171 | 100–118M |
+| Boulder County locals · 45+ | 120251356991330171 | 95–112K |
+Copies of the ad set targeting for reuse; the ad sets don't depend on them. Gotcha: the "Save audience"
+name field ignores automation `fill` — set the value with the native input setter + input event.
