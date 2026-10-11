@@ -7,6 +7,7 @@ import { SubscribeModal } from "@/components/subscribe-modal";
 import { Nav } from "@/components/nav";
 import { Ticker } from "@/components/ticker";
 import { Footer } from "@/components/footer";
+import { MetaPixel } from "@/components/meta-pixel";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -94,6 +95,7 @@ export default function RootLayout({
         <Footer />
         <Ticker />
         <SubscribeModal />
+        <MetaPixel />
       </body>
     </html>
   );

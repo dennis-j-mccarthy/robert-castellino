@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BOOK, bookUnitPrice, isBookPromo } from "@/data/pricing";
+import { trackPixel } from "@/components/meta-pixel";
 
 const usd = (n: number) => `$${n.toFixed(2).replace(/\.00$/, "")}`;
 
@@ -16,6 +17,7 @@ export function BookBuy({ initialCode = "" }: { initialCode?: string }) {
   const price = bookUnitPrice(signed, code);
 
   async function buy() {
+    trackPixel("InitiateCheckout", { content_name: BOOK.title, value: price, currency: "USD", num_items: 1 });
     setBusy(true);
     setErr(null);
     try {
@@ -30,7 +32,7 @@ export function BookBuy({ initialCode = "" }: { initialCode?: string }) {
         setBusy(false);
         return;
       }
-      window.location.href = data.url; // hand off to Stripe's hosted page
+      window.location.assign(data.url); // hand off to Stripe's hosted page
     } catch {
       setErr("Network error. Please try again.");
       setBusy(false);

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type Stripe from "stripe";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { PixelEvent } from "@/components/meta-pixel";
 
 export const dynamic = "force-dynamic";
 
@@ -67,8 +68,19 @@ export default async function CheckoutSuccess({
   const shipState = ship?.address?.state;
   const shipWhere = [shipCity, shipState].filter(Boolean).join(", ");
 
+  // Purchase fires only for a session Stripe reports as paid; the session id
+  // doubles as the event id so a refresh is not counted as a second sale.
+  const paid = session?.payment_status === "paid" && total != null;
+
   return (
     <section className="route confirm-page">
+      {paid && session && (
+        <PixelEvent
+          event="Purchase"
+          params={{ value: total / 100, currency: (session.currency ?? "usd").toUpperCase(), kind: session.metadata?.kind }}
+          eventId={session.id}
+        />
+      )}
       <div className="confirm">
         <span className="confirm__seal" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="26" height="26">

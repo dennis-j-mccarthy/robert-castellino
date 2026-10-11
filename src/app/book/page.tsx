@@ -1,6 +1,7 @@
 import { BOOK } from "@/data/pricing";
 import { BookBuy } from "./BookBuy";
 import { BookFlip } from "./BookFlip";
+import { PixelEvent } from "@/components/meta-pixel";
 
 const bookLd = {
   "@context": "https://schema.org",
@@ -58,6 +59,7 @@ export default async function BookPage({
           </p>
 
           <BookBuy initialCode={initialCode} />
+          <PixelEvent event="ViewContent" params={{ content_name: BOOK.title, content_type: "product", value: BOOK.promo.price, currency: "USD" }} />
 
           <dl className="book__specs">
             <div><dt>Format</dt><dd>11 × 11″ hardcover · cloth bound</dd></div>
