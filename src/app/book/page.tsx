@@ -1,3 +1,4 @@
+import { BOOK } from "@/data/pricing";
 import { BookBuy } from "./BookBuy";
 import { BookFlip } from "./BookFlip";
 
@@ -13,7 +14,7 @@ const bookLd = {
   image: "https://robertcastellino.com/gift-series/book-cover-hi.jpg",
   offers: {
     "@type": "Offer",
-    price: "60",
+    price: String(BOOK.promo.price),
     priceCurrency: "USD",
     availability: "https://schema.org/InStock",
     url: "https://robertcastellino.com/book",
@@ -26,7 +27,8 @@ export default async function BookPage({
   searchParams: Promise<{ code?: string | string[] }>;
 }) {
   const { code } = await searchParams;
-  const initialCode = (Array.isArray(code) ? code[0] : code)?.slice(0, 40) ?? "";
+  // The $49.95 price is the price: the code is applied for everyone, ad link or not.
+  const initialCode = (Array.isArray(code) ? code[0] : code)?.slice(0, 40) || BOOK.promo.code;
   return (
     <section className="route route--book">
       <script
