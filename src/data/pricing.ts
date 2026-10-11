@@ -24,11 +24,24 @@ export const PRINT_SIZES: PrintSize[] = [
 
 export const BOOK = {
   title: "Colorado: Life & Light on the Land",
-  /** Base price in USD for an unsigned copy. */
-  basePrice: 75,
-  /** Added to the base price for a signed copy. */
-  signedSurcharge: 10,
+  /** List price in USD. Signed or unsigned, same price. */
+  listPrice: 60,
+  /** Added to the price for a signed copy. */
+  signedSurcharge: 0,
+  /** Promo code that drops the book to `promo.price`. Matched case-insensitively. */
+  promo: { code: "10OFF", price: 49.95 },
 };
+
+/** True when `code` is the book promo code. */
+export function isBookPromo(code?: string | null): boolean {
+  return !!code && code.trim().toUpperCase() === BOOK.promo.code;
+}
+
+/** Per-copy book price in USD for the given options. */
+export function bookUnitPrice(signed: boolean, code?: string | null): number {
+  const base = isBookPromo(code) ? BOOK.promo.price : BOOK.listPrice;
+  return base + (signed ? BOOK.signedSurcharge : 0);
+}
 
 /** Flat shipping, in USD, applied at checkout per order kind. */
 export const SHIPPING = {

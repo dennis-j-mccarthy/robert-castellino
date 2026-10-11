@@ -13,14 +13,20 @@ const bookLd = {
   image: "https://robertcastellino.com/gift-series/book-cover-hi.jpg",
   offers: {
     "@type": "Offer",
-    price: "75",
+    price: "60",
     priceCurrency: "USD",
     availability: "https://schema.org/InStock",
     url: "https://robertcastellino.com/book",
   },
 };
 
-export default function BookPage() {
+export default async function BookPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string | string[] }>;
+}) {
+  const { code } = await searchParams;
+  const initialCode = (Array.isArray(code) ? code[0] : code)?.slice(0, 40) ?? "";
   return (
     <section className="route route--book">
       <script
@@ -68,10 +74,10 @@ export default function BookPage() {
             <div><dt>Extent</dt><dd>168 pages · 124 plates</dd></div>
             <div><dt>Paper</dt><dd>157gsm archival matte, FSC</dd></div>
             <div><dt>Printing</dt><dd>Fifth edition · signed copies available</dd></div>
-            <div><dt>Price</dt><dd><span className="price">$ 75</span> <span className="price__note">+ shipping, signed +$10</span></dd></div>
+            <div><dt>Price</dt><dd><span className="price">$ 60</span> <span className="price__note">+ shipping · $49.95 with code 10OFF · signed at no extra charge</span></dd></div>
           </dl>
 
-          <BookBuy />
+          <BookBuy initialCode={initialCode} />
 
           <p className="book__shipnote">Shipped from the Boulder studio · usually within 3 business days.</p>
         </div>

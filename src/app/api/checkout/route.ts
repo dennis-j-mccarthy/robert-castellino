@@ -4,7 +4,9 @@ import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import {
   BOOK,
   SHIPPING,
+  bookUnitPrice,
   findPrintSize,
+  isBookPromo,
   toCents,
 } from "@/data/pricing";
 
@@ -25,6 +27,7 @@ const Body = z.discriminatedUnion("kind", [
     kind: z.literal("book"),
     signed: z.boolean(),
     qty: z.number().int().min(1).max(20),
+    code: z.string().trim().max(40).optional(),
   }),
 ]);
 
@@ -87,9 +90,10 @@ export async function POST(req: Request) {
     };
     shippingUsd = SHIPPING.print;
   } else {
-    const unit = BOOK.basePrice + (data.signed ? BOOK.signedSurcharge : 0);
+    const unit = bookUnitPrice(data.signed, data.code);
+    const promo = isBookPromo(data.code) ? ` · code ${BOOK.promo.code}` : "";
     lineItem = {
-      name: data.signed ? `${BOOK.title} — signed copy` : BOOK.title,
+      name: (data.signed ? `${BOOK.title} — signed copy` : BOOK.title) + promo,
       description: "168-page hardcover monograph · fifth printing",
       unitAmount: toCents(unit),
     };
@@ -129,7 +133,7 @@ export async function POST(req: Request) {
         kind: data.kind,
         ...(data.kind === "print"
           ? { sizeLabel: data.sizeLabel, title: data.title }
-          : { signed: String(data.signed) }),
+          : { signed: String(data.signed), code: isBookPromo(data.code) ? BOOK.promo.code : "" }),
       },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
