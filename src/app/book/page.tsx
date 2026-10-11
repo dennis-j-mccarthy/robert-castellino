@@ -1,4 +1,5 @@
 import { BookBuy } from "./BookBuy";
+import { BookFlip } from "./BookFlip";
 
 const bookLd = {
   "@context": "https://schema.org",
@@ -41,6 +42,7 @@ export default async function BookPage({
             <span>Fifth</span>
             <span>Printing</span>
           </div>
+          <BookFlip />
         </div>
 
         <div className="book__copy">

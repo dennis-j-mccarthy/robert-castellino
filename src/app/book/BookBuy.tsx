@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BOOK, SHIPPING, bookUnitPrice, isBookPromo } from "@/data/pricing";
+import { BOOK, bookUnitPrice, isBookPromo } from "@/data/pricing";
 
 const usd = (n: number) => `$${n.toFixed(2).replace(/\.00$/, "")}`;
 
@@ -50,7 +50,6 @@ export function BookBuy({ initialCode = "" }: { initialCode?: string }) {
         ) : (
           <strong>{usd(price)}</strong>
         )}
-        <span className="offer-card__ship">+ {usd(SHIPPING.book)} shipping</span>
       </div>
 
       {promoOn ? (
