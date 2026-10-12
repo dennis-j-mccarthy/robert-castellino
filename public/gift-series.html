@@ -248,7 +248,8 @@
   .hub-side{padding:20px 16px 0;}
   @media (min-width:1000px){
     .layout{grid-template-columns:340px minmax(0,1fr);gap:28px;padding-inline:20px;}
-    .hub-side{position:sticky;top:0;align-self:start;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px 0;}
+    .hub-side{position:sticky;top:0;align-self:start;padding:24px 0;}
+    /* sections have 44px top padding, which puts a jumped-to section's first line level with the hub's top (also 44px) */
     .layout .wrap{margin:0;}
   }
   .hub{position:relative;width:100%;max-width:340px;aspect-ratio:1;margin:0 auto;}
