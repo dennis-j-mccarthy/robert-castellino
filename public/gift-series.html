@@ -1610,8 +1610,9 @@
         var r2=routeOf(chan,"Ad"), miss=[];
         if(!p.ad.adSet) miss.push("ad set");
         if(!p.ad.at) miss.push("date");
-        miss.push("budget");          // the plan has no budget field — always set it in-session
-        if(r2.build){ if(miss.length>1) needAds++; else readyAds++; }
+        // Budget/objective/audiences already live on the holiday campaign (CBO $30/day,
+        // OUTCOME_TRAFFIC) and ad sets 1-6 — a build is just creative + ad into one of them.
+        if(r2.build){ if(miss.length) needAds++; else readyAds++; }
         push("Ad",p.ad.at,r2,miss);
       }
     });
@@ -1624,7 +1625,7 @@
       return head+groups[k].map(function(it){
         var note=it.kind==="Ad"
           ? (it.route.build
-              ? (it.miss.length>1?'<span class="bq-miss">needs '+it.miss.join(", ")+'</span>':'<span class="bq-ok">ready — set budget when building</span>')
+              ? (it.miss.length?'<span class="bq-miss">needs '+it.miss.join(", ")+'</span>':'<span class="bq-ok">ready to build</span>')
               : "")
           : (it.miss.length?'<span class="bq-miss">needs '+it.miss.join(", ")+'</span>':'');
         return '<tr><td><a href="#post-'+it.num+'">#'+it.num+'</a></td>'+
@@ -1637,7 +1638,7 @@
       '<span class="bq-stat'+(readyAds?' on':'')+'"><b>'+readyAds+'</b> ad'+(readyAds===1?"":"s")+' ready to build</span>'+
       '<span class="bq-stat"><b>'+needAds+'</b> ad'+(needAds===1?"":"s")+' need info</span>'+
       '<span class="bq-stat"><b>'+byHand+'</b> post'+(byHand===1?"":"s")+' by hand</span></div>';
-    var lead='<p class="note">The morning run list, grouped by date. Only <b>Facebook ads</b> can be built from here — open a session and say <b>“build &lt;date&gt;”</b> and the operator creates them <b>paused</b> in Castellino Photo, then reports the IDs back. Organic posts, Instagram (not linked) and non-Meta channels are done by hand. Budgets aren’t stored here yet, so have a daily number per ad set ready.</p>';
+    var lead='<p class="note">The morning run list, grouped by date. Only <b>Facebook ads</b> can be built from here — open a session and say <b>“build &lt;date&gt;”</b>. The operator adds a creative + ad into the matching ad set (sets 1–6 already exist in Castellino Photo, paused; campaign budget &amp; objective are already set), <b>stages it as a draft, and stops</b> — it never activates. Bob reviews the draft in Ads Manager and publishes. Organic posts, Instagram (not linked) and non-Meta channels are done by hand.</p>';
     var body=items.length?rows:'<tr><td colspan="4" class="note">Nothing marked yet — tick <b>Post</b> or <b>Ad</b> on a post below.</td></tr>';
     el.innerHTML='<h3>Build queue</h3>'+sum+lead+'<table class="sch"><thead><tr><th>Post</th><th>What</th><th>Where it’s built</th><th>Readiness</th></tr></thead><tbody>'+body+'</tbody></table>';
   }

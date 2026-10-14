@@ -34,24 +34,42 @@ Organic posts are manual/Business Suite; **Instagram can't go through the connec
 1. Mark a batch on the plan page — tick **Ad**, pick the **ad set**, set a **date**. (Posts:
    tick **Post** + date; those you or Bob publish by hand.)
 2. Open a Claude session with the Meta connector and say: **"build Nov 28"** (or whatever date
-   group). I create the Facebook ads **PAUSED** in Castellino Photo `1788471615529613` and
-   report the ad IDs.
+   group). For each Facebook ad I add a **creative + ad into the matching existing ad set** in
+   Castellino Photo `1788471615529613`, **staged as a draft**, and report the ad IDs.
 3. You paste each ad ID into its post's **Meta ad ID** box (the live "built ✓" status can't
    auto-write-back — the live DB only lives in Vercel and I can't sign in there from here).
-4. Bob reviews in Ads Manager and activates. **Bob approves anything public and pays all spend.**
+4. **Bob** opens Ads Manager, reviews the draft ("Review and publish"), and publishes. The ads
+   publish **paused**; Bob activates when ready. **Bob approves anything public and pays all spend.**
 
-## Before an ad batch can be built — don't-guess items
-- **Budget**: the plan has **no budget field yet**. Every ad needs a **daily number per ad set**
-  from you or Bob (ad set 4 currently says "$50–90/day" — that's a range, not a number). Have
-  the numbers ready; I set them when building.
-- **Objective**: not stored either — tell me the goal per batch (sales/traffic/etc.).
-- **Audiences A–E**: still **don't exist** in Meta. If a batch uses them, they get created first.
+### Hard rule for the build session
+The connector runs in **draft mode**: creates are staged as DRAFT, and `ads_activate_entity`
+**publishes them LIVE/ACTIVE**. So the build session **stages the drafts and stops — it must
+NOT call `ads_activate_entity`.** Publishing is Bob's step in Ads Manager, not the operator's.
+"Build" here means *stage a draft*, never *go live*.
 
-## Connector + account state (checked tonight, read-only)
-- Working Meta connector **responds** on Castellino Photo `1788471615529613` — **not** blocked.
-  (A separate `meta-ads` entry shows "needs auth"; that's a duplicate, ignore it — the one I use
-  is authorized.)
-- Account already holds **one PAUSED campaign**: "Book · Signed copy $49.95 · Holiday 2026".
+## What's already set up (checked tonight, read-only) — so a build is mechanical
+The holiday structure already exists in Castellino Photo `1788471615529613`, all **PAUSED**:
+- Campaign **"Book · Signed copy $49.95 · Holiday 2026"** `120251354161250171` — CBO
+  **$30/day**, objective **OUTCOME_TRAFFIC**. (Budget & objective live here, not per item. If
+  you want the holiday push bigger, raise this one number — optional, not a blocker.)
+- Ad sets **1–6 already built** (audiences baked in). A Facebook-ad build = add a creative +
+  ad into the right one:
+
+  | Plan "ad set" | Meta ad set | ID |
+  |---|---|---|
+  | 1 | Warm · Page engagers + followers | `120251354238940171` |
+  | 2 | Lookalike 1% · followers · 45+ | `120251354162580171` |
+  | 3 | Colorado home · 45+ · interests | `120251354163940171` |
+  | 4 | Homesick gift buyers · US 45+ · Nov 17–Dec 12 | `120251354164530171` |
+  | 5 | Photo-book people · US 45+ · interests | `120251356932420171` |
+  | 6 | Boulder, CO locals · 45+ | `120251356932940171` |
+
+So the only per-item inputs are the ones the queue checks: **ad set chosen** and **date**. The
+creative (image + copy) comes from the post's plate on the page.
+
+## Connector state
+- Working Meta connector **responds** — not blocked. (A separate `meta-ads` entry shows "needs
+  auth"; that's a duplicate — the one I use is authorized.)
 
 ## One thing to confirm
 Only **one** item is marked right now: post `01`, *Instagram feed*, flagged **Post** for
