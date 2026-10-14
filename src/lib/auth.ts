@@ -39,17 +39,29 @@ export function isAuthConfigured(): boolean {
   );
 }
 
+// Admin credentials: the primary (ADMIN_EMAIL / ADMIN_PASSWORD_HASH) plus an
+// optional second (ADMIN_EMAIL_2 / ADMIN_PASSWORD_HASH_2), so more than one
+// person can sign in without a user table.
+function adminCredentials(): Array<{ email: string; hash: string }> {
+  const list: Array<{ email: string; hash: string }> = [];
+  const add = (email?: string, hash?: string) => {
+    if (email && hash) list.push({ email: email.trim().toLowerCase(), hash });
+  };
+  add(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD_HASH);
+  add(process.env.ADMIN_EMAIL_2, process.env.ADMIN_PASSWORD_HASH_2);
+  return list;
+}
+
 export async function verifyCredentials(
   email: string,
   password: string,
 ): Promise<boolean> {
   if (!isAuthConfigured()) return false;
-  const expected = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
   const got = email.trim().toLowerCase();
-  if (expected !== got) return false;
-  const hash = process.env.ADMIN_PASSWORD_HASH!;
+  const match = adminCredentials().find((c) => c.email === got);
+  if (!match) return false;
   try {
-    return await bcrypt.compare(password, hash);
+    return await bcrypt.compare(password, match.hash);
   } catch {
     return false;
   }
