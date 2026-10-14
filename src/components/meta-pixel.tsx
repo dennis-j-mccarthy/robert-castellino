@@ -2,11 +2,20 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-// Meta Pixel. Inert until NEXT_PUBLIC_META_PIXEL_ID is set in Vercel, so it can
-// ship before the pixel exists in Events Manager.
-const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+// Meta Pixel. The dataset id is public (it ships in every pixel's page source),
+// so we default to it and let NEXT_PUBLIC_META_PIXEL_ID override. It only
+// activates on the live domain, so preview deploys and localhost never pollute
+// the dataset or the retargeting audiences.
+const FALLBACK_PIXEL_ID = "1160986453259804"; // www.robertcastellino.com
+const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || FALLBACK_PIXEL_ID;
+
+function onLiveSite(): boolean {
+  if (typeof window === "undefined") return false;
+  const h = window.location.hostname;
+  return h === "robertcastellino.com" || h === "www.robertcastellino.com";
+}
 
 type Fbq = (cmd: string, ...args: unknown[]) => void;
 
@@ -17,7 +26,7 @@ function fbq(): Fbq | null {
 
 /** Fire a standard Meta event. `eventId` dedupes against a future Conversions API send. */
 export function trackPixel(event: string, params?: Record<string, unknown>, eventId?: string) {
-  if (!PIXEL_ID) return;
+  if (!PIXEL_ID || !onLiveSite()) return;
   fbq()?.("track", event, params ?? {}, eventId ? { eventID: eventId } : undefined);
 }
 
@@ -25,18 +34,24 @@ export function trackPixel(event: string, params?: Record<string, unknown>, even
 export function MetaPixel() {
   const pathname = usePathname();
   const first = useRef(true);
+  // Decided after mount so SSR and first client render agree (both null).
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
-    if (!PIXEL_ID) return;
+    if (PIXEL_ID && onLiveSite()) setActive(true);
+  }, []);
+
+  useEffect(() => {
+    if (!active) return;
     // The base snippet sends the first PageView itself.
     if (first.current) {
       first.current = false;
       return;
     }
     fbq()?.("track", "PageView");
-  }, [pathname]);
+  }, [pathname, active]);
 
-  if (!PIXEL_ID) return null;
+  if (!active) return null;
   return (
     <Script id="meta-pixel" strategy="afterInteractive">
       {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
