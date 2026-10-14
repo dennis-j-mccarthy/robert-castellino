@@ -264,6 +264,10 @@
   .pb-rem{font-size:12.5px;color:var(--faint);}
   .pb-tags{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;}
   .pb-msg{font-size:12px;color:var(--muted);margin-left:10px;}
+  .pb-lock{display:none;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--accent-ink);text-decoration:none;}
+  .pb-lock:hover{text-decoration:underline;}
+  .planbar.locked .pb-row{display:none;}
+  .planbar.locked .pb-lock{display:inline-flex;}
   .tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid var(--line);background:var(--card);color:var(--muted);white-space:nowrap;}
   .tag-post{border-color:#5b7fa6;color:#2f4f73;background:#eef3f9;}
   .tag-ad{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
@@ -1520,6 +1524,7 @@
       bar.c["ad.on"].checked=p.ad.on; bar.c["ad.adSet"].value=p.ad.adSet; bar.c["ad.status"].value=p.ad.status; bar.c["ad.adId"].value=p.ad.adId; bar.c["ad.at"].value=p.ad.at;
       bar.c["cross.fb"].checked=p.cross.fb; bar.c["cross.ig"].checked=p.cross.ig; bar.c["cross.done"].checked=p.cross.done;
       bar.all.forEach(function(el){ el.disabled=!signedIn; });
+      bar.root.classList.toggle("locked",!signedIn);
       bar.root.classList.toggle("has-post",p.post.on);
       bar.root.classList.toggle("has-ad",p.ad.on);
       bar.root.classList.toggle("has-cross",p.cross.fb||p.cross.ig);
@@ -1614,7 +1619,8 @@
   var AD_OPTS='<option value="">Choose ad set…</option>'+Object.keys(AD_SETS).map(function(k){return '<option value="'+k+'">'+AD_SETS[k]+'</option>';}).join("");
   var ST_OPTS=Object.keys(STATUS).map(function(k){return '<option value="'+k+'">'+STATUS[k]+'</option>';}).join("");
   function barHTML(){
-    return '<div class="pb-row">'+
+    return '<a class="pb-lock">🔒 Sign in to plan this post</a>'+
+      '<div class="pb-row">'+
         '<label class="pb-chk pb-main"><input type="checkbox" data-k="post.on"><span>Post</span></label>'+
         '<span class="pb-grp pb-post"><input type="date" data-k="post.at" aria-label="Post date">'+
           '<label class="pb-chk pb-min"><input type="checkbox" data-k="post.posted"><span>posted</span></label></span>'+
@@ -1639,6 +1645,7 @@
     var c={}; root.querySelectorAll("[data-k]").forEach(function(el){ c[el.getAttribute("data-k")]=el; });
     var all=[].slice.call(root.querySelectorAll("input,select"));
     bars[num]={root:root,c:c,all:all,tags:root.querySelector(".pb-tags"),msg:root.querySelector(".pb-msg")};
+    var lk=root.querySelector(".pb-lock"); if(lk) lk.setAttribute("href","/admin/login?next="+encodeURIComponent("/gift-series.html#post-"+num));
     function collect(){ return {
       post:{on:c["post.on"].checked,at:c["post.at"].value,posted:c["post.posted"].checked},
       ad:{on:c["ad.on"].checked,adSet:c["ad.adSet"].value,status:c["ad.status"].value,adId:(c["ad.adId"].value||"").replace(/\D/g,""),at:c["ad.at"].value},
