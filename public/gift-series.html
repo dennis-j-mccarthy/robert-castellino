@@ -208,10 +208,14 @@
 
   /* ---------- accordions + ad tracking ---------- */
   .h2sub{display:block;font-family:var(--sans,inherit);font-size:15px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:4px;}
-  .acc-head{all:unset;cursor:pointer;display:flex;align-items:flex-start;gap:12px;width:100%;}
-  .acc-head:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:6px;}
-  .acc-head .chev{margin-top:14px;transition:transform .2s;font-size:14px;color:var(--muted);}
+  .acc-head{all:unset;cursor:pointer;display:flex;align-items:flex-start;gap:12px;width:100%;box-sizing:border-box;padding:8px 12px;border-radius:12px;transition:background .15s;}
+  .acc-head:hover{background:var(--surface);}
+  .mp-part:not(.acc-closed) .acc-head{background:var(--surface);}
+  .acc-head:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .acc-head .chev{flex:0 0 auto;margin-top:9px;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--muted);font-size:12px;line-height:1;transition:transform .2s,background .15s,color .15s,border-color .15s;}
+  .mp-part:not(.acc-closed) .acc-head .chev{background:var(--accent);border-color:var(--accent);color:#fff;}
   .acc-closed .acc-head .chev{transform:rotate(-90deg);}
+  .mp-part:not(.acc-closed) .mp-part__n{color:var(--accent-ink);}
   .acc-closed > .acc-body{display:none;}
   details.pgroup{border:1px solid var(--line);border-radius:12px;margin:14px 0;background:var(--surface);}
   details.pgroup > summary{cursor:pointer;padding:14px 18px;font-weight:600;display:flex;gap:10px;align-items:center;flex-wrap:wrap;list-style:none;}
@@ -1417,6 +1421,7 @@
   var OPEN_KEY="rc-gift-open-v2", openState={};
   try{openState=JSON.parse(localStorage.getItem(OPEN_KEY)||"{}");}catch(e){}
   function keepOpen(){try{localStorage.setItem(OPEN_KEY,JSON.stringify(openState));}catch(e){}}
+  var accs=[];
   document.querySelectorAll("section.mp-part").forEach(function(sec){
     var h2=sec.querySelector(":scope > h2"); if(!h2) return;
     var body=document.createElement("div"); body.className="acc-body";
@@ -1427,10 +1432,15 @@
     var chev=document.createElement("span"); chev.className="chev"; chev.textContent="▾";
     h2.parentNode.insertBefore(btn,h2); btn.appendChild(chev); btn.appendChild(h2);
     sec.appendChild(body);
-    var id=sec.id, open = id in openState ? openState[id] : false;
-    function set(o){ sec.classList.toggle("acc-closed",!o); btn.setAttribute("aria-expanded",String(o)); openState[id]=o; keepOpen(); }
-    set(open);
-    btn.addEventListener("click",function(){ set(sec.classList.contains("acc-closed")); });
+    function set(o){ sec.classList.toggle("acc-closed",!o); btn.setAttribute("aria-expanded",String(o)); }
+    set(false);                               // every section starts closed
+    accs.push({sec:sec,set:set,btn:btn});
+    btn.addEventListener("click",function(){
+      var willOpen=sec.classList.contains("acc-closed");
+      accs.forEach(function(a){ if(a.sec!==sec) a.set(false); });   // only one open at a time
+      set(willOpen);
+      if(willOpen) btn.scrollIntoView({block:"start",behavior:"smooth"});
+    });
   });
   // TOC links open their section
   document.querySelectorAll('.mp-toc a[href^="#"]').forEach(function(a){
