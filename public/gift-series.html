@@ -242,6 +242,39 @@
   .adtrack .chips{display:flex;flex-wrap:wrap;gap:6px;}
   .adtrack .note{font-size:13px;color:var(--muted);margin:8px 2px;}
   @media (max-width:640px){.adtrack table,.adtrack thead,.adtrack tbody,.adtrack tr,.adtrack th,.adtrack td{display:block;} .adtrack thead{display:none;} .adtrack td{border:0;padding:4px 0;} .adtrack tr{border-bottom:1px solid var(--line);padding:8px 0;}}
+  /* plan bar */
+  .planbar{display:flex;flex-direction:column;gap:7px;margin:2px 2px 12px;padding:10px 12px;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 2px rgba(20,33,28,.04);}
+  .pb-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;}
+  .pb-row2{border-top:1px dashed var(--line-soft);padding-top:7px;}
+  .pb-chk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:var(--muted);}
+  .pb-chk input{accent-color:var(--accent);width:15px;height:15px;}
+  .pb-main{font-weight:600;color:var(--ink);font-size:13.5px;}
+  .pb-min{font-size:12.5px;}
+  .pb-grp{display:none;align-items:center;gap:7px;flex-wrap:wrap;}
+  .planbar.has-post .pb-post{display:inline-flex;}
+  .planbar.has-ad .pb-ad{display:inline-flex;}
+  .pb-done{display:none;}
+  .planbar.has-cross .pb-done{display:inline-flex;}
+  .planbar input[type=date],.planbar select,.planbar input[type=text]{font:inherit;font-size:12.5px;padding:4px 7px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:inherit;}
+  .planbar input[type=text]{width:12ch;font-family:var(--mono);}
+  .pb-rem{font-size:12.5px;color:var(--faint);}
+  .pb-tags{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;}
+  .pb-msg{font-size:12px;color:var(--muted);margin-left:10px;}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid var(--line);background:var(--card);color:var(--muted);white-space:nowrap;}
+  .tag-post{border-color:#5b7fa6;color:#2f4f73;background:#eef3f9;}
+  .tag-ad{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
+  .tag-ad.running{border-color:#2e7d4f;color:#1e5c38;background:#e3f3e8;}
+  .tag-cross{border-color:#8a6fb0;color:#5a3f82;background:#f1ecf8;}
+  .slot.is-post{outline:2px dashed #9db4cf;outline-offset:6px;border-radius:14px;}
+  .sch{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .sch th,.sch td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top;}
+  .sch th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:500;}
+  .sch .sch-d{font-family:var(--mono);white-space:nowrap;color:var(--ink);}
+  .sch .sch-x{font-size:11.5px;color:var(--muted);}
+  .sch .sch-cap{color:var(--muted);}
+  .sch a{color:var(--accent-ink);font-family:var(--mono);}
+  tr.cx-done{opacity:.5;}
+  @media (max-width:640px){.sch table,.sch thead,.sch tbody,.sch tr,.sch th,.sch td{display:block;} .sch thead{display:none;} .sch td{border:0;padding:3px 0;} .sch tr{border-bottom:1px solid var(--line);padding:7px 0;}}
 
   /* ---------- hub & spokes layout ---------- */
   .layout{display:grid;grid-template-columns:minmax(0,1fr);max-width:1180px;margin:0 auto;}
@@ -500,6 +533,8 @@
     <div class="mp-flag"><b>The offer.</b> Signed copy, list $60, $49.95 with code <code>10OFF</code>. The code box is on robertcastellino.com/book, and ad links use <code>/book?code=10OFF</code> so it is already filled in.</div>
 
     <div id="ad-tracker" class="adtrack" aria-live="polite"></div>
+    <div id="plan-schedule" class="adtrack" aria-live="polite"></div>
+    <div id="plan-crosspost" class="adtrack" aria-live="polite"></div>
   <main>
     <section class="slot" data-n="01"><div class="slot__meta"><span class="seq">01</span><span class="plat">Instagram · feed</span><span class="angle">Fri Nov 28 · the centerpiece</span></div>
       <div class="card"><div class="phead"><span class="ava">RC</span><div class="who">robertcastellino<small>Maroon Lake, Colorado</small></div><span class="more">•••</span></div>
@@ -1441,71 +1476,157 @@
   var BUILT_ELSEWHERE={"1":["B3 coffee table","B1 fifty years"],"2":["B1","B3"],"3":["B1","B3"],"4":["D1 gift of Colorado","B3"],"5":["B1","B3"],"6":["B1","B3"]};
   var ads={}, signedIn=false, bars={};
 
-  function pill(status){ var sp=document.createElement("span"); sp.className="adpill "+(status||""); sp.textContent=status?STATUS[status]:"Not an ad"; return sp; }
+  var MON=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function shortDate(s){ if(!s) return ""; var m=s.slice(0,10).split("-"); if(m.length<3) return s; return (MON[parseInt(m[1],10)]||m[1])+" "+parseInt(m[2],10); }
+  function chanOf(slot){ var p=slot.querySelector(".plat"); return p?p.textContent.split("·")[0].trim():""; }
+  function capOf(slot){ var e=slot.querySelector(".ov-h, .em-sub, .cap, h3"); var t=e?e.textContent.replace(/\s+/g," ").trim():""; return t.length>70?t.slice(0,68)+"…":t; }
+  function emptyPlan(){ return {post:{on:false,at:"",posted:false}, ad:{on:false,adSet:"",status:"marked",adId:"",at:""}, cross:{fb:false,ig:false,done:false}}; }
+  function planOf(num){ return ads[num]||emptyPlan(); }
+  function isSet(p){ return p.post.on||p.ad.on||p.cross.fb||p.cross.ig; }
+  function slotOf(num){ return document.getElementById("post-"+num); }
 
   function render(){
-    // per post
     slots.forEach(function(slot){
-      var num=slot.dataset.post, st=ads[num], bar=bars[num]; if(!bar) return;
-      bar.cb.checked=!!st; bar.cb.disabled=!signedIn;
-      if(st){ bar.root.removeAttribute("data-off"); } else { bar.root.setAttribute("data-off",""); }
-      bar.set.value=st?st.adSet:""; bar.status.value=st?st.status:"marked"; bar.adId.value=st?st.adId:"";
-      [bar.set,bar.status,bar.adId].forEach(function(c){ c.disabled=!signedIn; });
-      bar.pillWrap.replaceChildren(pill(st&&st.status));
-      slot.classList.toggle("is-ad",!!st); slot.classList.toggle("running",!!st&&st.status==="running");
+      var num=slot.dataset.post, bar=bars[num]; if(!bar) return;
+      var p=planOf(num);
+      bar.c["post.on"].checked=p.post.on; bar.c["post.at"].value=p.post.at; bar.c["post.posted"].checked=p.post.posted;
+      bar.c["ad.on"].checked=p.ad.on; bar.c["ad.adSet"].value=p.ad.adSet; bar.c["ad.status"].value=p.ad.status; bar.c["ad.adId"].value=p.ad.adId; bar.c["ad.at"].value=p.ad.at;
+      bar.c["cross.fb"].checked=p.cross.fb; bar.c["cross.ig"].checked=p.cross.ig; bar.c["cross.done"].checked=p.cross.done;
+      bar.all.forEach(function(el){ el.disabled=!signedIn; });
+      bar.root.classList.toggle("has-post",p.post.on);
+      bar.root.classList.toggle("has-ad",p.ad.on);
+      bar.root.classList.toggle("has-cross",p.cross.fb||p.cross.ig);
+      slot.classList.toggle("is-ad",p.ad.on);
+      slot.classList.toggle("running",p.ad.on&&p.ad.status==="running");
+      slot.classList.toggle("is-post",p.post.on&&!p.ad.on);
+      var tags=[];
+      if(p.post.on) tags.push('<span class="tag tag-post">Post'+(p.post.at?" · "+shortDate(p.post.at):"")+(p.post.posted?" ✓":"")+'</span>');
+      if(p.ad.on) tags.push('<span class="tag tag-ad '+p.ad.status+'">Ad'+(p.ad.adSet?" · set "+p.ad.adSet:"")+" · "+STATUS[p.ad.status]+'</span>');
+      if(p.cross.fb||p.cross.ig) tags.push('<span class="tag tag-cross">↗ Bob '+[p.cross.fb?"FB":"",p.cross.ig?"IG":""].filter(Boolean).join("+")+(p.cross.done?" ✓":"")+'</span>');
+      bar.tags.innerHTML=tags.join("");
     });
-    // group counts
     groupEls.forEach(function(x){
-      var marked=0;
-      x.body.querySelectorAll(".slot").forEach(function(sl){ if(ads[sl.dataset.post]) marked++; });
-      x.cnt.innerHTML=marked ? "<b>"+marked+" marked as ads</b>" : "no ads marked";
+      var ad=0,po=0;
+      x.body.querySelectorAll(".slot").forEach(function(sl){ var p=ads[sl.dataset.post]; if(!p)return; if(p.ad.on)ad++; if(p.post.on)po++; });
+      x.cnt.innerHTML=(ad||po)?("<b>"+po+" posts · "+ad+" ads</b>"):"nothing marked";
     });
-    // tracker table
+    renderTracker(); renderSchedule(); renderCross();
+  }
+
+  function renderTracker(){
     var t=document.getElementById("ad-tracker"); if(!t) return;
-    var rows=Object.keys(AD_SETS).map(function(k){
-      var mine=Object.keys(ads).filter(function(p){return ads[p].adSet===k;}).sort();
-      var chips=mine.map(function(p){ var st=ads[p]; return '<a href="#post-'+p+'" class="adpill '+st.status+'">#'+p+' · '+STATUS[st.status]+'</a>'; }).join("");
+    var adKeys=Object.keys(ads).filter(function(p){return ads[p].ad.on;});
+    var rows=Object.keys(AD_SETS).filter(function(k){return k;}).map(function(k){
+      var mine=adKeys.filter(function(p){return ads[p].ad.adSet===k;}).sort();
+      var chips=mine.map(function(p){ var st=ads[p].ad.status; return '<a href="#post-'+p+'" class="adpill '+st+'">#'+p+' · '+STATUS[st]+'</a>'; }).join("");
       var elsewhere=(BUILT_ELSEWHERE[k]||[]).map(function(n){return '<span class="adpill built">'+n+' · Built · paused</span>';}).join("");
       return "<tr><td><b>"+AD_SETS[k]+"</b></td><td><div class=\"chips\">"+(chips||'<span class="adpill">no posts marked</span>')+"</div></td><td><div class=\"chips\">"+elsewhere+"</div></td></tr>";
     }).join("");
-    var unassigned=Object.keys(ads).filter(function(p){return !ads[p].adSet;}).sort().map(function(p){ return '<a href="#post-'+p+'" class="adpill '+ads[p].status+'">#'+p+'</a>'; }).join("");
+    var unassigned=adKeys.filter(function(p){return !ads[p].ad.adSet;}).sort().map(function(p){ return '<a href="#post-'+p+'" class="adpill '+ads[p].ad.status+'">#'+p+'</a>'; }).join("");
     t.innerHTML='<h3>Ads tracker</h3>'+
-      '<p class="note">Tick <b>Run as ad</b> on any post below and pick its ad set. It saves for everyone straight away. <b>Marked</b> = queued for Claude to build in Meta; <b>Built · paused</b> = exists in Meta, not spending; <b>Running</b> = live. Statuses are set here when ads are built or published; they are not yet synced from Meta automatically.</p>'+
+      '<p class="note">Tick <b>Ad</b> on any post below and pick its ad set. Saves for everyone. <b>Marked</b> = queued for Claude to build in Meta; <b>Built · paused</b> = exists, not spending; <b>Running</b> = live.</p>'+
       '<table><thead><tr><th>Ad set</th><th>Posts from this page</th><th>Already built in Meta</th></tr></thead><tbody>'+rows+
       (unassigned?'<tr><td><b>No ad set chosen</b></td><td colspan="2"><div class="chips">'+unassigned+'</div></td></tr>':'')+
-      '</tbody></table>'+(signedIn?'':'<p class="note"><a href="/admin/login?next=/gift-series.html">Sign in</a> to mark posts as ads.</p>');
+      '</tbody></table>'+(signedIn?'':'<p class="note"><a href="/admin/login?next=/gift-series.html">Sign in</a> to plan posts and ads.</p>');
   }
 
-  function save(num,state,bar){
+  function renderSchedule(){
+    var el=document.getElementById("plan-schedule"); if(!el) return;
+    var items=[];
+    Object.keys(ads).forEach(function(num){
+      var p=ads[num], s=slotOf(num); if(!s) return;
+      if(p.post.on&&p.post.at) items.push({at:p.post.at,num:num,kind:"Post",chan:chanOf(s),extra:p.post.posted?"posted":"",cap:capOf(s)});
+      if(p.ad.on&&p.ad.at) items.push({at:p.ad.at,num:num,kind:"Ad",chan:"set "+(p.ad.adSet||"—"),extra:STATUS[p.ad.status],cap:capOf(s)});
+    });
+    items.sort(function(a,b){ return a.at<b.at?-1:a.at>b.at?1:0; });
+    var body=items.length?items.map(function(it){
+      return '<tr><td class="sch-d">'+shortDate(it.at)+'</td><td><a href="#post-'+it.num+'">#'+it.num+'</a></td><td><span class="tag tag-'+(it.kind==="Ad"?"ad":"post")+'">'+it.kind+'</span></td><td>'+it.chan+'</td><td class="sch-x">'+(it.extra||"")+'</td><td class="sch-cap">'+it.cap+'</td></tr>';
+    }).join(""):'<tr><td colspan="6" class="note">Nothing scheduled yet — set a date on a post or ad below.</td></tr>';
+    el.innerHTML='<h3>Schedule</h3><p class="note">Everything with a date, soonest first. Dates are intent for now — nothing posts automatically yet.</p><table class="sch"><thead><tr><th>When</th><th>Post</th><th>Kind</th><th>Channel / set</th><th>Status</th><th>What</th></tr></thead><tbody>'+body+'</tbody></table>';
+  }
+
+  function renderCross(){
+    var el=document.getElementById("plan-crosspost"); if(!el) return;
+    var open=[], done=[];
+    Object.keys(ads).forEach(function(num){
+      var p=ads[num], s=slotOf(num); if(!s||!(p.cross.fb||p.cross.ig)) return;
+      var where=[p.cross.fb?"Facebook":"",p.cross.ig?"Instagram":""].filter(Boolean).join(" + ");
+      (p.cross.done?done:open).push({num:num,where:where,cap:capOf(s),done:p.cross.done});
+    });
+    var all=open.concat(done);
+    function row(it){ return '<tr'+(it.done?' class="cx-done"':'')+'><td><a href="#post-'+it.num+'">#'+it.num+'</a></td><td class="sch-cap">'+it.cap+'</td><td>'+it.where+'</td><td><label class="pb-chk pb-min"><input type="checkbox" data-done="'+it.num+'"'+(it.done?" checked":"")+(signedIn?"":" disabled")+'><span>done</span></label></td></tr>'; }
+    var body=all.length?all.map(row).join(""):'<tr><td colspan="4" class="note">Nothing flagged for Bob yet — tick “Remind Bob” on a post below.</td></tr>';
+    el.innerHTML='<h3>Bob’s cross-post list</h3><p class="note">Remind Bob to share these on his <b>personal</b> Facebook / Instagram (those can’t be automated). Tick when done.</p><table class="sch"><thead><tr><th>Post</th><th>What</th><th>Where</th><th></th></tr></thead><tbody>'+body+'</tbody></table>';
+  }
+
+  // One PUT in flight at a time (the server does a whole-row read-modify-write,
+  // so concurrent saves to different posts would clobber each other). Changes
+  // queue per post and each response updates only its own post from server truth.
+  var inflight=false, queue=[];
+  function queueSave(num){
     if(!signedIn){ window.location.assign("/admin/login?next="+encodeURIComponent("/gift-series.html#post-"+num)); return; }
-    bar.msg.textContent="Saving…";
-    fetch("/api/gift-series/ads",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({post:num,state:state})})
+    if(queue.indexOf(num)<0) queue.push(num);
+    pump();
+  }
+  function pump(){
+    if(inflight||!queue.length) return;
+    var num=queue.shift(); inflight=true;
+    var p=ads[num], body=(p&&isSet(p))?p:null, bar=bars[num];
+    if(bar) bar.msg.textContent="Saving…";
+    fetch("/api/gift-series/ads",{method:"PUT",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({post:num,state:body})})
       .then(function(r){ return r.json().then(function(d){return {ok:r.ok,d:d};}); })
       .then(function(res){
-        if(res.ok){ ads=res.d.ads||{}; bar.msg.textContent="Saved ✓"; setTimeout(function(){bar.msg.textContent="";},1500); render(); }
-        else { bar.msg.textContent=(res.d&&res.d.error)||"Could not save"; }
-      }).catch(function(){ bar.msg.textContent="Could not save"; });
+        inflight=false;
+        if(res.ok){ var srv=res.d.ads||{}; if(srv[num]) ads[num]=srv[num]; else delete ads[num];
+          if(bar){ bar.msg.textContent="Saved ✓"; (function(b){ setTimeout(function(){ if(b.msg.textContent==="Saved ✓") b.msg.textContent=""; },1500); })(bar); } }
+        else if(bar){ bar.msg.textContent=(res.d&&res.d.error)||"Could not save"; }
+        render(); pump();
+      }).catch(function(){ inflight=false; if(bar) bar.msg.textContent="Could not save"; pump(); });
   }
 
+  var AD_OPTS='<option value="">Choose ad set…</option>'+Object.keys(AD_SETS).map(function(k){return '<option value="'+k+'">'+AD_SETS[k]+'</option>';}).join("");
+  var ST_OPTS=Object.keys(STATUS).map(function(k){return '<option value="'+k+'">'+STATUS[k]+'</option>';}).join("");
+  function barHTML(){
+    return '<div class="pb-row">'+
+        '<label class="pb-chk pb-main"><input type="checkbox" data-k="post.on"><span>Post</span></label>'+
+        '<span class="pb-grp pb-post"><input type="date" data-k="post.at" aria-label="Post date">'+
+          '<label class="pb-chk pb-min"><input type="checkbox" data-k="post.posted"><span>posted</span></label></span>'+
+        '<label class="pb-chk pb-main"><input type="checkbox" data-k="ad.on"><span>Ad</span></label>'+
+        '<span class="pb-grp pb-ad"><select data-k="ad.adSet" aria-label="Ad set">'+AD_OPTS+'</select>'+
+          '<select data-k="ad.status" aria-label="Status">'+ST_OPTS+'</select>'+
+          '<input type="text" data-k="ad.adId" inputmode="numeric" placeholder="Meta ad ID" aria-label="Meta ad ID">'+
+          '<input type="date" data-k="ad.at" aria-label="Ad date"></span>'+
+      '</div>'+
+      '<div class="pb-row pb-row2">'+
+        '<span class="pb-rem">Remind Bob to post on his own:</span>'+
+        '<label class="pb-chk pb-min"><input type="checkbox" data-k="cross.fb"><span>Facebook</span></label>'+
+        '<label class="pb-chk pb-min"><input type="checkbox" data-k="cross.ig"><span>Instagram</span></label>'+
+        '<label class="pb-chk pb-min pb-done"><input type="checkbox" data-k="cross.done"><span>Bob did it</span></label>'+
+        '<span class="pb-tags"></span><span class="pb-msg adsave"></span>'+
+      '</div>';
+  }
   slots.forEach(function(slot){
     var num=slot.dataset.post;
-    var root=document.createElement("div"); root.className="adbar";
-    var lab=document.createElement("label"); var cb=document.createElement("input"); cb.type="checkbox";
-    lab.appendChild(cb); lab.appendChild(document.createTextNode("Run as ad"));
-    var set=document.createElement("select"); set.setAttribute("aria-label","Ad set");
-    set.innerHTML='<option value="">Choose ad set…</option>'+Object.keys(AD_SETS).map(function(k){return '<option value="'+k+'">'+AD_SETS[k]+'</option>';}).join("");
-    var status=document.createElement("select"); status.setAttribute("aria-label","Status");
-    status.innerHTML=Object.keys(STATUS).map(function(k){return '<option value="'+k+'">'+STATUS[k]+'</option>';}).join("");
-    var adId=document.createElement("input"); adId.type="text"; adId.placeholder="Meta ad ID"; adId.inputMode="numeric"; adId.setAttribute("aria-label","Meta ad ID");
-    var pillWrap=document.createElement("span"); var msg=document.createElement("span"); msg.className="adsave";
-    root.appendChild(lab); root.appendChild(set); root.appendChild(status); root.appendChild(adId); root.appendChild(pillWrap); root.appendChild(msg);
+    var root=document.createElement("div"); root.className="planbar"; root.innerHTML=barHTML();
     var meta=slot.querySelector(".slot__meta"); meta.parentNode.insertBefore(root, meta.nextSibling);
-    var bar={root:root,cb:cb,set:set,status:status,adId:adId,pillWrap:pillWrap,msg:msg}; bars[num]=bar;
-    function current(){ return {adSet:set.value,status:status.value,adId:adId.value.replace(/\D/g,""),note:""}; }
-    cb.addEventListener("change",function(){ save(num, cb.checked ? {adSet:set.value,status:"marked",adId:"",note:""} : null, bar); });
-    set.addEventListener("change",function(){ save(num,current(),bar); });
-    status.addEventListener("change",function(){ save(num,current(),bar); });
-    adId.addEventListener("change",function(){ save(num,current(),bar); });
+    var c={}; root.querySelectorAll("[data-k]").forEach(function(el){ c[el.getAttribute("data-k")]=el; });
+    var all=[].slice.call(root.querySelectorAll("input,select"));
+    bars[num]={root:root,c:c,all:all,tags:root.querySelector(".pb-tags"),msg:root.querySelector(".pb-msg")};
+    function collect(){ return {
+      post:{on:c["post.on"].checked,at:c["post.at"].value,posted:c["post.posted"].checked},
+      ad:{on:c["ad.on"].checked,adSet:c["ad.adSet"].value,status:c["ad.status"].value,adId:(c["ad.adId"].value||"").replace(/\D/g,""),at:c["ad.at"].value},
+      cross:{fb:c["cross.fb"].checked,ig:c["cross.ig"].checked,done:c["cross.done"].checked}}; }
+    all.forEach(function(el){ el.addEventListener("change",function(){
+      var p=collect(); if(isSet(p)) ads[num]=p; else delete ads[num];
+      render(); queueSave(num);
+    }); });
+  });
+
+  // "done" checkboxes in Bob's cross-post list (delegated, since that table re-renders)
+  document.addEventListener("change",function(e){
+    var cb=e.target; if(!cb||!cb.getAttribute||!cb.getAttribute("data-done")) return;
+    var num=cb.getAttribute("data-done"), p=ads[num]; if(!p) return;
+    p.cross.done=cb.checked; render(); queueSave(num);
   });
 
   fetch("/api/gift-series/ads",{credentials:"same-origin"}).then(function(r){return r.json();}).then(function(d){
