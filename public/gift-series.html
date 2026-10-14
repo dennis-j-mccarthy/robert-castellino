@@ -288,6 +288,20 @@
   tr.cx-done{opacity:.5;}
   @media (max-width:640px){.sch table,.sch thead,.sch tbody,.sch tr,.sch th,.sch td{display:block;} .sch thead{display:none;} .sch td{border:0;padding:3px 0;} .sch tr{border-bottom:1px solid var(--line);padding:7px 0;}}
 
+  /* ---------- build queue ---------- */
+  .bq-sum{display:flex;flex-wrap:wrap;gap:8px;margin:10px 2px 4px;}
+  .bq-stat{font-family:var(--mono);font-size:11px;letter-spacing:.04em;border-radius:999px;padding:3px 11px;border:1px solid var(--line);color:var(--muted);background:var(--surface);}
+  .bq-stat b{font-weight:700;}
+  .bq-stat.on{border-color:#2e7d4f;color:#1e5c38;background:#e3f3e8;}
+  .bq-drow td{background:var(--accent-soft);font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-ink);padding:6px 10px;}
+  .bq-badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 9px;border:1px solid var(--line);white-space:nowrap;}
+  .bq-ready{border-color:#2e7d4f;color:#1e5c38;background:#e3f3e8;}
+  .bq-manual{border-color:#5b7fa6;color:#2f4f73;background:#eef3f9;}
+  .bq-blocked{border-color:var(--bad);color:var(--bad);background:var(--bad-soft);}
+  .bq-none{border-color:var(--line);color:var(--muted);background:var(--surface);}
+  .bq-miss{font-size:11.5px;color:#9a6a12;}
+  .bq-ok{font-size:11.5px;color:#1e5c38;}
+
   /* ---------- hub & spokes layout ---------- */
   .layout{display:grid;grid-template-columns:minmax(0,1fr);max-width:1180px;margin:0 auto;}
   .hub-side{padding:20px 16px 0;}
@@ -545,6 +559,7 @@
     <div class="mp-flag"><b>The offer.</b> Signed copy, list $60, $49.95 with code <code>10OFF</code>. The code box is on robertcastellino.com/book, and ad links use <code>/book?code=10OFF</code> so it is already filled in.</div>
 
     <div id="ad-tracker" class="adtrack" aria-live="polite"></div>
+    <div id="plan-build" class="adtrack" aria-live="polite"></div>
     <div id="plan-schedule" class="adtrack" aria-live="polite"></div>
     <div id="plan-crosspost" class="adtrack" aria-live="polite"></div>
   <main>
@@ -1546,7 +1561,7 @@
       x.body.querySelectorAll(".slot").forEach(function(sl){ var p=ads[sl.dataset.post]; if(!p)return; if(p.ad.on)ad++; if(p.post.on)po++; });
       x.cnt.innerHTML=(ad||po)?("<b>"+po+" posts · "+ad+" ads</b>"):"nothing marked";
     });
-    renderTracker(); renderSchedule(); renderCross();
+    renderTracker(); renderBuildQueue(); renderSchedule(); renderCross();
   }
 
   function renderTracker(){
@@ -1564,6 +1579,67 @@
       '<table><thead><tr><th>Ad set</th><th>Posts from this page</th><th>Already built in Meta</th></tr></thead><tbody>'+rows+
       (unassigned?'<tr><td><b>No ad set chosen</b></td><td colspan="2"><div class="chips">'+unassigned+'</div></td></tr>':'')+
       '</tbody></table>'+(signedIn?'':'<p class="note"><a href="/admin/login?next=/gift-series.html">Sign in</a> to plan posts and ads.</p>');
+  }
+
+  // Where each marked item can actually be made, routed off the slot's channel.
+  // Only Facebook *ads* can be built through the Meta connector in a session;
+  // organic posts are by hand, Instagram isn't linked, the rest isn't Meta.
+  function routeOf(chan,kind){
+    var c=(chan||"").toLowerCase();
+    if(kind==="Ad"){
+      if(c.indexOf("facebook")===0) return {cls:"bq-ready",label:"Operator builds · PAUSED",build:true};
+      if(c.indexOf("instagram")===0) return {cls:"bq-blocked",label:"Needs IG account linked"};
+      return {cls:"bq-none",label:chan+" — not Meta ads"};
+    }
+    if(c.indexOf("facebook")===0) return {cls:"bq-manual",label:"By hand · Business Suite"};
+    if(c.indexOf("instagram")===0) return {cls:"bq-manual",label:"By hand · IG (not linked)"};
+    if(c.indexOf("email")===0) return {cls:"bq-manual",label:"Email tool · not Meta"};
+    return {cls:"bq-manual",label:"By hand · not Meta"};
+  }
+  function renderBuildQueue(){
+    var el=document.getElementById("plan-build"); if(!el) return;
+    var items=[], readyAds=0, needAds=0, byHand=0;
+    Object.keys(ads).forEach(function(num){
+      var p=ads[num], s=slotOf(num); if(!s) return;
+      var chan=chanOf(s), cap=capOf(s);
+      function push(kind,at,route,miss){
+        items.push({at:at||"",num:num,kind:kind,chan:chan,cap:cap,route:route,miss:miss});
+      }
+      if(p.post.on){ var r=routeOf(chan,"Post"); byHand++; push("Post",p.post.at,r,p.post.at?[]:["date"]); }
+      if(p.ad.on){
+        var r2=routeOf(chan,"Ad"), miss=[];
+        if(!p.ad.adSet) miss.push("ad set");
+        if(!p.ad.at) miss.push("date");
+        miss.push("budget");          // the plan has no budget field — always set it in-session
+        if(r2.build){ if(miss.length>1) needAds++; else readyAds++; }
+        push("Ad",p.ad.at,r2,miss);
+      }
+    });
+    // group by date; undated last
+    var groups={}, order=[];
+    items.forEach(function(it){ var k=it.at||"￿"; if(!groups[k]){groups[k]=[];order.push(k);} groups[k].push(it); });
+    order.sort();
+    var rows=order.map(function(k){
+      var head='<tr class="bq-drow"><td colspan="4">'+(k==="￿"?"No date set":shortDate(k))+'</td></tr>';
+      return head+groups[k].map(function(it){
+        var note=it.kind==="Ad"
+          ? (it.route.build
+              ? (it.miss.length>1?'<span class="bq-miss">needs '+it.miss.join(", ")+'</span>':'<span class="bq-ok">ready — set budget when building</span>')
+              : "")
+          : (it.miss.length?'<span class="bq-miss">needs '+it.miss.join(", ")+'</span>':'');
+        return '<tr><td><a href="#post-'+it.num+'">#'+it.num+'</a></td>'+
+          '<td><span class="tag tag-'+(it.kind==="Ad"?"ad":"post")+'">'+it.kind+'</span> <span class="sch-cap">'+it.cap+'</span></td>'+
+          '<td><span class="bq-badge '+it.route.cls+'">'+it.route.label+'</span></td>'+
+          '<td>'+note+'</td></tr>';
+      }).join("");
+    }).join("");
+    var sum='<div class="bq-sum">'+
+      '<span class="bq-stat'+(readyAds?' on':'')+'"><b>'+readyAds+'</b> ad'+(readyAds===1?"":"s")+' ready to build</span>'+
+      '<span class="bq-stat"><b>'+needAds+'</b> ad'+(needAds===1?"":"s")+' need info</span>'+
+      '<span class="bq-stat"><b>'+byHand+'</b> post'+(byHand===1?"":"s")+' by hand</span></div>';
+    var lead='<p class="note">The morning run list, grouped by date. Only <b>Facebook ads</b> can be built from here — open a session and say <b>“build &lt;date&gt;”</b> and the operator creates them <b>paused</b> in Castellino Photo, then reports the IDs back. Organic posts, Instagram (not linked) and non-Meta channels are done by hand. Budgets aren’t stored here yet, so have a daily number per ad set ready.</p>';
+    var body=items.length?rows:'<tr><td colspan="4" class="note">Nothing marked yet — tick <b>Post</b> or <b>Ad</b> on a post below.</td></tr>';
+    el.innerHTML='<h3>Build queue</h3>'+sum+lead+'<table class="sch"><thead><tr><th>Post</th><th>What</th><th>Where it’s built</th><th>Readiness</th></tr></thead><tbody>'+body+'</tbody></table>';
   }
 
   function renderSchedule(){
