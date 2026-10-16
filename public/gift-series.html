@@ -383,6 +383,35 @@
     </div>
   </header>
 
+<section class="pagestats" id="pagestats" aria-label="Page stats">
+  <style>
+    .pagestats{margin:6px 0 10px;}
+    .pagestats__h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 4px;}
+    .pagestats__n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent-ink);}
+    .pagestats__t{font-family:var(--serif,Georgia,serif);font-size:21px;color:var(--ink);margin:0;font-weight:500;}
+    .pagestats__t small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-left:6px;}
+    .ps-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:12px;margin-top:14px;}
+    .ps-tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;display:flex;flex-direction:column;}
+    .ps-tile--hero{border-color:var(--accent);background:var(--accent-soft);}
+    .ps-n{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.01em;}
+    .ps-tile--hero .ps-n{color:var(--accent-ink);font-size:40px;}
+    .ps-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:8px;}
+    .ps-sub{font-size:11.5px;color:var(--faint);margin-top:3px;}
+    @media(max-width:720px){.ps-grid{grid-template-columns:1fr 1fr;}}
+  </style>
+  <div class="pagestats__h">
+    <span class="pagestats__n">Page stats</span>
+    <h2 class="pagestats__t">Robert Castellino Photography <small>the baseline we're boosting to grow</small></h2>
+  </div>
+  <p class="note" style="margin-top:6px">We're buying boosts to grow the Page's <b>followers</b> — the warm audience the ads then reach. Here's the starting line (Page insights, read Oct 10). Watch the follower count climb as boosts run, and update these numbers on each read.</p>
+  <div class="ps-grid">
+    <div class="ps-tile ps-tile--hero"><span class="ps-n">207</span><span class="ps-k">Followers</span><span class="ps-sub">baseline · Oct 10 · skews 55+ (87% are 45+)</span></div>
+    <div class="ps-tile"><span class="ps-n">0</span><span class="ps-k">New follows</span><span class="ps-sub">last 28 days — what boosts should move</span></div>
+    <div class="ps-tile"><span class="ps-n">44</span><span class="ps-k">Reach · views</span><span class="ps-sub">19 viewers · 28 days</span></div>
+    <div class="ps-tile"><span class="ps-n">47</span><span class="ps-k">Page visits</span><span class="ps-sub">28 days · 0 interactions</span></div>
+  </div>
+</section>
+
 <section class="mp mp-part" id="essence">
     <div class="mp-part__n">HUB</div>
     <h2>Essence &amp; value proposition <span class="h2sub">the center every spoke points back to</span></h2>
