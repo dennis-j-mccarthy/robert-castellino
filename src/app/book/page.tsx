@@ -1,6 +1,7 @@
 import { BOOK } from "@/data/pricing";
 import { BookBuy } from "./BookBuy";
 import { BookFlip } from "./BookFlip";
+import { ScrollReveal } from "./ScrollReveal";
 import { PixelEvent } from "@/components/meta-pixel";
 
 const bookLd = {
@@ -36,6 +37,7 @@ export default async function BookPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(bookLd) }}
       />
+      <ScrollReveal />
       <div className="book book--landing">
         <div className="book__bg" aria-hidden="true" style={{ backgroundImage: "url('/assets/maroon-bells.jpg')" }} />
         <div className="book__scrim" aria-hidden="true" />
@@ -149,7 +151,7 @@ export default async function BookPage({
           </div>
         </header>
         <div className="spreads__row">
-          <div className="spread">
+          <div className="spread reveal">
             <div className="spread__page spread__page--l" style={{ backgroundImage: "url('/assets/maroon-bells.jpg')" }} />
             <div className="spread__page spread__page--r">
               <div className="spread__plate">Plate 014</div>
@@ -160,7 +162,7 @@ export default async function BookPage({
               </p>
             </div>
           </div>
-          <div className="spread">
+          <div className="spread reveal">
             <div className="spread__page spread__page--l spread__page--text">
               <div className="spread__plate">Plate 022</div>
               <h3>Lone Pine, Quiet Drift</h3>
@@ -171,7 +173,7 @@ export default async function BookPage({
             </div>
             <div className="spread__page spread__page--r" style={{ backgroundImage: "url('/assets/lone-pine.jpg')" }} />
           </div>
-          <div className="spread">
+          <div className="spread reveal">
             <div className="spread__page spread__page--l" style={{ backgroundImage: "url('/assets/mt-yale.jpg')" }} />
             <div className="spread__page spread__page--r">
               <div className="spread__plate">Plate 041</div>
