@@ -3488,7 +3488,7 @@ select.add-input option { background: #111; }
 .flip-open:hover { background: #e7bd6a; transform: translateY(-2px); box-shadow: 0 18px 40px -12px rgba(216,170,84,0.6); }
 .flip {
   position: fixed; inset: 0; z-index: 100;
-  background: rgba(3,4,6,0.88); backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center; padding: 24px;
 }
 .flip__stage { position: relative; width: min(1100px, 100%); }
@@ -3534,6 +3534,73 @@ select.add-input option { background: #111; }
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
 }
 @media (prefers-reduced-motion: reduce) { .flip__leaf { animation-duration: 1ms !important; } }
+
+/* "A statement from Robert" — click-to-open note on the photographer stripe. */
+.bobnote__trigger {
+  display: inline-flex; align-items: center; gap: 9px; margin-top: 28px;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold);
+  position: relative;
+}
+.bobnote__trigger svg { flex: none; opacity: 0.85; transition: transform 0.4s var(--ease); }
+.bobnote__trigger::after {
+  content: ""; position: absolute; left: 24px; right: 0; bottom: -5px; height: 1px;
+  background: currentColor; opacity: 0.4; transform: scaleX(0.4); transform-origin: left;
+  transition: transform 0.5s var(--ease), opacity 0.4s var(--ease);
+}
+.bobnote__trigger:hover { color: #e7bd6a; }
+.bobnote__trigger:hover svg { transform: rotate(-18deg); }
+.bobnote__trigger:hover::after { transform: scaleX(1); opacity: 0.7; }
+
+.bobnote {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(7px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  animation: bobnoteIn 0.4s var(--ease) both;
+}
+.bobnote__card {
+  position: relative; width: min(680px, 100%); max-height: calc(100vh - 80px); overflow-y: auto;
+  padding: clamp(36px, 5vw, 64px);
+  background: linear-gradient(170deg, rgba(22,19,15,0.98), rgba(12,10,8,0.98));
+  border: 1px solid rgba(200,169,106,0.28);
+  border-radius: 4px;
+  box-shadow: 0 40px 120px -30px rgba(0,0,0,0.8);
+  animation: bobnoteRise 0.55s var(--ease) both;
+}
+.bobnote__close {
+  position: absolute; top: 18px; right: 20px; width: 34px; height: 34px;
+  border: 0; background: none; cursor: pointer;
+  color: var(--bone-50); font-size: 30px; line-height: 1;
+  transition: color 0.3s var(--ease);
+}
+.bobnote__close:hover { color: var(--bone-95); }
+.bobnote__eyebrow {
+  display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+}
+.bobnote__title {
+  font-family: var(--serif); font-weight: 400; font-style: italic;
+  font-size: clamp(30px, 4.4vw, 46px); line-height: 1.05; color: var(--bone-95);
+  margin: 0 0 24px;
+}
+.bobnote__body p {
+  font-family: var(--serif); font-size: clamp(16px, 1.5vw, 19px); line-height: 1.7;
+  color: var(--bone-70); margin: 0 0 18px;
+}
+.bobnote__sign {
+  font-family: var(--font-sig), var(--serif); font-size: clamp(38px, 5vw, 52px);
+  color: var(--gold); line-height: 1; margin: 28px 0 2px !important;
+}
+.bobnote__place {
+  font-family: var(--mono) !important; font-size: 11px !important; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--bone-50) !important; margin: 0 !important;
+}
+@keyframes bobnoteIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bobnoteRise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .bobnote, .bobnote__card { animation: none; }
+}
 
 /* Book "signed copy" toggle, sits above the order button. */
 .book__signed {

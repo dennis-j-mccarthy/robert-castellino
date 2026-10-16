@@ -1,6 +1,7 @@
 import { BOOK } from "@/data/pricing";
 import { BookBuy } from "./BookBuy";
 import { BookFlip } from "./BookFlip";
+import { BobNote } from "./BobNote";
 import { ScrollReveal } from "./ScrollReveal";
 import { PixelEvent } from "@/components/meta-pixel";
 
@@ -98,6 +99,7 @@ export default async function BookPage({
             <div><dt>Working since</dt><dd>1985</dd></div>
             <div><dt>Studied with</dt><dd>Sam Abell · Nat Geo</dd></div>
           </dl>
+          <BobNote />
         </div>
       </section>
 
