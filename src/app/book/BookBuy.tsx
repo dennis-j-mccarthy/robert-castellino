@@ -77,6 +77,10 @@ export function BookBuy({ initialCode = "" }: { initialCode?: string }) {
         {busy ? "Redirecting…" : `${signed ? "Order a signed copy" : "Order the book"} — ${usd(price)}`}
       </button>
 
+      <div className="offer-sig" aria-hidden="true">
+        <span className="offer-sig__name">Robert Castellino</span>
+      </div>
+
       <label className="book__signed">
         <input
           type="checkbox"

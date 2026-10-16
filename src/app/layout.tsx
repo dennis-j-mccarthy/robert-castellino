@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Manrope, Mr_De_Haviland } from "next/font/google";
 import "./globals.css";
 import { Aurora } from "@/components/aurora";
 import { GiftBanner } from "@/components/gift-banner";
@@ -21,6 +21,13 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["200", "300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const signature = Mr_De_Haviland({
+  variable: "--font-sig",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 });
 
@@ -84,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${manrope.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${manrope.variable} ${signature.variable}`}>
       <body>
         <script
           type="application/ld+json"
