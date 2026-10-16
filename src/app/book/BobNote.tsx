@@ -43,10 +43,6 @@ export function BobNote() {
             </button>
             <span className="bobnote__eyebrow">— In his words</span>
             <h3 className="bobnote__title">Why I wake early.</h3>
-            <blockquote className="bobnote__epigraph">
-              <p>&ldquo;In the morning, light clears all the outside darkness&hellip;&rdquo;</p>
-              <cite>John O&apos;Donohue · <span>Beauty: The Invisible Embrace</span></cite>
-            </blockquote>
             <div className="bobnote__body">
               <p>
                 I have never been able to explain it to anyone who hasn&apos;t stood in it. The
