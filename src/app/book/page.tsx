@@ -37,6 +37,8 @@ export default async function BookPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(bookLd) }}
       />
       <div className="book book--landing">
+        <div className="book__bg" aria-hidden="true" style={{ backgroundImage: "url('/assets/maroon-bells.jpg')" }} />
+        <div className="book__scrim" aria-hidden="true" />
         <div className="book__art">
           <div className="book__halo" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
