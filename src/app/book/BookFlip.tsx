@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 // A look inside the real book: 15 two-page spreads rendered from the print PDF
 // (resources/colorado-life-and-light-book.pdf, kept local) into
@@ -83,7 +84,7 @@ export function BookFlip() {
         Look inside the book
       </button>
 
-      {open && (
+      {open && createPortal(
         <div className="flip" role="dialog" aria-modal="true" aria-label="Look inside the book" onClick={close}>
           <div className="flip__stage" onClick={(e) => e.stopPropagation()}>
             {/* eslint-disable @next/next/no-img-element */}
@@ -117,7 +118,8 @@ export function BookFlip() {
             </div>
             <button type="button" className="flip__close" onClick={close} aria-label="Close">×</button>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

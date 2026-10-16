@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export function BobNote() {
   const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ export function BobNote() {
         <span>Read — a statement from Robert · why I wake early</span>
       </button>
 
-      {open && (
+      {open && createPortal(
         <div
           className="bobnote"
           role="dialog"
@@ -73,7 +74,8 @@ export function BobNote() {
               <p className="bobnote__place">Boulder, Colorado · before dawn</p>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
