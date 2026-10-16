@@ -48,6 +48,8 @@ export function SubscribeModal() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const isAdmin = pathname?.startsWith("/admin") ?? false;
+  // The /book landing page is the ad destination — no list-capture popup there.
+  const isBook = pathname?.startsWith("/book") ?? false;
 
   const openModal = useCallback((auto: boolean) => {
     if (auto) {
@@ -74,7 +76,7 @@ export function SubscribeModal() {
 
   // Auto-arm: timer + desktop exit-intent, unless suppressed or on /admin.
   useEffect(() => {
-    if (isAdmin) return;
+    if (isAdmin || isBook) return;
     let armed = true;
     try {
       if (sessionStorage.getItem(SESSION_KEY)) armed = false;
@@ -92,7 +94,7 @@ export function SubscribeModal() {
       window.clearTimeout(timer);
       document.removeEventListener("mouseout", onLeave);
     };
-  }, [isAdmin, openModal]);
+  }, [isAdmin, isBook, openModal]);
 
   // Focus the field + wire Esc when open.
   useEffect(() => {
