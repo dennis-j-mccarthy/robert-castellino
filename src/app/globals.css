@@ -462,6 +462,51 @@ a  { color: inherit; text-decoration: none; }
 }
 .section-head__link:hover { border-color: var(--gold); }
 
+/* Full-bleed photo bands — horizontal rhythm between text sections */
+.book-band {
+  position: relative;
+  width: 100%;
+  min-height: clamp(360px, 54vh, 640px);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  margin: clamp(56px, 7vw, 120px) 0;
+}
+.book-band::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(10,8,6,0.22) 0%, rgba(10,8,6,0) 34%, rgba(10,8,6,0.74) 100%);
+}
+.book-band__inner {
+  position: relative; z-index: 1;
+  width: 100%;
+  max-width: var(--col-max);
+  margin: 0 auto;
+  padding: 0 var(--col-pad) clamp(30px, 4vw, 56px);
+}
+.book-band__line {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--bone-95);
+  margin: 0;
+  max-width: 18ch;
+  text-shadow: 0 2px 28px rgba(0,0,0,0.55);
+}
+.book-band__line em { color: var(--ember); font-style: italic; }
+.book-band__credit {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+}
+
 /* ============================================================
    HOME — Selected work grid
 ============================================================ */
@@ -3937,23 +3982,39 @@ select.add-input option { background: #111; }
 }
 
 /* ===== Book page — praise ===== */
-.book-praise { max-width: 1100px; margin: 0 auto; padding: clamp(44px, 6vw, 88px) var(--col-pad); }
-.book-praise .kicker { display: block; text-align: center; margin-bottom: clamp(24px, 3vw, 38px); }
-.book-praise__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 72px); }
-.book-praise__q { margin: 0; text-align: center; position: relative; }
+.book-praise { position: relative; max-width: 1180px; margin: 0 auto; padding: clamp(76px, 9vw, 150px) var(--col-pad); overflow: hidden; }
+.book-praise::before {
+  content: ""; position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
+  width: min(720px, 86%); height: 440px; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(216,170,84,0.11), transparent 70%); filter: blur(34px);
+}
+.book-praise .kicker { position: relative; display: block; text-align: center; margin-bottom: clamp(44px, 5vw, 80px); }
+.book-praise__grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(46px, 6vw, 108px); }
+.book-praise__grid::before {
+  content: ""; position: absolute; top: 4%; bottom: 4%; left: 50%; width: 1px;
+  background: linear-gradient(180deg, transparent, var(--rule) 18%, var(--rule) 82%, transparent);
+}
+.book-praise__q { position: relative; margin: 0; text-align: left; }
 .book-praise__q::before {
-  content: "\201C"; font-family: var(--serif); color: var(--gold); opacity: 0.5;
-  font-size: 2.8rem; line-height: 0.6; display: block; margin-bottom: 0.3em;
+  content: "\201C"; position: absolute; top: -0.46em; left: -0.06em;
+  font-family: var(--serif); font-style: italic; color: var(--ember); opacity: 0.3;
+  font-size: clamp(5rem, 9vw, 8.5rem); line-height: 1; display: block; margin: 0; pointer-events: none;
 }
 .book-praise__q p {
-  margin: 0; font-family: var(--serif); font-style: italic;
-  font-size: clamp(1.1rem, 1.6vw, 1.42rem); line-height: 1.5;
-  color: var(--bone-85); text-wrap: balance;
+  position: relative; margin: 0;
+  font-family: var(--serif); font-weight: 300; font-style: italic;
+  font-size: clamp(1.3rem, 2.05vw, 1.9rem); line-height: 1.42; letter-spacing: -0.01em;
+  color: var(--bone-95); text-wrap: balance;
 }
-.book-praise__q figcaption { margin-top: 20px; display: flex; flex-direction: column; gap: 4px; }
-.book-praise__name { font-family: var(--serif); color: var(--ember); font-size: 1.05rem; letter-spacing: 0.01em; }
-.book-praise__role { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bone-50); }
-@media (max-width: 720px) { .book-praise__grid { grid-template-columns: 1fr; gap: 40px; } }
+.book-praise__q figcaption { margin-top: clamp(22px, 2.4vw, 34px); display: flex; flex-direction: column; gap: 5px; }
+.book-praise__name { font-family: var(--serif); font-style: italic; color: var(--ember); font-size: 1.12rem; letter-spacing: 0.01em; }
+.book-praise__role { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone-70); }
+@media (max-width: 760px) {
+  .book-praise__grid { grid-template-columns: 1fr; gap: 56px; }
+  .book-praise__grid::before { display: none; }
+  .book-praise__q { text-align: center; }
+  .book-praise__q::before { position: static; opacity: 0.4; font-size: 4rem; margin-bottom: 0.1em; }
+}
 
 /* ===== Site-wide holiday gift banner ===== */
 :root { --promo-h: 40px; }
@@ -3988,6 +4049,54 @@ body:has(.admin-shell) .promo { display: none; }
 /* /book is the ad landing page: the banner only points back to it. */
 body:has(.route--book) { --promo-h: 0px; }
 body:has(.route--book) .promo { display: none; }
+/* On the landing page itself, the header "View the Book" CTA is redundant. */
+body:has(.route--book) .nav__cta { display: none; }
+
+/* Landing page — the photographer (Bob) */
+.bob {
+  max-width: var(--col-max);
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 96px) var(--col-pad);
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(32px, 5vw, 84px);
+  align-items: center;
+}
+.bob__media { position: relative; }
+.bob__media img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 50px 90px -30px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+}
+.bob__copy { max-width: 560px; }
+.bob__title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(34px, 4.2vw, 60px); line-height: 1.0; letter-spacing: -0.02em;
+  margin: 18px 0 22px; color: var(--bone-95);
+}
+.bob__title em { color: var(--ember); font-style: italic; }
+.bob__lede {
+  font-family: var(--serif); font-size: clamp(19px, 1.8vw, 23px); line-height: 1.5;
+  color: var(--bone-95); margin: 0 0 18px;
+}
+.bob__p {
+  font-family: var(--serif); font-size: 17px; line-height: 1.66;
+  color: var(--bone-70); margin: 0 0 30px;
+}
+.bob__p em { color: var(--bone-85); font-style: italic; }
+.bob__facts {
+  display: grid; grid-template-columns: repeat(3, auto); gap: 30px;
+  padding-top: 24px; border-top: 1px solid var(--rule); margin: 0;
+}
+.bob__facts dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone-70); margin-bottom: 5px; }
+.bob__facts dd { margin: 0; font-family: var(--serif); font-size: 15px; color: var(--bone-95); }
+@media (max-width: 860px) {
+  .bob { grid-template-columns: 1fr; gap: 30px; }
+  .bob__media img { aspect-ratio: 16 / 11; }
+  .bob__facts { grid-template-columns: 1fr 1fr; gap: 22px; }
+}
 
 /* ============================================================
    SUBSCRIBE MODAL (list-capture popup)
