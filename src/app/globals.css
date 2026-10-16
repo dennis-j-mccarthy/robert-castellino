@@ -3361,16 +3361,31 @@ select.add-input option { background: #111; }
 
 /* /book as an ad landing page: no hero, cover beside the offer. */
 .book--landing {
-  padding-top: calc(var(--promo-h, 0px) + 112px);
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 88px);
+  padding-top: calc(var(--promo-h, 0px) + 92px);
+  padding-bottom: clamp(36px, 5vw, 84px);
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: clamp(40px, 6vw, 104px);
+  align-items: center;
 }
-.book--landing .book__art { padding: 24px; order: 2; flex-direction: column; gap: 28px; }
-.book--landing .book__cover { max-width: min(100%, 520px); transform: rotate(3deg); }
+.book--landing .book__art {
+  padding: 0; order: 2;
+  flex-direction: column; gap: 30px;
+  justify-content: center;
+}
+.book--landing .book__cover {
+  max-width: min(100%, 600px);
+  transform: rotate(2.5deg);
+  box-shadow: 0 80px 120px -34px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.07);
+}
 .book--landing .book__art:hover .book__cover { transform: rotate(0); }
-.book--landing .book__title { font-size: clamp(40px, 4.6vw, 68px); margin: 16px 0 16px; }
-.book--landing .book__deck { font-size: 19px; margin-bottom: 24px; }
-.book--landing .book__specs { margin: 28px 0 0; padding: 12px 0; }
+.book--landing .book__halo {
+  width: 118%; height: 118%;
+  background: radial-gradient(circle, rgba(216,170,84,0.34), transparent 60%);
+  filter: blur(92px);
+}
+.book--landing .book__title { font-size: clamp(40px, 4.8vw, 70px); margin: 14px 0 18px; }
+.book--landing .book__deck { font-size: 19px; margin-bottom: 26px; }
+.book--landing .book__specs { margin: 30px 0 0; padding: 14px 0; }
 
 .offer-card {
   border: 1px solid var(--gold);
