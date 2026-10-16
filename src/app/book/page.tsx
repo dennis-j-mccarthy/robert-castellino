@@ -40,7 +40,7 @@ export default async function BookPage({
         <div className="book__art">
           <div className="book__halo" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/book-cover.png" alt="Colorado: Life and Light on the Land" className="book__cover" />
+          <img src="/gift-series/book-cover-hi.jpg" alt="Colorado: Life and Light on the Land" className="book__cover" />
           <div className="book__edition">
             <span>Fifth</span>
             <span>Printing</span>

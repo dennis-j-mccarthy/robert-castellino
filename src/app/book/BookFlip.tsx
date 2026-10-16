@@ -76,10 +76,11 @@ export function BookFlip() {
   return (
     <>
       <button type="button" className="flip-open" onClick={() => { setI(0); setOpen(true); }}>
-        Flip through the book
-        <svg viewBox="0 0 14 14" width="10" height="10" aria-hidden="true">
-          <path d="M2 7h10M7 2l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+          <circle cx="6.8" cy="6.8" r="4.4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M10.2 10.2L14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
+        Look inside the book
       </button>
 
       {open && (
