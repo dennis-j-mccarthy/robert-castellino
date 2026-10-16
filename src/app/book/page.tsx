@@ -70,6 +70,33 @@ export default async function BookPage({
         </div>
       </div>
 
+      {/* THE PHOTOGRAPHER */}
+      <section className="bob">
+        <div className="bob__media">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/portrait-flatirons.png" alt="Robert Castellino below the Flatirons" />
+        </div>
+        <div className="bob__copy">
+          <span className="kicker kicker--gold">— The photographer</span>
+          <h2 className="bob__title">Every plate is <em>his.</em></h2>
+          <p className="bob__lede">
+            Robert Castellino has photographed Colorado — and the desert Southwest, the
+            national parks, and the quiet places close to home — for fifty years.
+          </p>
+          <p className="bob__p">
+            A 1991 workshop with <em>National Geographic</em>&apos;s Sam Abell changed the way
+            he sees; a long practice of Julia Cameron&apos;s <em>The Artist&apos;s Way</em> shaped
+            the discipline. Every one of the 124 plates was made the same way — by waiting for
+            the light — and he signs every copy himself, from the Boulder studio.
+          </p>
+          <dl className="bob__facts">
+            <div><dt>Based</dt><dd>Lafayette, Colorado</dd></div>
+            <div><dt>Working since</dt><dd>1985</dd></div>
+            <div><dt>Studied with</dt><dd>Sam Abell · Nat Geo</dd></div>
+          </dl>
+        </div>
+      </section>
+
       <section className="book-band" style={{ backgroundImage: "url('/gift-series/columbia-sunset.jpg')" }}>
         <div className="book-band__inner">
           <p className="book-band__line">Fifty years of waiting for the <em>light.</em></p>
@@ -109,33 +136,6 @@ export default async function BookPage({
         <div className="book-band__inner">
           <p className="book-band__line">Every photograph, a real place in this <em>state.</em></p>
           <span className="book-band__credit">Deerlodge Park at sunrise · a plate from the book</span>
-        </div>
-      </section>
-
-      {/* THE PHOTOGRAPHER */}
-      <section className="bob">
-        <div className="bob__media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/portrait-flatirons.png" alt="Robert Castellino below the Flatirons" />
-        </div>
-        <div className="bob__copy">
-          <span className="kicker kicker--gold">— The photographer</span>
-          <h2 className="bob__title">Every plate is <em>his.</em></h2>
-          <p className="bob__lede">
-            Robert Castellino has photographed Colorado — and the desert Southwest, the
-            national parks, and the quiet places close to home — for fifty years.
-          </p>
-          <p className="bob__p">
-            A 1991 workshop with <em>National Geographic</em>&apos;s Sam Abell changed the way
-            he sees; a long practice of Julia Cameron&apos;s <em>The Artist&apos;s Way</em> shaped
-            the discipline. Every one of the 124 plates was made the same way — by waiting for
-            the light — and he signs every copy himself, from the Boulder studio.
-          </p>
-          <dl className="bob__facts">
-            <div><dt>Based</dt><dd>Lafayette, Colorado</dd></div>
-            <div><dt>Working since</dt><dd>1985</dd></div>
-            <div><dt>Studied with</dt><dd>Sam Abell · Nat Geo</dd></div>
-          </dl>
         </div>
       </section>
 
