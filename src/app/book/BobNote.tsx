@@ -26,7 +26,7 @@ export function BobNote() {
           <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.4" />
           <path d="M12 7v6l3.5 2" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        A statement from Robert — why I wake early
+        <span>Read — a statement from Robert · why I wake early</span>
       </button>
 
       {open && (
@@ -43,6 +43,10 @@ export function BobNote() {
             </button>
             <span className="bobnote__eyebrow">— In his words</span>
             <h3 className="bobnote__title">Why I wake early.</h3>
+            <blockquote className="bobnote__epigraph">
+              <p>&ldquo;In the morning, light clears all the outside darkness&hellip;&rdquo;</p>
+              <cite>John O&apos;Donohue · <span>Beauty: The Invisible Embrace</span></cite>
+            </blockquote>
             <div className="bobnote__body">
               <p>
                 I have never been able to explain it to anyone who hasn&apos;t stood in it. The

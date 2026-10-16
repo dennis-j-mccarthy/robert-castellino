@@ -3537,21 +3537,20 @@ select.add-input option { background: #111; }
 
 /* "A statement from Robert" — click-to-open note on the photographer stripe. */
 .bobnote__trigger {
-  display: inline-flex; align-items: center; gap: 9px; margin-top: 28px;
-  padding: 0; border: 0; background: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 11px; margin-top: 30px;
+  padding: 14px 24px; cursor: pointer;
+  border: 1px solid rgba(200,169,106,0.55); border-radius: 999px;
+  background: rgba(200,169,106,0.10);
   font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--gold);
-  position: relative;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
-.bobnote__trigger svg { flex: none; opacity: 0.85; transition: transform 0.4s var(--ease); }
-.bobnote__trigger::after {
-  content: ""; position: absolute; left: 24px; right: 0; bottom: -5px; height: 1px;
-  background: currentColor; opacity: 0.4; transform: scaleX(0.4); transform-origin: left;
-  transition: transform 0.5s var(--ease), opacity 0.4s var(--ease);
+.bobnote__trigger svg { flex: none; opacity: 0.9; transition: transform 0.4s var(--ease); }
+.bobnote__trigger:hover {
+  background: rgba(200,169,106,0.18); border-color: var(--gold); transform: translateY(-2px);
+  box-shadow: 0 14px 34px -16px rgba(216,170,84,0.5);
 }
-.bobnote__trigger:hover { color: #e7bd6a; }
-.bobnote__trigger:hover svg { transform: rotate(-18deg); }
-.bobnote__trigger:hover::after { transform: scaleX(1); opacity: 0.7; }
+.bobnote__trigger:hover svg { transform: rotate(-20deg); }
 
 .bobnote {
   position: fixed; inset: 0; z-index: 100;
@@ -3582,8 +3581,21 @@ select.add-input option { background: #111; }
 .bobnote__title {
   font-family: var(--serif); font-weight: 400; font-style: italic;
   font-size: clamp(30px, 4.4vw, 46px); line-height: 1.05; color: var(--bone-95);
-  margin: 0 0 24px;
+  margin: 0 0 22px;
 }
+.bobnote__epigraph {
+  margin: 0 0 26px; padding: 0 0 0 18px;
+  border-left: 2px solid rgba(200,169,106,0.5);
+}
+.bobnote__epigraph p {
+  font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.7vw, 20px);
+  line-height: 1.5; color: #e9e3d6; margin: 0 0 8px;
+}
+.bobnote__epigraph cite {
+  font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold);
+}
+.bobnote__epigraph cite span { color: var(--bone-50); }
 .bobnote__body p {
   font-family: var(--sans); font-size: clamp(15.5px, 1.4vw, 17.5px); line-height: 1.72;
   color: #e9e3d6; margin: 0 0 18px;
