@@ -16,6 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="admin-shell__menu">
           <Link href="/admin/musings">Musings</Link>
           <Link href="/admin/collections">Collections</Link>
+          <Link href="/admin/social">Social</Link>
           <Link href="/admin/contact">Contact</Link>
           <form action="/api/admin/logout" method="post" className="admin-shell__logout-form">
             <button type="submit" className="admin-shell__logout">Sign out</button>

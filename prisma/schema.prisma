@@ -150,3 +150,26 @@ model SocialDraft {
   @@unique([musingId, platform])
   @@index([status, createdAt])
 }
+
+// ───────── META (FACEBOOK / INSTAGRAM) CONNECTION ─────────
+// Single-row store for the OAuth tokens that let the app publish, schedule,
+// and advertise on Bob's own Page/Instagram on his behalf. Populated by the
+// Facebook Login flow in /api/admin/meta/*. The long-lived Page token does
+// not normally expire; the user token is long-lived (~60 days) and is what
+// `tokenExpiresAt` tracks so the UI can prompt a reconnect before it lapses.
+model MetaConnection {
+  id             String    @id @default("default") // singleton row
+  fbUserId       String?
+  fbUserName     String?
+  fbUserToken    String? // long-lived user access token
+  pageId         String?
+  pageName       String?
+  pageToken      String? // long-lived Page access token (used to publish)
+  igUserId       String? // linked Instagram Business account id, when present
+  igUsername     String?
+  adAccountId    String? // e.g. "act_1788471615529613"
+  scopes         String? // comma-separated granted permissions
+  tokenExpiresAt DateTime?
+  connectedAt    DateTime?
+  updatedAt      DateTime  @updatedAt
+}
