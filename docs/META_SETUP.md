@@ -61,6 +61,35 @@ npm run db:generate
 3. You'll land back on the Social page showing **Connected to Robert
    Castellino Photography**.
 
+## Simplest activation: a direct Page token (recommended for one Page)
+
+If the app uses **Facebook Login for Business** (the "Manage everything on your
+Page" use case sets this up), the interactive login needs a *configuration*.
+For a single Page it's easier to skip that and provide a long-lived Page token
+directly:
+
+1. Go to **developers.facebook.com/tools/explorer** (Graph API Explorer).
+2. Top right: **Meta App** → select **Castellino Studio Tools**.
+3. **User or Page Access Token** dropdown → **Get User Access Token** → check
+   `pages_show_list`, `pages_read_engagement`, `pages_manage_posts` → Generate →
+   log in / approve as the Page admin.
+4. In the same dropdown, pick the **Page** (Robert Castellino Photography) to get
+   a **Page access token**.
+5. Make it long-lived: open **Access Token Debugger**
+   (developers.facebook.com/tools/debug/accesstoken), paste the Page token →
+   **Extend Access Token**. A Page token derived from a long-lived user token
+   does not expire.
+6. Find the **Page ID**: on the Page → About, or GET `/me?fields=id` with the
+   Page token selected.
+7. Put them in `.env.local` (and Vercel):
+   ```
+   META_PAGE_ID=<page id>
+   META_PAGE_TOKEN=<long-lived page token>
+   META_PAGE_NAME=Robert Castellino Photography
+   ```
+8. Reload `/admin/social` — it shows **Connected** and the composer is live.
+   (No "Connect Facebook" click needed on this path.)
+
 ## Using it
 - **Publish now**: writes the post to the Page immediately.
 - **Schedule**: set a date/time ≥ ~15 min out (Meta's rule: 10 min–6 months).

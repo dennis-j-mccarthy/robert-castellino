@@ -23,7 +23,34 @@ export interface MetaConnection {
   connectedAt: Date | null;
 }
 
+/**
+ * Direct-token path: for a single Page, you can skip interactive OAuth and
+ * provide a long-lived Page token via env (simplest, most reliable — handy
+ * when the app uses "Facebook Login for Business"). If set, it wins.
+ */
+function envConnection(): MetaConnection | null {
+  const pageId = process.env.META_PAGE_ID;
+  const pageToken = process.env.META_PAGE_TOKEN;
+  if (!pageId || !pageToken) return null;
+  return {
+    fbUserId: null,
+    fbUserName: null,
+    fbUserToken: null,
+    pageId,
+    pageName: process.env.META_PAGE_NAME ?? "Facebook Page",
+    pageToken,
+    igUserId: process.env.META_IG_USER_ID ?? null,
+    igUsername: process.env.META_IG_USERNAME ?? null,
+    adAccountId: process.env.META_AD_ACCOUNT_ID ?? null,
+    scopes: null,
+    tokenExpiresAt: null,
+    connectedAt: null,
+  };
+}
+
 export async function getConnection(): Promise<MetaConnection | null> {
+  const fromEnv = envConnection();
+  if (fromEnv) return fromEnv;
   if (!isDatabaseConfigured()) return null;
   try {
     const row = await prisma.metaConnection.findUnique({ where: { id: ID } });
