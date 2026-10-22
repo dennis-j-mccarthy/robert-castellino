@@ -21,7 +21,7 @@ export class MetaError extends Error {
 
 type Json = Record<string, unknown>;
 
-async function handle(res: Response): Promise<Json> {
+export async function handleGraphResponse(res: Response): Promise<Json> {
   const text = await res.text();
   let body: Json = {};
   try {
@@ -31,8 +31,17 @@ async function handle(res: Response): Promise<Json> {
   }
   if (!res.ok || (body.error as Json | undefined)) {
     const err = (body.error as Json | undefined) || {};
+    // Marketing API errors carry a human-readable pair (title + msg) that is
+    // far more useful than the generic `message`; prefer it when present.
+    const userMsg = err.error_user_msg as string | undefined;
+    const userTitle = err.error_user_title as string | undefined;
+    const readable = userMsg
+      ? userTitle && !userMsg.startsWith(userTitle)
+        ? `${userTitle}: ${userMsg}`
+        : userMsg
+      : (err.message as string);
     throw new MetaError(
-      (err.message as string) || `Graph request failed (${res.status})`,
+      readable || `Graph request failed (${res.status})`,
       {
         type: err.type as string,
         code: err.code as number,
@@ -50,7 +59,7 @@ export async function graphGet(
 ): Promise<Json> {
   const qs = new URLSearchParams(params).toString();
   const res = await fetch(`${GRAPH}/${path}?${qs}`, { cache: "no-store" });
-  return handle(res);
+  return handleGraphResponse(res);
 }
 
 export async function graphPost(
@@ -63,7 +72,7 @@ export async function graphPost(
     body,
     cache: "no-store",
   });
-  return handle(res);
+  return handleGraphResponse(res);
 }
 
 // ───────── OAuth ─────────

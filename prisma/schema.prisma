@@ -173,3 +173,30 @@ model MetaConnection {
   connectedAt    DateTime?
   updatedAt      DateTime  @updatedAt
 }
+
+// ───────── AD DRAFTS (Ads maker) ─────────
+// One row per ad composed in /admin/ads. Submitting uploads the image,
+// creates the creative + a PAUSED ad in Bob's ad account, and stores the
+// Meta ids here. Status mirrors Meta's effective_status once live.
+model AdDraft {
+  id          String   @id @default(cuid())
+  name        String
+  imageUrl    String
+  imageHash   String?
+  message     String
+  headline    String
+  description String?
+  link        String
+  ctaType     String   @default("SHOP_NOW")
+  campaignId  String?
+  adsetId     String?
+  creativeId  String?
+  metaAdId    String?
+  status      String   @default("draft") // draft | submitted | active | paused | failed
+  error       String?
+  previewUrl  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
