@@ -1,37 +1,16 @@
-import fs from "node:fs";
-import path from "node:path";
 import { adAccountId, isAdsConfigured } from "@/lib/meta/ads";
 import { DEFAULT_LINK, PAGE_ID } from "@/lib/ads-drafts";
+import adImages from "@/data/ad-images.json";
 import AdsClient, { type LibraryImage } from "./AdsClient";
 
 export const dynamic = "force-dynamic";
 
-const IMG_RE = /\.(jpe?g|png|webp)$/i;
-
-/** Every image under public/assets/collections/**, grouped by folder. */
+// Image list is a committed manifest (src/data/ad-images.json) rather than a
+// runtime scan of public/: scanning pulled every photo into the serverless
+// bundle (325 MB) and public/ isn't on the function's filesystem anyway.
+// Regenerate it when photos are added (see docs/ADS_SETUP.md).
 function libraryImages(): LibraryImage[] {
-  const root = path.join(process.cwd(), "public", "assets", "collections");
-  const out: LibraryImage[] = [];
-  let entries: fs.Dirent[] = [];
-  try {
-    entries = fs.readdirSync(root, { withFileTypes: true, recursive: true });
-  } catch {
-    return out;
-  }
-  for (const e of entries) {
-    if (!e.isFile() || !IMG_RE.test(e.name)) continue;
-    const parent = (e as fs.Dirent & { parentPath?: string; path?: string }).parentPath ??
-      (e as fs.Dirent & { path?: string }).path ?? root;
-    const rel = path.relative(root, path.join(parent, e.name)).split(path.sep).join("/");
-    const collection = rel.includes("/") ? rel.split("/")[0] : "";
-    out.push({
-      src: `/assets/collections/${rel}`,
-      collection,
-      label: e.name.replace(IMG_RE, "").replace(/[-_]+/g, " "),
-    });
-  }
-  out.sort((a, b) => a.collection.localeCompare(b.collection) || a.label.localeCompare(b.label));
-  return out;
+  return adImages as LibraryImage[];
 }
 
 // The Ads maker: compose creative here, create it as a PAUSED ad in Bob's

@@ -89,3 +89,19 @@ runs `prisma migrate deploy`, so it applies on deploy; locally run
   raw Meta status in the tooltip.
 - Pre-existing ads created outside the app don't appear in the table (it
   lists rows created here); they're still in Ads Manager.
+
+## Image manifest
+`src/data/ad-images.json` lists the photos the Ads maker offers. Regenerate after adding photos:
+
+```
+python3 - <<'PY'
+import os,re,json
+root="public/assets/collections"; out=[]
+for dp,_,fs in os.walk(root):
+    for f in fs:
+        if re.search(r"\.(jpe?g|png|webp)$",f,re.I):
+            rel=os.path.relpath(os.path.join(dp,f),root).replace(os.sep,"/")
+            out.append({"src":f"/assets/collections/{rel}","collection":rel.split("/")[0] if "/" in rel else "","label":re.sub(r"[-_]+"," ",re.sub(r"\.(jpe?g|png|webp)$","",f,flags=re.I))})
+out.sort(key=lambda x:(x["collection"],x["label"])); json.dump(out,open("src/data/ad-images.json","w"),indent=0)
+PY
+```
