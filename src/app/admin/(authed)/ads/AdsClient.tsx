@@ -201,7 +201,7 @@ export default function AdsClient(props: Props) {
       .catch((e: Error) => setDestError(e.message));
   }, []);
 
-  // Prefill from Bob's Throughline workbook: /admin/ads?h=…&m=…&d=…&img=/assets/…
+  // Prefill from Bob's Creator page: /admin/ads?h=…&m=…&d=…&img=/assets/…
   // so an ad composed there lands here ready to send.
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -215,7 +215,7 @@ export default function AdsClient(props: Props) {
       if (d !== null) setDescription(d);
       if (n) setName(n);
       if (img && library.some((i) => i.src === img)) { setImageUrl(img); setCustomUrl(""); }
-      if (h || m) setNotice({ kind: "ok", text: "Loaded from Throughline — review, pick audiences, then Send to Meta (paused)." });
+      if (h || m) setNotice({ kind: "ok", text: "Loaded from the Creator page — review, pick audiences, then Send to Meta (paused)." });
     });
   }, [library]);
 
