@@ -215,8 +215,8 @@ export default function Home() {
             <em>Colorado:</em><br />
             Life &amp; Light on the Land.
           </h2>
-          <p>The definitive monograph — 168 plates drawn from half a century in
-          the Rockies. Now in its fifth printing.</p>
+          <p>The definitive monograph — 84 plates drawn from half a century in
+          the Rockies. First printing, signed and numbered.</p>
           <Link className="btn btn--gold" href="/book">Open the Book</Link>
         </div>
         <div className="book-strip__art">

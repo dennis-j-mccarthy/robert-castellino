@@ -11,7 +11,7 @@ const bookLd = {
   name: "Colorado: Life and Light on the Land",
   author: { "@type": "Person", name: "Robert Castellino" },
   bookFormat: "https://schema.org/Hardcover",
-  numberOfPages: 168,
+  numberOfPages: 116,
   isbn: "978-0-9972290-0-4",
   inLanguage: "en",
   image: "https://robertcastellino.com/gift-series/book-cover-hi.jpg",
@@ -47,7 +47,7 @@ export default async function BookPage({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/gift-series/book-cover-hi.jpg" alt="Colorado: Life and Light on the Land" className="book__cover" />
           <div className="book__edition">
-            <span>Fifth</span>
+            <span>First</span>
             <span>Printing</span>
           </div>
           <BookFlip />
@@ -59,8 +59,8 @@ export default async function BookPage({
             <em>Colorado</em><br />Life &amp; Light on the Land.
           </h1>
           <p className="book__deck">
-            Fifty years of Colorado in one 168-page volume, signed by the man who
-            made every photograph.
+            Fifty years of Colorado in one 116-page volume — 84 plates, signed and
+            numbered by the man who made every photograph.
           </p>
 
           <BookBuy initialCode={initialCode} />
@@ -68,9 +68,10 @@ export default async function BookPage({
 
           <dl className="book__specs">
             <div><dt>Format</dt><dd>11 × 11″ hardcover · cloth bound</dd></div>
-            <div><dt>Extent</dt><dd>168 pages · 124 plates</dd></div>
+            <div><dt>Extent</dt><dd>116 pages · 84 plates</dd></div>
             <div><dt>Paper</dt><dd>157gsm archival matte, FSC</dd></div>
-            <div><dt>Printing</dt><dd>Fifth edition · hand-bound, smyth-sewn</dd></div>
+            <div><dt>Printing</dt><dd>First printing · hand-bound, smyth-sewn</dd></div>
+            <div><dt>Each copy</dt><dd>Signed &amp; numbered · certificate of authenticity</dd></div>
           </dl>
         </div>
       </div>
@@ -91,7 +92,7 @@ export default async function BookPage({
           <p className="bob__p">
             A 1991 workshop with <em>National Geographic</em>&apos;s Sam Abell changed the way
             he sees; a long practice of Julia Cameron&apos;s <em>The Artist&apos;s Way</em> shaped
-            the discipline. Every one of the 124 plates was made the same way — by waiting for
+            the discipline. Every one of the 84 plates was made the same way — by waiting for
             the light — and he signs every copy himself, from the Boulder studio.
           </p>
           <dl className="bob__facts">
