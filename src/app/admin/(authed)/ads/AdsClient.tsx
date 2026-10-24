@@ -201,6 +201,20 @@ export default function AdsClient(props: Props) {
       .catch((e: Error) => setDestError(e.message));
   }, []);
 
+  // Prefill from Bob's Throughline workbook: /admin/ads?h=…&m=…&d=…&img=/assets/…
+  // so an ad composed there lands here ready to send.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (![...q.keys()].length) return;
+    const h = q.get("h"), m = q.get("m"), d = q.get("d"), img = q.get("img"), n = q.get("name");
+    if (h) setHeadline(h);
+    if (m) setMessage(m);
+    if (d !== null) setDescription(d);
+    if (n) setName(n);
+    if (img && library.some((i) => i.src === img)) { setImageUrl(img); setCustomUrl(""); }
+    if (h || m) setNotice({ kind: "ok", text: "Loaded from Throughline — review, pick audiences, then Send to Meta (paused)." });
+  }, [library]);
+
   useEffect(() => {
     void loadDrafts();
     if (!configured) return;
