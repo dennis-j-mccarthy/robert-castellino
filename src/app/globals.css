@@ -4390,7 +4390,14 @@ body:has(.route--book) .nav__cta { display: none; }
   padding: 0; border: 2px solid transparent; border-radius: 6px;
   overflow: hidden; background: #111; cursor: pointer;
 }
+.ads-thumb { position: relative; }
 .ads-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* "p.63" — the plate's page in the book, so a book ad can't pick a non-book image by accident. */
+.ads-thumb__page {
+  position: absolute; left: 4px; bottom: 4px;
+  font: 600 10px/1 var(--sans, system-ui); letter-spacing: .04em;
+  color: #111; background: var(--gold); border-radius: 3px; padding: 3px 5px;
+}
 .ads-thumb:hover { border-color: var(--bone-70); }
 .ads-thumb.is-selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
 .ads-checklist {

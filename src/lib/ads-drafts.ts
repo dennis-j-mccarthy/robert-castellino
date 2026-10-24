@@ -16,8 +16,10 @@ import {
   adsManagerUrl,
   createAd,
   createCreative,
+  draftStatusFor,
   errorMessage,
   getPreview,
+  listAds,
   uploadImage,
 } from "@/lib/meta/ads";
 import type { AdDraft } from "@/generated/prisma/client";
@@ -82,6 +84,44 @@ export function serialize(d: AdDraft, extra?: Record<string, unknown>) {
 export function parseError(e: unknown): string {
   if (e instanceof z.ZodError) return e.issues[0]?.message ?? "Invalid request.";
   return e instanceof Error ? e.message : "Invalid request.";
+}
+
+/**
+ * Pull ads that exist in Meta but not here into AdDraft rows, so the table
+ * is the account's truth (ads made in Ads Manager, by the API, or from
+ * another device all show up with Preview / Activate / Pause). Best-effort:
+ * callers swallow errors so a Meta hiccup never blanks the table.
+ * Returns the number of rows created.
+ */
+export async function syncFromMeta(): Promise<number> {
+  const live = await listAds(undefined, true);
+  if (!live.length) return 0;
+  const known = new Set(
+    (await prisma.adDraft.findMany({ where: { metaAdId: { not: null } }, select: { metaAdId: true } }))
+      .map((r) => r.metaAdId),
+  );
+  const missing = live.filter((a) => !known.has(a.id) && a.creativeId);
+  for (const a of missing) {
+    const c = a.creative;
+    await prisma.adDraft.create({
+      data: {
+        name: a.name || `Ad ${a.id}`,
+        imageUrl: c?.thumbnailUrl || "",
+        imageHash: c?.imageHash ?? null,
+        message: c?.message || "(creative text not available)",
+        headline: c?.headline || a.name || "",
+        description: c?.description ?? null,
+        link: c?.link || DEFAULT_LINK,
+        ctaType: c?.ctaType && (CTA_TYPES as readonly string[]).includes(c.ctaType) ? c.ctaType : "SHOP_NOW",
+        campaignId: a.campaignId,
+        adsetId: a.adsetId || null,
+        creativeId: a.creativeId,
+        metaAdId: a.id,
+        status: draftStatusFor(a.effectiveStatus),
+      },
+    });
+  }
+  return missing.length;
 }
 
 /**

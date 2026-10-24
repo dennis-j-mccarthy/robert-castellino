@@ -87,8 +87,20 @@ runs `prisma migrate deploy`, so it applies on deploy; locally run
 - Ad effective status also depends on the ad set and campaign being active;
   the pill shows `paused` for `ADSET_PAUSED` / `CAMPAIGN_PAUSED` too, with the
   raw Meta status in the tooltip.
-- Pre-existing ads created outside the app don't appear in the table (it
-  lists rows created here); they're still in Ads Manager.
+- The table is the account's truth: on every load, ads that exist in Meta but
+  not here (made in Ads Manager, by the API, from another device) are pulled
+  in as rows (`syncFromMeta`), so Preview / Activate / Pause / View in Meta
+  work on all of them. Archived ads are skipped.
+- **The Meta app must be Live (published).** In Development mode Meta rejects
+  new creatives with subcode 1885183 ("created by an app that is in
+  development mode"). Publishing needs a privacy-policy URL — the site's
+  `/privacy` page is set in the app's Basic settings.
+- **Book ads use book plates only.** Entries in `src/data/ad-images.json`
+  with a `bookPage` (page in `resources/colorado-life-and-light-book.pdf`)
+  are the plates verified to be in the book; the maker defaults to the
+  "In the book" filter and blocks Send when a book campaign is paired with a
+  non-book image. When adding a photo that is in the book, set its
+  `bookPage`.
 
 ## Image manifest
 `src/data/ad-images.json` lists the photos the Ads maker offers. Regenerate after adding photos:

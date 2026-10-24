@@ -6,7 +6,11 @@ export interface LibraryImage {
   src: string; // /assets/collections/…
   collection: string;
   label: string;
+  /** Page where this plate appears in the print PDF of the book, when it does. */
+  bookPage?: number;
 }
+
+const IN_BOOK = "__book__";
 
 interface Props {
   configured: boolean;
@@ -70,21 +74,30 @@ const CTAS = [
 ] as const;
 const ctaLabel = (t: string) => CTAS.find(([k]) => k === t)?.[1] ?? t;
 
+// The book's close, shared by every preset; the hook is what changes.
+const BOOK_CLOSE =
+  "Colorado: Life & Light on the Land — 84 plates, 116 pages, first printing, signed and numbered, certificate of authenticity. $49.95. Shop the signed copy.";
 const PRESETS: Array<{ label: string; headline: string; message: string; description: string }> = [
-  {
-    label: "The book",
-    headline: "Colorado: Life & Light on the Land",
-    message:
-      "Colorado: Life & Light on the Land — 84 plates across 116 pages of Robert Castellino's Colorado, from the first printing.\n\nEach copy is signed and numbered, with a certificate of authenticity. $49.95.",
-    description: "Signed & numbered first printing · $49.95",
-  },
-  {
-    label: "The gift",
-    headline: "For someone who misses Colorado",
-    message:
-      "Know someone who left Colorado but never quite left? Bob Castellino's new book brings the light home: 84 plates, 116 pages, signed and numbered from the first printing.\n\n$49.95, certificate of authenticity in every copy.",
-    description: "Colorado: Life & Light on the Land · $49.95",
-  },
+  { label: "Boulder mornings", headline: "Fifty Years of Boulder Mornings — The Book", description: "Signed & numbered first printing · 84 plates · $49.95",
+    message: `Boulder looks up at the Flatirons every morning. Robert Castellino waited fifty years for this one.\n\n${BOOK_CLOSE}` },
+  { label: "No fakes", headline: "No Filters. No Fakes. 84 Real Colorado Mornings.", description: "The signed book · First printing · $49.95",
+    message: `The most photographed mountains in Colorado — and still, nobody stood exactly here on exactly this morning. Eighty-four plates like it, every one a real place, in one signed book.\n\n${BOOK_CLOSE}` },
+  { label: "Asleep for this", headline: "The Light You Slept Through, Bound in a Book", description: "Signed & numbered · 84 plates · $49.95",
+    message: `Most people were asleep for this. You can keep it on the coffee table anyway.\n\n${BOOK_CLOSE}` },
+  { label: "Doesn't fit on a phone", headline: "Colorado, at a Size Your Phone Can't Manage", description: "Signed hardcover · 84 plates · 116 pages · $49.95",
+    message: `Colorado doesn't fit on a phone. It barely fits in 116 pages.\n\n${BOOK_CLOSE}` },
+  { label: "Turn pages", headline: "Made to Be Turned, Not Scrolled", description: "The signed Colorado book · $49.95",
+    message: `Some photographs you scroll past. These you turn pages for.\n\n${BOOK_CLOSE}` },
+  { label: "One of them was yours", headline: "Five Decades of Colorado Dawn. One Signed Book.", description: "First printing · Numbered · $49.95",
+    message: `Fifty years of Colorado sunrises. Odds are one of them was yours.\n\n${BOOK_CLOSE}` },
+  { label: "Ten days of gold", headline: "Ten Days of Gold, Kept for Good — The Book", description: "Signed & numbered first printing · $49.95",
+    message: `Aspen gold lasts about ten days in the mountains. In this book it lasts as long as you keep it.\n\n${BOOK_CLOSE}` },
+  { label: "Not a screen", headline: "Put Colorado on the Table, Not in a Tab", description: "Signed hardcover · 84 plates · $49.95",
+    message: `Not a feed. Not a screen. 116 pages of Colorado you can actually hold.\n\n${BOOK_CLOSE}` },
+  { label: "No charger", headline: "The Colorado Gift That Never Needs Charging", description: "Signed & numbered book · $49.95",
+    message: `The gift that doesn't need a charger, a password, or a software update.\n\n${BOOK_CLOSE}` },
+  { label: "One evening", headline: "Fifty Years to Make. One Evening to Fall For.", description: "Signed & numbered first printing · $49.95",
+    message: `Fifty years in the making. One evening to read. A lifetime on the shelf.\n\n${BOOK_CLOSE}` },
 ];
 
 const PREVIEW_FORMATS: Array<[string, string]> = [
@@ -110,10 +123,11 @@ async function api<T>(url: string, init?: RequestInit): Promise<T> {
 export default function AdsClient(props: Props) {
   const { configured, account, library, defaultLink } = props;
 
-  // ① image
-  const [imageUrl, setImageUrl] = useState<string>(library[0]?.src ?? "");
+  // ① image — book ads start on the plates that are actually in the book.
+  const bookPlates = useMemo(() => library.filter((i) => i.bookPage), [library]);
+  const [imageUrl, setImageUrl] = useState<string>((bookPlates[0] ?? library[0])?.src ?? "");
   const [customUrl, setCustomUrl] = useState("");
-  const [collection, setCollection] = useState<string>("");
+  const [collection, setCollection] = useState<string>(bookPlates.length ? IN_BOOK : "");
   // ② copy
   const [name, setName] = useState("Book · Signed copy $49.95");
   const [headline, setHeadline] = useState(PRESETS[0].headline);
@@ -144,9 +158,19 @@ export default function AdsClient(props: Props) {
     [library],
   );
   const shown = useMemo(
-    () => (collection ? library.filter((i) => i.collection === collection) : library),
-    [library, collection],
+    () =>
+      collection === IN_BOOK
+        ? bookPlates
+        : collection
+          ? library.filter((i) => i.collection === collection)
+          : library,
+    [library, bookPlates, collection],
   );
+  const selectedPlate = library.find((i) => i.src === imageUrl);
+  const selectedCampaign = campaigns.find((c) => c.id === campaignId);
+  const isBookCampaign = /book/i.test(selectedCampaign?.name ?? "");
+  // A book ad must show a plate from the book — anything else misrepresents it.
+  const notInBook = isBookCampaign && !!imageUrl && !selectedPlate?.bookPage;
   const displayLink = (() => {
     try {
       return new URL(link).hostname.toUpperCase();
@@ -360,7 +384,7 @@ export default function AdsClient(props: Props) {
     }
   }
 
-  const canSend = configured && !!imageUrl && !!headline.trim() && !!message.trim() && adsetIds.length > 0 && !busy;
+  const canSend = configured && !!imageUrl && !notInBook && !!headline.trim() && !!message.trim() && adsetIds.length > 0 && !busy;
 
   return (
     <div className="ads">
@@ -385,6 +409,7 @@ export default function AdsClient(props: Props) {
           <header className="ads-step__title"><span>①</span> Image</header>
           <div className="ads-row">
             <select className="ads-input" value={collection} onChange={(e) => setCollection(e.target.value)}>
+              {bookPlates.length > 0 && <option value={IN_BOOK}>In the book ({bookPlates.length})</option>}
               <option value="">All collections ({library.length})</option>
               {collections.map((c) => (
                 <option key={c} value={c}>{c.replace(/-/g, " ")}</option>
@@ -397,14 +422,24 @@ export default function AdsClient(props: Props) {
                 key={img.src}
                 type="button"
                 className={`ads-thumb${imageUrl === img.src ? " is-selected" : ""}`}
-                title={img.label}
+                title={img.bookPage ? `${img.label} · book p.${img.bookPage}` : img.label}
                 onClick={() => { setImageUrl(img.src); setCustomUrl(""); }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- static library thumbs */}
                 <img src={img.src} alt={img.label} loading="lazy" />
+                {img.bookPage && <span className="ads-thumb__page">p.{img.bookPage}</span>}
               </button>
             ))}
           </div>
+          {notInBook && (
+            <div className="ads-hint ads-hint--err">
+              This image isn&rsquo;t a plate from the book. Book ads should only show plates that are in it
+              — pick from <b>In the book</b>.
+            </div>
+          )}
+          {selectedPlate?.bookPage && (
+            <div className="ads-hint">Plate from the book · page {selectedPlate.bookPage}.</div>
+          )}
           <label className="ads-label">or paste a public image URL</label>
           <input
             className="ads-input"
@@ -556,8 +591,8 @@ export default function AdsClient(props: Props) {
                 </div>
               )}
               {current.adsManagerUrl && (
-                <a className="ads-linkbtn" href={current.adsManagerUrl} target="_blank" rel="noreferrer">
-                  Open in Ads Manager ↗
+                <a className="btn btn--ghost ads-btn-sm" href={current.adsManagerUrl} target="_blank" rel="noreferrer">
+                  View ad in Meta ↗
                 </a>
               )}
             </div>
@@ -652,7 +687,7 @@ export default function AdsClient(props: Props) {
                           </button>
                         )}
                         {d.adsManagerUrl && (
-                          <a className="ads-linkbtn" href={d.adsManagerUrl} target="_blank" rel="noreferrer">Ads Manager ↗</a>
+                          <a className="btn btn--ghost ads-btn-xs" href={d.adsManagerUrl} target="_blank" rel="noreferrer">View in Meta ↗</a>
                         )}
                       </td>
                     </tr>

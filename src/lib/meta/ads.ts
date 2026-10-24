@@ -216,28 +216,62 @@ export interface LiveAd {
   status: string;
   adsetId: string;
   adsetName: string;
+  campaignId: string | null;
   creativeId: string | null;
+  /** Creative details, present when fetched with `withCreative`. */
+  creative?: {
+    thumbnailUrl: string | null;
+    imageHash: string | null;
+    message: string;
+    headline: string;
+    description: string | null;
+    link: string | null;
+    ctaType: string | null;
+  };
 }
 
 function mapAd(a: Json): LiveAd {
   const adset = a.adset as Json | undefined;
   const creative = a.creative as Json | undefined;
-  return {
+  const out: LiveAd = {
     id: String(a.id),
     name: String(a.name ?? ""),
     effectiveStatus: String(a.effective_status ?? ""),
     status: String(a.status ?? ""),
     adsetId: String(a.adset_id ?? adset?.id ?? ""),
     adsetName: String(adset?.name ?? ""),
+    campaignId: a.campaign_id ? String(a.campaign_id) : null,
     creativeId: creative?.id ? String(creative.id) : null,
   };
+  if (creative && "object_story_spec" in creative) {
+    const spec = creative.object_story_spec as Json | undefined;
+    const link = (spec?.link_data as Json | undefined) ?? {};
+    const cta = link.call_to_action as Json | undefined;
+    out.creative = {
+      thumbnailUrl: creative.thumbnail_url ? String(creative.thumbnail_url) : null,
+      imageHash: link.image_hash ? String(link.image_hash) : null,
+      message: String(link.message ?? ""),
+      headline: String(link.name ?? ""),
+      description: link.description ? String(link.description) : null,
+      link: link.link ? String(link.link) : null,
+      ctaType: cta?.type ? String(cta.type) : null,
+    };
+  }
+  return out;
 }
 
-const AD_FIELDS = "id,name,status,effective_status,adset_id,adset{name},creative{id}";
+const AD_FIELDS = "id,name,status,effective_status,adset_id,campaign_id,adset{name},creative{id}";
+const AD_FIELDS_FULL =
+  "id,name,status,effective_status,adset_id,campaign_id,adset{name},creative{id,thumbnail_url,object_story_spec}";
 
-export async function listAds(adsetId?: string): Promise<LiveAd[]> {
+export async function listAds(adsetId?: string, withCreative = false): Promise<LiveAd[]> {
   const data = await graphGet(`${adsetId || act()}/ads`, {
-    fields: AD_FIELDS,
+    fields: withCreative ? AD_FIELDS_FULL : AD_FIELDS,
+    // Archived/deleted ads are history, not something to manage here.
+    effective_status: JSON.stringify([
+      "ACTIVE", "PAUSED", "ADSET_PAUSED", "CAMPAIGN_PAUSED", "PENDING_REVIEW",
+      "DISAPPROVED", "PREAPPROVED", "PENDING_BILLING_INFO", "IN_PROCESS", "WITH_ISSUES",
+    ]),
     limit: "200",
     access_token: readToken(),
   });

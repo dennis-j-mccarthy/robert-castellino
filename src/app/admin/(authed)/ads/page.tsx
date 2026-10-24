@@ -22,7 +22,9 @@ export default function AdminAdsPage() {
       <p>
         Build a Facebook / Instagram ad from Bob&rsquo;s photographs and send it
         to his ad account <em>paused</em>. Nothing spends until you press
-        Activate.
+        Activate. Book ads use plates that are in the book (the{" "}
+        <em>In the book</em> filter); the table below is every live ad in the
+        account, whether it was made here or in Ads Manager.
       </p>
       <AdsClient
         configured={isAdsConfigured()}

@@ -8,7 +8,7 @@ import {
   isAdsConfigured,
   type AdInsights,
 } from "@/lib/meta/ads";
-import { DraftSchema, guard, parseError, serialize, toCreateData } from "@/lib/ads-drafts";
+import { DraftSchema, guard, parseError, serialize, syncFromMeta, toCreateData } from "@/lib/ads-drafts";
 
 export const runtime = "nodejs";
 
@@ -18,9 +18,18 @@ export async function GET() {
   if (blocked) return blocked;
 
   const configured = isAdsConfigured();
+  let liveError: string | null = null;
+
+  // Ads created outside this tool (Ads Manager, API) appear here too.
+  if (configured) {
+    try {
+      await syncFromMeta();
+    } catch (e) {
+      liveError = e instanceof Error ? e.message : "Couldn't sync ads from Meta.";
+    }
+  }
   const rows = await prisma.adDraft.findMany({ orderBy: { createdAt: "desc" }, take: 200 });
 
-  let liveError: string | null = null;
   const liveIds = rows.map((r) => r.metaAdId).filter((x): x is string => !!x);
   let live: Awaited<ReturnType<typeof getAds>> = {};
   let stats: Record<string, AdInsights> = {};
