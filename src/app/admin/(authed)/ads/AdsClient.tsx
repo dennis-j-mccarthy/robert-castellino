@@ -206,13 +206,17 @@ export default function AdsClient(props: Props) {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     if (![...q.keys()].length) return;
-    const h = q.get("h"), m = q.get("m"), d = q.get("d"), img = q.get("img"), n = q.get("name");
-    if (h) setHeadline(h);
-    if (m) setMessage(m);
-    if (d !== null) setDescription(d);
-    if (n) setName(n);
-    if (img && library.some((i) => i.src === img)) { setImageUrl(img); setCustomUrl(""); }
-    if (h || m) setNotice({ kind: "ok", text: "Loaded from Throughline — review, pick audiences, then Send to Meta (paused)." });
+    // The URL is an external input that can't be known at render time (SSR), so it is
+    // applied once, from a callback, after mount.
+    queueMicrotask(() => {
+      const h = q.get("h"), m = q.get("m"), d = q.get("d"), img = q.get("img"), n = q.get("name");
+      if (h) setHeadline(h);
+      if (m) setMessage(m);
+      if (d !== null) setDescription(d);
+      if (n) setName(n);
+      if (img && library.some((i) => i.src === img)) { setImageUrl(img); setCustomUrl(""); }
+      if (h || m) setNotice({ kind: "ok", text: "Loaded from Throughline — review, pick audiences, then Send to Meta (paused)." });
+    });
   }, [library]);
 
   useEffect(() => {
