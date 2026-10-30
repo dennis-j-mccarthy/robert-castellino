@@ -1,6 +1,7 @@
 import { CONCEPT_COUNT, CONCEPT_SETS } from "@/lib/creator/concepts";
 import { BOOK_CAMPAIGN_ID } from "@/lib/creator/in-market";
 import { loadLibrary } from "@/lib/creator/library";
+import NextSteps from "./NextSteps";
 import PaidSocialClient from "./PaidSocialClient";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,7 @@ export default async function PaidSocialPage() {
         <a href="/admin/ads">Ads maker</a>, and only from plates that are in the book. {CONCEPT_COUNT} concepts ·
         campaign <code>{BOOK_CAMPAIGN_ID}</code>.
       </p>
+      <NextSteps />
       <PaidSocialClient sets={CONCEPT_SETS} plates={plates} />
     </section>
   );
