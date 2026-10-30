@@ -143,6 +143,19 @@ export async function uploadImage(
   return firstImage(await handleGraphResponse(res));
 }
 
+
+/**
+ * Upload an image by fetching it ourselves and sending the bytes. Meta now
+ * refuses `adimages?url=` for this app ("(#3) … capability"), bytes still work.
+ */
+export async function uploadImageFromUrl(url: string): Promise<{ hash: string; url?: string }> {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Could not fetch image (${res.status}): ${url}`);
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const filename = decodeURIComponent(url.split("?")[0].split("/").pop() || "image.jpg");
+  return uploadImage({ bytes, filename });
+}
+
 // ───────── Creatives ─────────
 
 export const CTA_TYPES = ["SHOP_NOW", "LEARN_MORE", "BUY_NOW", "ORDER_NOW", "GET_OFFER"] as const;
@@ -177,7 +190,8 @@ export async function createCreative(input: CreateCreativeInput): Promise<{ id: 
   if (input.displayLink) linkData.caption = input.displayLink;
 
   const spec: Json = { page_id: input.pageId, link_data: linkData };
-  if (input.instagramActorId) spec.instagram_actor_id = input.instagramActorId;
+  // Meta's current field (instagram_actor_id is the deprecated name and rejects page-backed ids).
+  if (input.instagramActorId) spec.instagram_user_id = input.instagramActorId;
 
   const res = await graphPost(`${act()}/adcreatives`, {
     name: input.name,

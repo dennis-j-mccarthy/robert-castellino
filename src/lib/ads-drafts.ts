@@ -20,7 +20,7 @@ import {
   errorMessage,
   getPreview,
   listAds,
-  uploadImage,
+  uploadImageFromUrl,
 } from "@/lib/meta/ads";
 import type { AdDraft } from "@/generated/prisma/client";
 
@@ -136,7 +136,7 @@ export async function submitDraft(id: string, adsetIdOverride?: string): Promise
 
   try {
     if (!draft.imageHash) {
-      const { hash } = await uploadImage({ url: draft.imageUrl });
+      const { hash } = await uploadImageFromUrl(draft.imageUrl);
       draft = await prisma.adDraft.update({ where: { id }, data: { imageHash: hash } });
     }
     if (!draft.creativeId) {
