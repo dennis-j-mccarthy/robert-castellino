@@ -217,3 +217,12 @@ export async function publishPagePost(
   const id = (result.post_id as string) || (result.id as string);
   return { id, scheduled: scheduling, scheduledAt };
 }
+
+/** Delete a Page post (used to cancel a scheduled one). Code 100 = already gone. */
+export async function deletePagePost(postId: string, pageToken: string): Promise<void> {
+  const res = await fetch(`${GRAPH}/${postId}?${new URLSearchParams({ access_token: pageToken })}`, {
+    method: "DELETE",
+    cache: "no-store",
+  });
+  await handleGraphResponse(res);
+}

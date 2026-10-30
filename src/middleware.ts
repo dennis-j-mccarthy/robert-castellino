@@ -44,5 +44,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/add"],
+  // /creator (the Creator page) shares the admin session: logged-out visits
+  // bounce to /admin/login?next=/creator/…
+  matcher: ["/admin/:path*", "/creator/:path*", "/add"],
 };

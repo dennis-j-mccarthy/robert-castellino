@@ -19,6 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/social">Social</Link>
           <Link href="/admin/ads">Ads</Link>
           <Link href="/admin/contact">Contact</Link>
+          <Link href="/creator" className="admin-shell__creator">Creator ↗</Link>
           <form action="/api/admin/logout" method="post" className="admin-shell__logout-form">
             <button type="submit" className="admin-shell__logout">Sign out</button>
           </form>
