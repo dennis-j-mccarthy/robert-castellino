@@ -35,7 +35,7 @@ const PHASES: Phase[] = [
     oneLine: "Widen the audience, bring in the new concepts, and let the best ads prove it.",
     ads: "Add the Lookalike and Photo-book audiences. Stage 6 new ads from the concepts below (2 from each set: Core 25, The Photographer, Coffee Table). Keep the Phase 1 winners running.",
     posts: "4 posts a week. Same mix, plus one “why this plate is in the book” post. Posts and ads should use different plates in the same week so the feed never repeats the ad.",
-    budget: "$40/day · about $560 over two weeks",
+    budget: "$30/day · about $420 over two weeks",
     watch: "Cost per click, and cost per site visit by audience.",
     decide: "Sunday Nov 22: pick the top 4 ads overall. Those carry the holiday push.",
   },
@@ -46,7 +46,7 @@ const PHASES: Phase[] = [
     oneLine: "Spend where it works, add the gift message, and give people a reason to order now.",
     ads: "Top 4 ads on all four audiences, plus a retargeting set for recent site visitors. Add “Order by Dec 15 for Christmas delivery · signed” to copy once Bob confirms the date.",
     posts: "5 posts a week through Thanksgiving, Black Friday and Cyber Monday. Gift angle twice a week; the rest stays about the light.",
-    budget: "$60/day · about $1,400 over 24 days",
+    budget: "$40/day · about $960 over 24 days",
     watch: "Orders in Stripe against ad spend, weekly. Cost per order is the only number that matters here.",
     decide: "Every Sunday: move budget to the best ad set. Pause anything that has not produced a sale in 7 days.",
   },
@@ -57,7 +57,7 @@ const PHASES: Phase[] = [
     oneLine: "Taper, switch to a gift-note message, and stop before Christmas.",
     ads: "Only the retargeting set and the single best cold ad. Copy becomes “Arrives after Christmas, with a signed gift note today.”",
     posts: "3 posts: thank-you, the year in light, one last plate.",
-    budget: "$30/day · about $270",
+    budget: "$20/day · about $180",
     watch: "Orders only.",
     decide: "Dec 25: pause everything. Review the whole run the week after.",
   },
@@ -83,8 +83,8 @@ export default function NextSteps() {
           </p>
         </div>
         <div className="cr-next__total">
-          <div className="cr-next__total-n">$2,400</div>
-          <div className="cr-next__total-l">total over 8 weeks<br />range $2,000 – $2,800</div>
+          <div className="cr-next__total-n">$1,700</div>
+          <div className="cr-next__total-l">total over 8 weeks<br />range $1,500 – $1,900</div>
         </div>
       </header>
 
@@ -126,9 +126,9 @@ export default function NextSteps() {
         <div className="cr-next__box">
           <h3>What to expect</h3>
           <ul className="cr-next__list">
-            <li><b>Reach:</b> roughly 40,000 – 80,000 people in Colorado and photo-book audiences, 150,000+ impressions.</li>
-            <li><b>Site visits:</b> about 2,000 – 4,000 to the book page.</li>
-            <li><b>Orders:</b> 60 – 150 signed copies if the ads land. Below 40 by Nov 22 and we rethink the offer, not the budget.</li>
+            <li><b>Reach:</b> roughly 30,000 – 60,000 people in Colorado and photo-book audiences, 100,000+ impressions.</li>
+            <li><b>Site visits:</b> about 1,400 – 2,800 to the book page.</li>
+            <li><b>Orders:</b> 45 – 110 signed copies if the ads land. Below 30 by Nov 22 and we rethink the offer, not the budget.</li>
             <li><b>Not expected:</b> a profit in week one. Weeks one and two buy information; weeks three and four spend it.</li>
           </ul>
         </div>
@@ -147,7 +147,7 @@ export default function NextSteps() {
       <div className="cr-next__start">
         <h3>To start, this week</h3>
         <ol>
-          <li><b>Bob says yes</b> to the budget ($25/day to begin, $2,400 over the run) and confirms the Christmas order-by date.</li>
+          <li><b>Bob says yes</b> to the budget ($25/day to begin, about $1,700 over the run) and confirms the Christmas order-by date.</li>
           <li><b>Dennis switches on Phase 1</b>: 8 ads, 2 audiences, $25/day. Nothing goes live before step 1.</li>
           <li><b>Three posts get scheduled</b> for Nov 2, 4 and 6 from the Post maker, using plates the ads are not using.</li>
         </ol>
