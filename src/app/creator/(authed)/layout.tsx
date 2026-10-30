@@ -1,9 +1,12 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { loadLibrary } from "@/lib/creator/library";
 import { ensureCreatorSeeded } from "@/lib/creator/seed";
-import CreatorNav from "./CreatorNav";
+import { isDatabaseConfigured, prisma } from "@/lib/prisma";
+import CreatorShell, { type NavCounts } from "./CreatorShell";
+import "../creator.css";
 
 export const metadata: Metadata = {
   title: "Creator — Robert Castellino",
@@ -11,6 +14,22 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
+
+// The Throughline type stack, loaded for /creator only (the public site
+// keeps Cormorant + Manrope). Exposed as CSS variables the scoped
+// creator.css reads under `.tl`.
+const disp = Bricolage_Grotesque({ variable: "--tl-font-disp", subsets: ["latin"], weight: ["400", "600", "700", "800"], display: "swap" });
+const sans = Instrument_Sans({ variable: "--tl-font-sans", subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
+const mono = JetBrains_Mono({ variable: "--tl-font-mono", subsets: ["latin"], weight: ["400", "500", "700"], display: "swap" });
+
+// Cheap counts for the rail chips. Never let them break the page.
+async function navCounts(): Promise<NavCounts> {
+  const [library, queued] = await Promise.all([
+    loadLibrary().then((l) => l.counts.total).catch(() => null),
+    isDatabaseConfigured() ? prisma.socialDraft.count({ where: { status: "scheduled" } }).catch(() => null) : Promise.resolve(null),
+  ]);
+  return { library, queued };
+}
 
 // The Creator page shell. Gated by the SAME admin session as /admin
 // (src/middleware.ts bounces logged-out visits to /admin/login?next=…; this
@@ -20,24 +39,11 @@ export default async function CreatorLayout({ children }: { children: React.Reac
   const session = await getSession();
   if (!session) redirect("/admin/login?next=/creator");
   await ensureCreatorSeeded();
+  const counts = await navCounts();
 
   return (
-    <div className="admin-shell cr-shell">
-      <header className="admin-shell__nav">
-        <Link href="/creator" className="admin-shell__brand">
-          Creator
-        </Link>
-        <nav className="admin-shell__menu cr-menu">
-          <CreatorNav />
-          <Link href="/admin" className="cr-menu__back">
-            ← Admin
-          </Link>
-          <form action="/api/admin/logout" method="post" className="admin-shell__logout-form">
-            <button type="submit" className="admin-shell__logout">Sign out</button>
-          </form>
-        </nav>
-      </header>
-      <main className="admin-shell__main cr-main">{children}</main>
-    </div>
+    <CreatorShell fontClass={`${disp.variable} ${sans.variable} ${mono.variable}`} counts={counts}>
+      {children}
+    </CreatorShell>
   );
 }

@@ -14,7 +14,8 @@ export default async function SocialPage() {
   const [lib, pillars, essence, conn] = await Promise.all([loadLibrary(), loadPillars(), getBrandEssence(), getConnection()]);
   return (
     <section className="admin-page cr-page">
-      <h1>Social</h1>
+      <div className="tl-eyebrow">Channels</div>
+      <h1>Post machine</h1>
       <p>
         One post at a time, from a real plate. Facebook publishes through Meta; Instagram is copy-only until
         a Business account is linked to the Page.

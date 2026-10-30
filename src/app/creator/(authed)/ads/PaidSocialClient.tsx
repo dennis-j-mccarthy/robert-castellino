@@ -1,24 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import Thumb from "@/components/creator/Thumb";
 import { api, errText } from "@/lib/creator/client";
 import type { Concept, ConceptSet } from "@/lib/creator/concepts";
 import type { AdState, InMarket, InMarketAd } from "@/lib/creator/in-market";
+import type { PreviewFormat } from "@/lib/meta/ads";
 
 /*
-  Paid social — the control room for Bob's book campaign.
+  Paid social — the control room for Bob's book campaign, Throughline edition.
 
   Same structure and same words as Meta Ads Manager (Campaign → Ad sets → Ads,
   Meta's status strings shown verbatim) so nothing is lost flipping between
-  the two. Every level has a direct "Open in Ads Manager" link. Turning
-  anything ON asks for one confirmation because it can start spending.
+  the two. Every level has a direct "View in Meta" link. Turning anything ON
+  asks for one confirmation because it can start spending.
+
+  Ads are shown as Meta-rendered preview cards: one card per creative
+  (same headline + image), with a row per ad set underneath that keeps its
+  own switch and Meta link. Previews load lazily (when a card scrolls into
+  view or a placement chip is clicked) and are cached per creative+format.
 */
 
 interface Props {
   sets: ConceptSet[];
   plates: { src: string; label: string; page: number | null }[];
+  /** Meta ad id → page in the book, when the ad was built from an in-book plate. */
+  bookPages: Record<string, number>;
 }
 
 type Confirm = {
@@ -42,20 +50,53 @@ const STATE_LABEL: Record<AdState, string> = {
 const STATE_ORDER: AdState[] = ["running", "armed", "off", "review", "problem"];
 const STATE_PILL: Record<AdState, string> = { running: "active", armed: "submitted", off: "paused", review: "submitted", problem: "failed" };
 
+// Placements → the preview formats /api/creator/ads/preview accepts (PREVIEW_FORMATS).
+// width/height ≈ the size Meta renders each placement at (its iframes don't scale).
+const PLACEMENTS: Array<{ format: PreviewFormat; label: string; width: number; height: number }> = [
+  { format: "MOBILE_FEED_STANDARD", label: "Facebook feed", width: 320, height: 475 },
+  { format: "INSTAGRAM_STANDARD", label: "Instagram feed", width: 320, height: 500 },
+  { format: "INSTAGRAM_STORY", label: "IG Story", width: 320, height: 570 },
+  { format: "FACEBOOK_STORY_MOBILE", label: "FB Story", width: 320, height: 570 },
+  { format: "DESKTOP_FEED_STANDARD", label: "Desktop feed", width: 500, height: 470 },
+  { format: "RIGHT_COLUMN_STANDARD", label: "Right column", width: 254, height: 150 },
+];
+const DEFAULT_FORMAT: PreviewFormat = "MOBILE_FEED_STANDARD";
+type PreviewCache = Record<string, { src: string | null; state: "loading" | "ok" | "error" }>;
+const cacheKey = (creativeId: string, format: string) => `${creativeId}:${format}`;
+
 const amUrl = {
   campaign: (act: string, id: string) => `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${act}&selected_campaign_ids=${id}`,
   adset: (act: string, campaignId: string, id: string) => `https://adsmanager.facebook.com/adsmanager/manage/adsets?act=${act}&selected_campaign_ids=${campaignId}&selected_adset_ids=${id}`,
 };
 
-export default function PaidSocialClient({ sets, plates }: Props) {
+/** Ads that share a creative (same headline + image) collapse into one card. */
+type CreativeGroup = { key: string; lead: InMarketAd; ads: InMarketAd[] };
+function groupByCreative(ads: InMarketAd[]): CreativeGroup[] {
+  const out: CreativeGroup[] = [];
+  const idx = new Map<string, CreativeGroup>();
+  for (const a of ads) {
+    const key = `${a.headline}|${a.thumbnailUrl ?? a.creativeId ?? a.id}`;
+    const g = idx.get(key);
+    if (g) g.ads.push(a);
+    else {
+      const ng = { key, lead: a, ads: [a] };
+      idx.set(key, ng);
+      out.push(ng);
+    }
+  }
+  return out;
+}
+
+export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
   const [data, setData] = useState<InMarket | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<NoticeState>(null);
-  const [preview, setPreview] = useState<{ ad: InMarketAd; src: string | null } | null>(null);
+  const [previews, setPreviews] = useState<PreviewCache>({});
   const [confirm, setConfirm] = useState<Confirm | null>(null);
   const [open, setOpen] = useState<string>(sets[0]?.set ?? "");
   const [stage, setStage] = useState<{ c: Concept; set: ConceptSet } | null>(null);
+  const inflight = useRef(new Set<string>());
 
   const load = useCallback((refresh = false) => {
     return api<InMarket>(`/api/creator/ads/in-market${refresh ? "?refresh=1" : ""}`)
@@ -97,44 +138,59 @@ export default function PaidSocialClient({ sets, plates }: Props) {
     });
   }
 
-  async function showPreview(ad: InMarketAd) {
-    if (!ad.creativeId) return;
-    setPreview({ ad, src: null });
-    try {
-      const p = await api<{ src: string | null }>(`/api/creator/ads/preview?creativeId=${ad.creativeId}`);
-      setPreview({ ad, src: p.src });
-    } catch (e) {
-      setNotice({ kind: "err", text: errText(e) });
-      setPreview(null);
-    }
-  }
+  /** Meta's own rendered preview for one creative + placement, fetched once and kept. */
+  const loadPreview = useCallback((creativeId: string, format: PreviewFormat) => {
+    const key = cacheKey(creativeId, format);
+    if (inflight.current.has(key)) return;
+    inflight.current.add(key);
+    setPreviews((p) => (p[key] ? p : { ...p, [key]: { src: null, state: "loading" } }));
+    api<{ src: string | null }>(`/api/creator/ads/preview?creativeId=${creativeId}&format=${format}`)
+      .then((p) => setPreviews((prev) => ({ ...prev, [key]: { src: p.src, state: "ok" } })))
+      .catch((e: unknown) => {
+        setPreviews((prev) => ({ ...prev, [key]: { src: null, state: "error" } }));
+        setNotice({ kind: "err", text: errText(e) });
+      });
+  }, []);
 
   const ads = useMemo(() => data?.ads ?? [], [data]);
   const grouped = useMemo(() => {
-    const g: Record<AdState, InMarketAd[]> = { running: [], armed: [], off: [], review: [], problem: [] };
-    for (const a of ads) g[a.state].push(a);
+    const g: Record<AdState, CreativeGroup[]> = { running: [], armed: [], off: [], review: [], problem: [] };
+    const byState: Record<AdState, InMarketAd[]> = { running: [], armed: [], off: [], review: [], problem: [] };
+    for (const a of ads) byState[a.state].push(a);
+    for (const st of STATE_ORDER) g[st] = groupByCreative(byState[st]);
     return g;
   }, [ads]);
   const camp = data?.campaign ?? null;
   const campOn = camp?.status === "ACTIVE";
   const act = data?.account ?? "";
+  const asOf = data?.fetchedAt ? new Date(data.fetchedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : null;
 
   return (
     <div className="cr-paid">
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
+      <div className="tl-toolbar">
+        <span className={`tl-live${data?.error ? " is-stale" : ""}`}>
+          <i aria-hidden="true" />
+          {loading ? "Meta · loading…" : asOf ? `Meta · as of ${asOf}` : "Meta · not connected"}
+        </span>
+        <button type="button" className="btn ads-btn-sm" disabled={loading} onClick={() => { setLoading(true); void load(true); }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6" /></svg>
+          {loading ? "Refreshing…" : "Refresh view"}
+        </button>
+      </div>
+
       {/* ───── Campaign ───── */}
       <section className="cr-camp">
         <div className="cr-camp__row">
-          <div className="cr-camp__label">Campaign</div>
           <div className="cr-camp__main">
+            <div className="tl-eyebrow tl-eyebrow--muted">Campaign</div>
             <h2>{camp?.name ?? (loading ? "Loading…" : "—")}</h2>
             {camp && (
               <div className="cr-camp__meta">
-                Meta says <code>{camp.status}</code> · objective <code>{metaWord(camp.objective)}</code>
-                {camp.dailyBudget != null && <> · budget <b>{money(camp.dailyBudget)}/day</b> shared across all ad sets</>}
-                {" · "}
-                <a href={amUrl.campaign(act, camp.id)} target="_blank" rel="noreferrer">Open in Ads Manager ↗</a>
+                <span>Meta says <code>{camp.status}</code></span>
+                <span>· objective <code>{metaWord(camp.objective)}</code></span>
+                {camp.dailyBudget != null && <span>· <b>{money(camp.dailyBudget)}/day</b> shared across all ad sets</span>}
               </div>
             )}
           </div>
@@ -146,23 +202,19 @@ export default function PaidSocialClient({ sets, plates }: Props) {
               ) : (
                 <button type="button" className="btn btn--gold" disabled={busy === camp.id} onClick={() => askOn("campaign", camp.id, "the campaign")}>Turn campaign on</button>
               )}
+              <a className="btn btn--ghost ads-btn-sm" href={amUrl.campaign(act, camp.id)} target="_blank" rel="noreferrer">View campaign in Meta ↗</a>
             </div>
           )}
         </div>
 
         {data && (
-          <div className="cr-tally">
-            <div className={`cr-tally__cell${data.counts.running ? " is-on" : ""}`}><b>{data.counts.running}</b><span>running now</span></div>
-            <div className="cr-tally__cell"><b>{data.counts.armed}</b><span>switched on, waiting{!campOn && data.counts.armed ? " for the campaign" : ""}</span></div>
-            <div className="cr-tally__cell"><b>{data.counts.off}</b><span>switched off</span></div>
-            {(data.counts.review > 0 || data.counts.problem > 0) && (
-              <div className="cr-tally__cell cr-tally__cell--warn"><b>{data.counts.review + data.counts.problem}</b><span>in review / needs attention</span></div>
-            )}
-            <div className="cr-tally__cell cr-tally__cell--muted"><b>{data.counts.total}</b><span>ads in the campaign</span></div>
-            <div className="cr-tally__refresh">
-              {data.fetchedAt && <span className="ads-hint" style={{ margin: 0 }}>as of {new Date(data.fetchedAt).toLocaleTimeString()}</span>}
-              <button type="button" className="btn btn--ghost ads-btn-sm" disabled={loading} onClick={() => { setLoading(true); void load(true); }}>{loading ? "Loading…" : "Refresh from Meta"}</button>
-            </div>
+          <div className="tl-subrule" style={{ margin: "16px 0 0" }}>
+            <span>In market</span>
+            <span>· <b className={data.counts.running ? "tl-subrule--good" : undefined}>{data.counts.running}</b> running</span>
+            <span>· <b>{data.counts.armed}</b> switched on, waiting{!campOn && data.counts.armed ? " for the campaign" : ""}</span>
+            <span>· <b>{data.counts.off}</b> switched off</span>
+            {(data.counts.review > 0 || data.counts.problem > 0) && <span>· <b>{data.counts.review + data.counts.problem}</b> in review / needs attention</span>}
+            <span>· <b>{data.counts.total}</b> ads in the campaign</span>
           </div>
         )}
         {!campOn && data && data.counts.running === 0 && (
@@ -170,13 +222,13 @@ export default function PaidSocialClient({ sets, plates }: Props) {
             <b>Plain English:</b> nothing is running and nothing is spending. To start Phase 1, turn on the 8 chosen ads below, then turn the campaign on. Ads that stay &ldquo;switched off&rdquo; will not run even when the campaign is on.
           </div>
         )}
-        {data?.error && <div className="ads-notice ads-notice--warn">{data.error}</div>}
+        {data?.error && <div className="ads-notice ads-notice--warn" style={{ marginTop: 14, marginBottom: 0 }}>{data.error}</div>}
       </section>
 
       {/* ───── Ad sets ───── */}
       {data && data.adsets.length > 0 && camp && (
         <section className="ads-list">
-          <header className="ads-list__head"><h2>Ad sets <span className="cr-muted cr-h2sub">· Meta&rsquo;s word for an audience</span></h2></header>
+          <div className="tl-subrule">Ad sets · Meta&rsquo;s word for an audience · {data.adsets.length}</div>
           <div className="ads-tablewrap">
             <table className="ads-table cr-table">
               <thead><tr><th>Ad set (exact Meta name)</th><th>Meta status</th><th>Ads</th><th>Running</th><th></th></tr></thead>
@@ -186,14 +238,14 @@ export default function PaidSocialClient({ sets, plates }: Props) {
                   return (
                     <tr key={s.id}>
                       <td><div className="ads-table__name">{s.name}</div><div className="ads-table__sub">{s.id}</div></td>
-                      <td><span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{metaWord(s.status)}</span></td>
+                      <td><span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{s.status}</span></td>
                       <td>{s.adCount}</td>
                       <td>{s.runningCount}</td>
                       <td className="ads-table__actions">
                         {on
                           ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === s.id} onClick={() => void setStatus("adset", s.id, "PAUSED", `ad set “${s.name}”`)}>Turn off</button>
                           : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === s.id} onClick={() => askOn("adset", s.id, `ad set “${s.name}”`)}>Turn on</button>}
-                        <a className="btn btn--ghost ads-btn-xs" href={amUrl.adset(act, camp.id, s.id)} target="_blank" rel="noreferrer">Ads Manager ↗</a>
+                        <a className="btn btn--ghost ads-btn-xs" href={amUrl.adset(act, camp.id, s.id)} target="_blank" rel="noreferrer">View in Meta ↗</a>
                       </td>
                     </tr>
                   );
@@ -204,57 +256,39 @@ export default function PaidSocialClient({ sets, plates }: Props) {
         </section>
       )}
 
-      {/* ───── Ads, grouped by what they are actually doing ───── */}
-      {STATE_ORDER.filter((st) => grouped[st].length > 0).map((st) => (
-        <section key={st} className={`ads-list cr-group cr-group--${st}`}>
-          <header className="ads-list__head">
-            <h2><span className={`ads-pill ads-pill--${STATE_PILL[st]} cr-pill-lg`}>{STATE_LABEL[st]}</span> <span className="cr-muted cr-h2sub">{grouped[st].length} {grouped[st].length === 1 ? "ad" : "ads"}</span></h2>
-            {st === "off" && !campOn && <span className="ads-hint" style={{ margin: 0 }}>Turning these on arms them; they run once the campaign is on.</span>}
-          </header>
-          <div className="ads-tablewrap">
-            <table className="ads-table cr-table">
-              <thead><tr><th></th><th>Ad (exact Meta name)</th><th>Ad set</th><th>Headline</th><th>Meta status</th><th>Last 7 days</th><th></th></tr></thead>
-              <tbody>
-                {grouped[st].map((a) => {
-                  const on = a.status === "ACTIVE";
-                  return (
-                    <tr key={a.id}>
-                      <td><Thumb src={a.thumbnailUrl} /></td>
-                      <td><div className="ads-table__name">{a.name}</div><div className="ads-table__sub">{a.id}</div></td>
-                      <td className="ads-table__sub">{a.adsetName}</td>
-                      <td><div>{a.headline}</div>{a.description && <div className="ads-table__sub">{a.description}</div>}</td>
-                      <td>
-                        <span className={`ads-pill ads-pill--${STATE_PILL[a.state]}`}>{metaWord(a.effectiveStatus)}</span>
-                        <div className="ads-table__sub cr-why">{a.why}</div>
-                      </td>
-                      <td className="cr-nums">
-                        {a.insights
-                          ? <>{money(a.insights.spend)} spent<br />{a.insights.clicks} clicks · {pct(a.insights.ctr)} CTR<br />{a.insights.cpc ? `${money(a.insights.cpc)} per click` : ""}</>
-                          : <span className="ads-table__sub">no delivery yet</span>}
-                      </td>
-                      <td className="ads-table__actions">
-                        {on
-                          ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => void setStatus("ad", a.id, "PAUSED", `“${a.name}”`)}>Turn off</button>
-                          : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === a.id} onClick={() => askOn("ad", a.id, `“${a.name}”`)}>Turn on</button>}
-                        {a.creativeId && <button type="button" className="btn btn--ghost ads-btn-xs" onClick={() => void showPreview(a)}>Preview</button>}
-                        <a className="btn btn--ghost ads-btn-xs" href={a.adsManagerUrl} target="_blank" rel="noreferrer">Ads Manager ↗</a>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      ))}
+      {/* ───── Ads, grouped by what they are actually doing, as Meta preview cards ───── */}
+      {STATE_ORDER.filter((st) => grouped[st].length > 0).map((st) => {
+        const n = grouped[st].reduce((k, g) => k + g.ads.length, 0);
+        return (
+          <section key={st} className={`cr-group cr-group--${st}`}>
+            <div className={`tl-subrule${st === "running" ? " tl-subrule--good" : ""}`}>
+              <span>{STATE_LABEL[st]} · <b>{n}</b> {n === 1 ? "ad" : "ads"} · {grouped[st].length} {grouped[st].length === 1 ? "creative" : "creatives"}</span>
+              {st === "off" && !campOn && <span style={{ textTransform: "none", letterSpacing: 0 }}>· turning these on arms them; they run once the campaign is on</span>}
+            </div>
+            <div className="tl-ads">
+              {grouped[st].map((g, i) => (
+                <AdCard
+                  key={g.key}
+                  n={i + 1}
+                  group={g}
+                  bookPage={g.ads.map((a) => bookPages[a.id]).find((p) => p != null) ?? null}
+                  previews={previews}
+                  busy={busy}
+                  onNeedPreview={loadPreview}
+                  onOn={(a) => askOn("ad", a.id, `“${a.name}”`)}
+                  onOff={(a) => void setStatus("ad", a.id, "PAUSED", `“${a.name}”`)}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      })}
       {!loading && data && ads.length === 0 && !data.error && <div className="ads-hint">No ads in this campaign yet.</div>}
 
       {/* ───── Concepts → paused ads ───── */}
       <section className="ads-list">
-        <header className="ads-list__head">
-          <h2>Concepts <span className="cr-muted cr-h2sub">· on the bench, not in Meta yet</span></h2>
-        </header>
-        <div className="ads-row" style={{ marginBottom: 12 }}>
+        <div className="tl-subrule">Concepts · on the bench, not in Meta yet</div>
+        <div className="tl-seg">
           {sets.map((s) => (
             <button key={s.set} type="button" className={`btn btn--ghost ads-btn-xs${open === s.set ? " is-on" : ""}`} onClick={() => setOpen(s.set)}>
               {s.set} · {s.ads.length}
@@ -263,21 +297,21 @@ export default function PaidSocialClient({ sets, plates }: Props) {
         </div>
         {sets.filter((s) => s.set === open).map((s) => (
           <div key={s.set}>
-            <p className="cr-muted" style={{ fontFamily: "var(--sans)", fontSize: 14 }}>{s.goal}</p>
+            <p className="cr-muted" style={{ fontSize: 13.5, margin: "0 0 12px", maxWidth: "64ch" }}>{s.goal}</p>
             <div className="cr-concepts">
               {s.ads.map((c) => (
                 <article key={c.n} className="cr-concept">
-                  <div className="ads-table__sub">#{c.n}</div>
+                  <div className="ads-table__sub">{s.set} · {String(c.n).padStart(2, "0")}</div>
                   <h3>{c.t}</h3>
                   <p>{c.pt}</p>
-                  <div className="ads-table__sub">{c.d}</div>
+                  <div className="ads-table__sub" style={{ fontFamily: "inherit", textTransform: "none", letterSpacing: 0 }}>{c.d}</div>
                   <button type="button" className="btn btn--gold ads-btn-xs" onClick={() => setStage({ c, set: s })}>Create as paused ad</button>
                 </article>
               ))}
             </div>
           </div>
         ))}
-        <div className="ads-hint">Creating puts a real ad into the campaign, <b>switched off</b>. It shows up in &ldquo;Switched off&rdquo; above with its Meta id, and nothing spends until you turn it on.</div>
+        <div className="ads-hint" style={{ marginTop: 12 }}>Creating puts a real ad into the campaign, <b>switched off</b>. It shows up in &ldquo;Switched off&rdquo; above with its Meta id, and nothing spends until you turn it on.</div>
       </section>
 
       {/* ───── Modals ───── */}
@@ -305,17 +339,113 @@ export default function PaidSocialClient({ sets, plates }: Props) {
           onError={(t) => setNotice({ kind: "err", text: t })}
         />
       )}
+    </div>
+  );
+}
 
-      {preview && (
-        <div className="ads-modal" role="dialog" aria-modal="true" onClick={() => setPreview(null)}>
-          <div className="ads-modal__card cr-modal--wide" onClick={(e) => e.stopPropagation()}>
-            <h3>{preview.ad.name}</h3>
-            {preview.src ? <iframe src={preview.src} title="Meta ad preview" className="ads-metapreview__frame" /> : <div className="ads-hint">Loading Meta preview…</div>}
-            <div className="ads-row" style={{ marginTop: 12 }}><button className="btn btn--ghost" onClick={() => setPreview(null)}>Close</button></div>
-          </div>
+/* One creative, rendered the way Meta renders it, with a row per ad set. */
+function AdCard({ n, group, bookPage, previews, busy, onNeedPreview, onOn, onOff }: {
+  n: number;
+  group: CreativeGroup;
+  bookPage: number | null;
+  previews: PreviewCache;
+  busy: string | null;
+  onNeedPreview: (creativeId: string, format: PreviewFormat) => void;
+  onOn: (a: InMarketAd) => void;
+  onOff: (a: InMarketAd) => void;
+}) {
+  const lead = group.lead;
+  const creativeId = lead.creativeId;
+  const [format, setFormat] = useState<PreviewFormat>(DEFAULT_FORMAT);
+  const [seen, setSeen] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+
+  // Lazy: fetch the default placement the first time the card scrolls into view.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { setSeen(true); io.disconnect(); }
+    }, { rootMargin: "200px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [seen]);
+  useEffect(() => {
+    if (seen && creativeId) onNeedPreview(creativeId, format);
+  }, [seen, creativeId, format, onNeedPreview]);
+
+  const cached = creativeId ? previews[cacheKey(creativeId, format)] : undefined;
+  const placement = PLACEMENTS.find((p) => p.format === format) ?? PLACEMENTS[0];
+  const whys = Array.from(new Set(group.ads.map((a) => a.why)));
+
+  return (
+    <article ref={ref} className="tl-ad" id={`ad-${lead.id}`}>
+      <div className="tl-ad__top">
+        <span className="tl-ad__n" title={lead.name}>{String(n).padStart(2, "0")} · {lead.name}</span>
+        {bookPage != null && <span className="tl-ad__pg">book p.{bookPage}</span>}
+        <span className={`ads-pill ads-pill--${STATE_PILL[lead.state]}`}>{STATE_LABEL[lead.state]} · {lead.effectiveStatus}</span>
+      </div>
+
+      {creativeId && (
+        <div className="tl-ad__seg" role="tablist" aria-label="Placement">
+          {PLACEMENTS.map((p) => (
+            <button key={p.format} type="button" role="tab" aria-selected={p.format === format} className={p.format === format ? "is-on" : undefined} onClick={() => { setSeen(true); setFormat(p.format); }}>
+              {p.label}
+            </button>
+          ))}
         </div>
       )}
-    </div>
+
+      <div className="tl-ad__stage" style={{ minHeight: Math.min(placement.height + 28, 420) }}>
+        {!creativeId ? (
+          <Thumb src={lead.thumbnailUrl} className="tl-ad__thumb" empty={<div className="tl-ad__loading">No creative on this ad</div>} />
+        ) : cached?.state === "ok" && cached.src ? (
+          <iframe src={cached.src} title={`Meta preview · ${lead.name} · ${placement.label}`} className="tl-ad__frame" style={{ width: placement.width, height: placement.height }} scrolling="no" />
+        ) : cached?.state === "error" || (cached?.state === "ok" && !cached.src) ? (
+          <div>
+            <Thumb src={lead.thumbnailUrl} className="tl-ad__thumb" empty={<></>} />
+            <div className="tl-ad__loading">Meta preview unavailable</div>
+          </div>
+        ) : (
+          <div>
+            <Thumb src={lead.thumbnailUrl} className="tl-ad__thumb" empty={<></>} />
+            <div className="tl-ad__loading">{seen ? "Loading Meta preview…" : "Meta preview"}</div>
+          </div>
+        )}
+      </div>
+
+      <div className="tl-ad__b">
+        <div className="tl-ad__hl">{lead.headline || "—"}</div>
+        {lead.description && <div className="ads-table__sub">{lead.description}</div>}
+        {whys.length === 1 && <div className="tl-ad__why">{whys[0]}</div>}
+        <div className="tl-ad__rows">
+          {group.ads.map((a) => {
+            const on = a.status === "ACTIVE";
+            return (
+              <div key={a.id} className="tl-ad__row" title={a.name}>
+                <span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{a.status}</span>
+                <span className="tl-ad__aud">{a.adsetName}</span>
+                <span className="tl-ad__act">
+                  {on
+                    ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => onOff(a)}>Turn off</button>
+                    : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === a.id} onClick={() => onOn(a)}>Turn on</button>}
+                  <a className="tl-link" href={a.adsManagerUrl} target="_blank" rel="noreferrer">View ad in Meta ↗</a>
+                </span>
+                <span className="tl-ad__meta">
+                  <span className="tl-ad__aid">{a.id}</span>
+                  <span className="tl-ad__nums">
+                    {a.insights
+                      ? `${money(a.insights.spend)} spent · ${a.insights.clicks} clicks · ${pct(a.insights.ctr)} CTR${a.insights.cpc ? ` · ${money(a.insights.cpc)}/click` : ""}`
+                      : "· no delivery yet"}
+                  </span>
+                </span>
+                {whys.length > 1 && <span className="tl-ad__rowwhy">{a.why}</span>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -351,6 +481,7 @@ function StageModal({ concept, set, plates, adsets, onClose, onDone, onError }: 
   return (
     <div className="ads-modal" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="ads-modal__card cr-modal cr-modal--wide" onClick={(e) => e.stopPropagation()}>
+        <div className="tl-eyebrow">Concept → Meta</div>
         <h3>Create as paused ad</h3>
         <p className="cr-modal__p">Goes into the book campaign <b>switched off</b>. Same name here and in Ads Manager.</p>
         <label className="ads-label">Ad name (what you will see in Meta)</label>

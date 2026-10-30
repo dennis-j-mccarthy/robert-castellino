@@ -15,7 +15,10 @@ export default async function BlogPage() {
   return (
     <section className="admin-page cr-page">
       <div className="cr-pagehead">
-        <h1>Blog</h1>
+        <div>
+          <div className="tl-eyebrow">Channels</div>
+          <h1>Blog</h1>
+        </div>
         <Link className="btn btn--ghost ads-btn-sm" href="/creator/blog/posts">All Musings →</Link>
       </div>
       <p>

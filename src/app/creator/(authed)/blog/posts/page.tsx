@@ -13,7 +13,10 @@ export default async function BlogPostsPage() {
   return (
     <section className="admin-page cr-page">
       <div className="cr-pagehead">
-        <h1>Musings</h1>
+        <div>
+          <div className="tl-eyebrow">Channels · Blog</div>
+          <h1>Musings</h1>
+        </div>
         <Link className="btn btn--gold ads-btn-sm" href="/creator/blog">+ New Musing</Link>
       </div>
       <p>The same rows /admin/musings manages, seen from the Creator page.</p>

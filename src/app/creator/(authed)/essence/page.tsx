@@ -13,6 +13,7 @@ export default async function EssencePage() {
   const [essence, pillars, tone] = await Promise.all([getBrandEssence(), loadAllPillars(), getTone()]);
   return (
     <section className="admin-page cr-page">
+      <div className="tl-eyebrow">Strategy</div>
       <h1>Essence</h1>
       <p>
         What everything else is written from. Change a line here and the next title, Musing, caption and
