@@ -901,3 +901,31 @@
 @media (prefers-reduced-motion: reduce) {
   .tl *, .tl *::before, .tl *::after { transition: none !important; animation: none !important; }
 }
+
+/* ── concepts as the ads they will be (mirror of the review page) ── */
+.tl .tl-concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.tl .tl-concept { background: var(--card, #fff); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 12px 12px 10px; display: grid; gap: 10px; align-content: start; }
+.tl .tl-concept.is-live { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow); }
+.tl .tl-concept__bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--tl-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.tl .tl-concept__n { color: var(--ink); font-weight: 600; }
+.tl .tl-concept__plate { margin-left: auto; background: #f3e3b5; color: #4a3a0c; border-radius: 999px; padding: 2px 9px; letter-spacing: .04em; text-transform: none; font-size: 11px; }
+.tl .ads-pill--bench { border-color: var(--line); color: var(--faint); background: transparent; }
+/* facebook-style mock */
+.tl .tl-fb { background: #fff; color: #1c1e21; border: 1px solid #e4e6eb; border-radius: 10px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tl .tl-fb__top { display: flex; gap: 10px; align-items: center; padding: 12px 14px 8px; }
+.tl .tl-fb__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none; }
+.tl .tl-fb__page { font-weight: 600; font-size: 14px; }
+.tl .tl-fb__sp { font-size: 12px; color: #65676b; }
+.tl .tl-fb__sp span { font-family: var(--tl-mono); font-size: 10.5px; }
+.tl .tl-fb__pt { padding: 0 14px 10px; font-size: 14.5px; line-height: 1.4; }
+.tl .tl-fb__img { aspect-ratio: 4 / 5; background: #e4e6eb; overflow: hidden; }
+.tl .tl-fb__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tl .tl-fb__link { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; background: #f0f2f5; }
+.tl .tl-fb__dom { font-size: 11px; color: #65676b; letter-spacing: .02em; }
+.tl .tl-fb__hl { font-weight: 600; font-size: 15px; line-height: 1.25; margin-top: 1px; }
+.tl .tl-fb__d { font-size: 13px; color: #65676b; margin-top: 1px; }
+.tl .tl-fb__btn { flex: none; background: #e4e6eb; border-radius: 6px; padding: 8px 12px; font-weight: 600; font-size: 14px; }
+.tl .tl-concept__acts { display: grid; gap: 8px; }
+.tl .tl-concept__acts .tl-ad__row { padding-top: 8px; border-top: 1px solid var(--line-2); }
+[data-theme="dark"] .tl .tl-concept { background: var(--surface, #141a24); }
+@media (max-width: 640px) { .tl .tl-concepts { grid-template-columns: 1fr; } }

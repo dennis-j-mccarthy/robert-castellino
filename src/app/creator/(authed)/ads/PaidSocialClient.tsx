@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import Thumb from "@/components/creator/Thumb";
 import { api, errText } from "@/lib/creator/client";
-import type { Concept, ConceptSet } from "@/lib/creator/concepts";
+import { conceptAdName, conceptNumberFromAdName, type Concept, type ConceptSet } from "@/lib/creator/concepts";
 import type { AdState, InMarket, InMarketAd } from "@/lib/creator/in-market";
 import type { PreviewFormat } from "@/lib/meta/ads";
 
@@ -138,6 +138,28 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
     });
   }
 
+  async function removeAd(a: InMarketAd) {
+    setBusy(a.id);
+    try {
+      const next = await api<InMarket>("/api/creator/ads/remove", { method: "POST", json: { id: a.id } });
+      setData(next);
+      setNotice({ kind: "ok", text: `“${a.name}” was pulled out of Meta.` });
+    } catch (e) {
+      setNotice({ kind: "err", text: errText(e) });
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  function askRemove(a: InMarketAd) {
+    setConfirm({
+      title: `Pull “${a.name}” out of Meta?`,
+      body: "The ad is deleted in Meta and disappears from the campaign. The concept stays here and can be put back in any time, as a fresh paused ad.",
+      cta: "Yes, pull it out",
+      run: () => removeAd(a),
+    });
+  }
+
   /** Meta's own rendered preview for one creative + placement, fetched once and kept. */
   const loadPreview = useCallback((creativeId: string, format: PreviewFormat) => {
     const key = cacheKey(creativeId, format);
@@ -153,6 +175,18 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
   }, []);
 
   const ads = useMemo(() => data?.ads ?? [], [data]);
+  /** Concept number → the live Meta ads created from it (matched by the deterministic ad name). */
+  const liveByConcept = useMemo(() => {
+    const m = new Map<number, InMarketAd[]>();
+    for (const a of ads) {
+      const n = conceptNumberFromAdName(a.name);
+      if (n == null) continue;
+      const arr = m.get(n) ?? [];
+      arr.push(a);
+      m.set(n, arr);
+    }
+    return m;
+  }, [ads]);
   const grouped = useMemo(() => {
     const g: Record<AdState, CreativeGroup[]> = { running: [], armed: [], off: [], review: [], problem: [] };
     const byState: Record<AdState, InMarketAd[]> = { running: [], armed: [], off: [], review: [], problem: [] };
@@ -285,33 +319,45 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
       })}
       {!loading && data && ads.length === 0 && !data.error && <div className="ads-hint">No ads in this campaign yet.</div>}
 
-      {/* ───── Concepts → paused ads ───── */}
-      <section className="ads-list">
-        <div className="tl-subrule">Concepts · on the bench, not in Meta yet</div>
+      {/* ───── Concepts: the 37 book ads, mirrored from the review page; each can go into Meta (paused) or come back out ───── */}
+      <section className="ads-list" id="concepts">
+        <div className="tl-subrule">
+          <span>Concepts · <b>{sets.reduce((k, x) => k + x.ads.length, 0)}</b> book ads</span>
+          <span>· <b>{liveByConcept.size}</b> in Meta</span>
+          <span>· <b>{sets.reduce((k, x) => k + x.ads.length, 0) - liveByConcept.size}</b> on the bench</span>
+        </div>
         <div className="tl-seg">
-          {sets.map((s) => (
-            <button key={s.set} type="button" className={`btn btn--ghost ads-btn-xs${open === s.set ? " is-on" : ""}`} onClick={() => setOpen(s.set)}>
-              {s.set} · {s.ads.length}
-            </button>
-          ))}
+          {sets.map((s) => {
+            const inMeta = s.ads.filter((c) => liveByConcept.has(c.n)).length;
+            return (
+              <button key={s.set} type="button" className={`btn btn--ghost ads-btn-xs${open === s.set ? " is-on" : ""}`} onClick={() => setOpen(s.set)}>
+                {s.title} · {s.ads.length}{inMeta ? ` · ${inMeta} in Meta` : ""}
+              </button>
+            );
+          })}
         </div>
         {sets.filter((s) => s.set === open).map((s) => (
           <div key={s.set}>
             <p className="cr-muted" style={{ fontSize: 13.5, margin: "0 0 12px", maxWidth: "64ch" }}>{s.goal}</p>
-            <div className="cr-concepts">
+            <div className="tl-concepts">
               {s.ads.map((c) => (
-                <article key={c.n} className="cr-concept">
-                  <div className="ads-table__sub">{s.set} · {String(c.n).padStart(2, "0")}</div>
-                  <h3>{c.t}</h3>
-                  <p>{c.pt}</p>
-                  <div className="ads-table__sub" style={{ fontFamily: "inherit", textTransform: "none", letterSpacing: 0 }}>{c.d}</div>
-                  <button type="button" className="btn btn--gold ads-btn-xs" onClick={() => setStage({ c, set: s })}>Create as paused ad</button>
-                </article>
+                <ConceptCard
+                  key={c.n}
+                  concept={c}
+                  live={liveByConcept.get(c.n) ?? []}
+                  busy={busy}
+                  onPutIn={() => setStage({ c, set: s })}
+                  onOn={(a) => askOn("ad", a.id, `“${a.name}”`)}
+                  onOff={(a) => void setStatus("ad", a.id, "PAUSED", `“${a.name}”`)}
+                  onPullOut={askRemove}
+                />
               ))}
             </div>
           </div>
         ))}
-        <div className="ads-hint" style={{ marginTop: 12 }}>Creating puts a real ad into the campaign, <b>switched off</b>. It shows up in &ldquo;Switched off&rdquo; above with its Meta id, and nothing spends until you turn it on.</div>
+        <div className="ads-hint" style={{ marginTop: 12 }}>
+          <b>Put in Meta</b> creates the ad in the campaign, <b>switched off</b>, under the same name you see here. It then also appears in the campaign list above. <b>Pull out</b> deletes it in Meta; the concept stays on the bench.
+        </div>
       </section>
 
       {/* ───── Modals ───── */}
@@ -458,11 +504,11 @@ function StageModal({ concept, set, plates, adsets, onClose, onDone, onError }: 
   onDone: (next: InMarket, name: string) => void;
   onError: (text: string) => void;
 }) {
-  const [name, setName] = useState(`Book · ${set.set}${String(concept.n).padStart(2, "0")} · ${concept.t}`);
+  const [name, setName] = useState(conceptAdName(concept));
   const [headline, setHeadline] = useState(concept.t);
   const [message, setMessage] = useState(concept.pt);
   const [description, setDescription] = useState(concept.d);
-  const [imageUrl, setImageUrl] = useState(plates[0]?.src ?? "");
+  const [imageUrl, setImageUrl] = useState(plates.some((p) => p.src === concept.plate.src) ? concept.plate.src : (plates[0]?.src ?? ""));
   const [adsetId, setAdsetId] = useState(adsets[0]?.id ?? "");
   const [saving, setSaving] = useState(false);
 
@@ -482,8 +528,8 @@ function StageModal({ concept, set, plates, adsets, onClose, onDone, onError }: 
     <div className="ads-modal" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="ads-modal__card cr-modal cr-modal--wide" onClick={(e) => e.stopPropagation()}>
         <div className="tl-eyebrow">Concept → Meta</div>
-        <h3>Create as paused ad</h3>
-        <p className="cr-modal__p">Goes into the book campaign <b>switched off</b>. Same name here and in Ads Manager.</p>
+        <h3>Put in Meta, switched off</h3>
+        <p className="cr-modal__p">Concept #{String(concept.n).padStart(2, "0")} · {set.title}. Goes into the book campaign <b>switched off</b>, with the plate the review used ({concept.plate.label} · p.{concept.plate.page}). Same name here and in Ads Manager.</p>
         <label className="ads-label">Ad name (what you will see in Meta)</label>
         <input className="ads-input" value={name} onChange={(e) => setName(e.target.value)} />
         <div className="cr-form2">
@@ -507,10 +553,73 @@ function StageModal({ concept, set, plates, adsets, onClose, onDone, onError }: 
         <label className="ads-label">Description</label>
         <input className="ads-input" value={description} onChange={(e) => setDescription(e.target.value)} />
         <div className="ads-row" style={{ marginTop: 14 }}>
-          <button type="button" className="btn btn--gold" disabled={saving || !imageUrl || !adsetId} onClick={() => void submit()}>{saving ? "Creating in Meta…" : "Create, switched off"}</button>
+          <button type="button" className="btn btn--gold" disabled={saving || !imageUrl || !adsetId} onClick={() => void submit()}>{saving ? "Putting in Meta…" : "Put in Meta, switched off"}</button>
           <button type="button" className="btn btn--ghost" onClick={onClose}>Cancel</button>
         </div>
       </div>
     </div>
+  );
+}
+
+/* One concept rendered as the ad it will be — mirror of the review page — with its Meta state. */
+function ConceptCard({ concept: c, live, busy, onPutIn, onOn, onOff, onPullOut }: {
+  concept: Concept;
+  live: InMarketAd[];
+  busy: string | null;
+  onPutIn: () => void;
+  onOn: (a: InMarketAd) => void;
+  onOff: (a: InMarketAd) => void;
+  onPullOut: (a: InMarketAd) => void;
+}) {
+  const inMeta = live.length > 0;
+  const running = live.filter((a) => a.state === "running").length;
+  return (
+    <article className={`tl-concept${inMeta ? " is-live" : ""}`} id={`concept-${c.n}`}>
+      <div className="tl-concept__bar">
+        <span className="tl-concept__n">#{String(c.n).padStart(2, "0")}</span>
+        {inMeta
+          ? <span className={`ads-pill ads-pill--${running ? "active" : "paused"}`}>{running ? `In Meta · ${running} running` : `In Meta · ${live.length} switched off`}</span>
+          : <span className="ads-pill ads-pill--bench">Not in Meta</span>}
+        <span className="tl-concept__plate">{c.plate.label} · p.{c.plate.page}</span>
+      </div>
+
+      <div className="tl-fb">
+        <div className="tl-fb__top">
+          <div className="tl-fb__avatar">RC</div>
+          <div><div className="tl-fb__page">Robert Castellino Photography, LLC</div><div className="tl-fb__sp">Sponsored · <span>{conceptAdName(c)}</span></div></div>
+        </div>
+        <div className="tl-fb__pt">{c.pt}</div>
+        <div className="tl-fb__img">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={c.plate.src} alt={c.plate.label} loading="lazy" />
+        </div>
+        <div className="tl-fb__link">
+          <div><div className="tl-fb__dom">ROBERTCASTELLINO.COM</div><div className="tl-fb__hl">{c.t}</div><div className="tl-fb__d">{c.d}</div></div>
+          <span className="tl-fb__btn">Shop now</span>
+        </div>
+      </div>
+
+      <div className="tl-concept__acts">
+        {!inMeta && <button type="button" className="btn btn--gold ads-btn-xs" onClick={onPutIn}>Put in Meta (switched off)</button>}
+        {live.map((a) => {
+          const on = a.status === "ACTIVE";
+          return (
+            <div key={a.id} className="tl-ad__row" title={a.name}>
+              <span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{a.status}</span>
+              <span className="tl-ad__aud">{a.adsetName}</span>
+              <span className="tl-ad__act">
+                {on
+                  ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => onOff(a)}>Turn off</button>
+                  : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === a.id} onClick={() => onOn(a)}>Turn on</button>}
+                <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => onPullOut(a)}>Pull out of Meta</button>
+                <a className="tl-link" href={a.adsManagerUrl} target="_blank" rel="noreferrer">View in Meta ↗</a>
+              </span>
+              <span className="tl-ad__meta"><span className="tl-ad__aid">{a.id}</span><span className="tl-ad__nums">{a.why}</span></span>
+            </div>
+          );
+        })}
+        {inMeta && <button type="button" className="btn btn--ghost ads-btn-xs" onClick={onPutIn}>Put in another audience</button>}
+      </div>
+    </article>
   );
 }

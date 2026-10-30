@@ -300,6 +300,11 @@ export async function setStatus(id: string, status: EntityStatus): Promise<void>
   await graphPost(id, { status, access_token: writeToken() });
 }
 
+/** Delete an ad (or ad set) in Meta. Irreversible there; the creative stays in the library. */
+export async function deleteEntity(id: string): Promise<void> {
+  await graphPost(id, { status: "DELETED", access_token: writeToken() });
+}
+
 // ───────── Previews ─────────
 
 export const PREVIEW_FORMATS = [
