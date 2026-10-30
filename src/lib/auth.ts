@@ -49,6 +49,9 @@ function adminCredentials(): Array<{ email: string; hash: string }> {
   };
   add(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD_HASH);
   add(process.env.ADMIN_EMAIL_2, process.env.ADMIN_PASSWORD_HASH_2);
+  // A third slot; the same email may appear twice so one person can keep an
+  // old password while a new one is also valid.
+  add(process.env.ADMIN_EMAIL_3, process.env.ADMIN_PASSWORD_HASH_3);
   return list;
 }
 
@@ -58,13 +61,15 @@ export async function verifyCredentials(
 ): Promise<boolean> {
   if (!isAuthConfigured()) return false;
   const got = email.trim().toLowerCase();
-  const match = adminCredentials().find((c) => c.email === got);
-  if (!match) return false;
-  try {
-    return await bcrypt.compare(password, match.hash);
-  } catch {
-    return false;
+  const matches = adminCredentials().filter((c) => c.email === got);
+  for (const m of matches) {
+    try {
+      if (await bcrypt.compare(password, m.hash)) return true;
+    } catch {
+      /* malformed hash: skip */
+    }
   }
+  return false;
 }
 
 export async function mintToken(email: string): Promise<string> {
