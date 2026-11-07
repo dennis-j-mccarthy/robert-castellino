@@ -60,3 +60,22 @@ events from elsewhere. Test event accepted (events_received 1).
 
 Pixel, first 7 days of ads: PageView 674 · ViewContent 638 ·
 InitiateCheckout 1 · Purchase 0 (through 11/06).
+
+## 2026-11-07 — Retargeting ad set added (Dennis: "ok add the retargeting ad set")
+
+| Object | ID | Notes |
+|---|---|---|
+| Custom audience "Site · /book visitors 14d" | `120251853347230171` | Pixel 1160986453259804, url contains `/book`, 14 days, prefill on. Still populating at creation (Meta: "too small" / "finding people"). |
+| Custom audience "Site · Purchasers 180d" | `120251853347530171` | Pixel Purchase event, 180 days. Used as the exclusion. |
+| Ad set 7 "Retargeting · /book visitors 14d" | `120251853348670171` | ACTIVE in the CBO campaign (no own budget). US 18–65, visitors minus purchasers, FB feed/marketplace/story + IG feed/story/reels (`video_feeds` is deprecated in v21 and was dropped). LINK_CLICKS / IMPRESSIONS like the other sets. |
+| Ads (ACTIVE, in review) | 02 `120251853358830171` · 14 `120251853349090171` · 18 `120251853349240171` · 37 `120251853350540171` | Top-clicked plates from the first 48h. Copy: "You had a look at Colorado: Life & Light on the Land. Every copy is signed … $49.95. Order now to have it in time for Christmas." Headline "Signed. Ships from Boulder in 3 days." No hard order-by date (Bob hasn't confirmed one). |
+
+Deleted during the build: Retarget Concept 24 `120251853349870171` (same plate as 18; Meta
+returned the same creative id). Four distinct plates remain.
+
+**Flow audit, same day:** campaign ACTIVE $30/day CBO, sets 1/3/7 active, 2/4/5/6 paused.
+Every live ad links to https://robertcastellino.com/book (200). /book shows $60 struck →
+$49.95 with code 10OFF pre-applied for everyone, so the ad price matches the page. Shipping
+is a flat $12 at checkout (not in the ads). POST /api/checkout with the book returned a real
+Stripe Checkout URL. Success page fires Pixel Purchase + CAPI Purchase (same event id).
+**Watch:** audience 7 needs to populate before it delivers; check Monday.
