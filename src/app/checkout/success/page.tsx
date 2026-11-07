@@ -1,7 +1,9 @@
 import Link from "next/link";
 import type Stripe from "stripe";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { cookies, headers } from "next/headers";
 import { PixelEvent } from "@/components/meta-pixel";
+import { sendPurchase } from "@/lib/meta/capi";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +73,36 @@ export default async function CheckoutSuccess({
   // Purchase fires only for a session Stripe reports as paid; the session id
   // doubles as the event id so a refresh is not counted as a second sale.
   const paid = session?.payment_status === "paid" && total != null;
+
+  // Server-side twin of the browser Purchase (Conversions API). Same event_id,
+  // so Meta dedupes; best-effort and never blocks the receipt.
+  if (paid && session) {
+    const h = await headers();
+    const c = await cookies();
+    const proto = h.get("x-forwarded-proto") ?? "https";
+    const host = h.get("x-forwarded-host") ?? h.get("host") ?? "";
+    const li = session.line_items?.data?.[0];
+    const result = await sendPurchase({
+      eventId: session.id,
+      value: total / 100,
+      currency: session.currency ?? "usd",
+      contentName: li?.description ?? undefined,
+      numItems: li?.quantity ?? 1,
+      sourceUrl: `${proto}://${host}/checkout/success`,
+      clientIp: h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip"),
+      userAgent: h.get("user-agent"),
+      fbp: c.get("_fbp")?.value,
+      fbc: c.get("_fbc")?.value,
+      email: session.customer_details?.email,
+      phone: session.customer_details?.phone,
+      firstName: fullName,
+      city: ship?.address?.city,
+      state: ship?.address?.state,
+      zip: ship?.address?.postal_code,
+      country: ship?.address?.country,
+    });
+    if (!result.sent) console.warn("[capi] Purchase not sent:", result.reason);
+  }
 
   return (
     <section className="route confirm-page">
