@@ -44,3 +44,19 @@ setStatus("120251354163940171", "PAUSED")   # ad set 3
 The ad-set-3 copies can be deleted with `deleteEntity(id)` per ad if the set
 should go back to empty. Scripts used are in the session scratchpad
 (`activate.ts`, `dedupe.ts`); the same calls exist in `src/lib/meta/ads.ts`.
+
+## 2026-11-07 — Conversions API added
+
+Correction to the 10/10 handoff: the Meta Pixel has been live on the site
+since 10/13 (dataset `1160986453259804`): PageView, ViewContent on /book,
+InitiateCheckout on the buy click, Purchase on /checkout/success.
+
+Added `src/lib/meta/capi.ts` + a server-side Purchase send from
+`src/app/checkout/success/page.tsx` (commit b46a893, deploy Ready). Same
+`event_id` (Stripe session id) as the browser event, so Meta dedupes. Uses
+`META_CAPI_TOKEN` else `META_ADS_TOKEN` (already in Vercel production).
+Live-site only; set `META_CAPI_TEST_CODE` to send to Events Manager → Test
+events from elsewhere. Test event accepted (events_received 1).
+
+Pixel, first 7 days of ads: PageView 674 · ViewContent 638 ·
+InitiateCheckout 1 · Purchase 0 (through 11/06).
