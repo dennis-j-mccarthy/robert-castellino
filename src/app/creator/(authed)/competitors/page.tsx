@@ -36,7 +36,8 @@ export default async function CompetitorsPage() {
       ) : (
         <>
           <p className="ads-hint cm-meta">
-            Checked {run.date}: {total} gift, book and photography searches. {run.note}
+            Checked {run.date}: {total} gift, book and photography searches. Amazon, Etsy, Goodreads and other giant
+            marketplaces are left out of this list; the to-do list covers getting the book onto them. {run.note}
           </p>
 
           <h2 className="kw-h2">Who is winning</h2>

@@ -38,15 +38,6 @@ export interface WinnerNote {
 }
 
 export const WHY: Record<string, WinnerNote> = {
-  "amazon.com": {
-    name: "Amazon",
-    type: "Marketplace",
-    why: [
-      "The competing Colorado photo books are all listed there.",
-      "Amazon builds pages titled with the exact search, like “Colorado Books Coffee Table” and “Mountain Lover Gifts”.",
-    ],
-    lesson: "Life & Light did not show up on Amazon in any of these searches. A listing puts the book where gift shoppers start.",
-  },
   "mattpaynephotography.com": {
     name: "Matt Payne",
     type: "Photographer",
@@ -56,18 +47,6 @@ export const WHY: Record<string, WinnerNote> = {
       "Shows up in more of these searches than any other photographer.",
     ],
     lesson: "This is the model: one page per thing people search for, each with Colorado in the title.",
-  },
-  "etsy.com": {
-    name: "Etsy",
-    type: "Marketplace",
-    why: ["Etsy makes a page for almost any phrase (“Coffee Table Books Colorado”, “Colorado Photo Book”) filled with small sellers’ listings."],
-    lesson: "A signed-copy listing on Etsy would appear on pages Google already ranks.",
-  },
-  "goodreads.com": {
-    name: "Goodreads",
-    type: "Book list",
-    why: ["Its list “Popular Colorado Photography Books” ranks for three of the book searches. Goodreads builds it from how readers shelve books."],
-    lesson: "Add Life & Light to Goodreads, and ask readers to shelve it as Colorado photography.",
   },
   "collierpublishing.com": {
     name: "Grant Collier (Collier Publishing)",
@@ -114,6 +93,12 @@ export const WHY: Record<string, WinnerNote> = {
     why: ["An experience-gift site with a seasonal page titled “Colorado Christmas Gifts: Rocky Mountain Joy”."],
     lesson: "A holiday page on robertcastellino.com titled for Christmas gifts would compete for the same search.",
   },
+  "itsonlynaturalgifts.com": {
+    name: "It’s Only Natural Gifts",
+    type: "Gift shop",
+    why: ["A gift-basket shop whose page title is “Colorado Gift Baskets”. Baskets of Colorado-made goods rank for the gift searches."],
+    lesson: "Ask Colorado gift-basket makers to include the book.",
+  },
   "5280.com": {
     name: "5280 Magazine",
     type: "Gift guide",
@@ -158,6 +143,16 @@ export const WHY: Record<string, WinnerNote> = {
   },
 };
 
+/* Giant marketplaces and platforms. They hold many searches, but Bob can't
+   out-rank them and they aren't competitors in any useful sense, so the
+   leaderboard leaves them out. (Getting the book listed on them is in the
+   to-do list.) */
+export const GIANTS = new Set([
+  "amazon.com", "etsy.com", "goodreads.com", "ebay.com", "walmart.com", "barnesandnoble.com",
+  "abebooks.com", "pinterest.com", "instagram.com", "facebook.com", "youtube.com",
+  "society6.com", "icanvas.com", "greatbigcanvas.com", "mapquest.com", "yelp.com",
+]);
+
 export interface Winner {
   domain: string;
   count: number;
@@ -172,7 +167,7 @@ export function winners(run: RankRun, skip: (d: string) => boolean, limit = 10):
   for (const r of run.results) {
     const seen = new Set<string>();
     for (const o of r.organic) {
-      if (skip(o.domain) || seen.has(o.domain)) continue;
+      if (skip(o.domain) || GIANTS.has(o.domain) || seen.has(o.domain)) continue;
       seen.add(o.domain);
       const w = map.get(o.domain) ?? { domain: o.domain, count: 0, best: 99, hits: [], note: WHY[o.domain] ?? null };
       w.count += 1;
