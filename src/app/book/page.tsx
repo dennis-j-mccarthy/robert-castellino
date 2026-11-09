@@ -1,9 +1,35 @@
+import type { Metadata } from "next";
 import { BOOK } from "@/data/pricing";
 import { BookBuy } from "./BookBuy";
 import { BookFlip } from "./BookFlip";
 import { BobNote } from "./BobNote";
 import { ScrollReveal } from "./ScrollReveal";
 import { PixelEvent } from "@/components/meta-pixel";
+
+// The book's own title, description and canonical. Without these the page
+// inherited the home page's title and a canonical of "/", so Google treated
+// /book as a copy of the home page and never showed it for the book's name.
+const BOOK_TITLE = "Colorado: Life & Light on the Land — A Signed Colorado Coffee Table Book";
+const BOOK_DESCRIPTION = `Fifty years of Colorado in one signed, 116-page coffee table book: 84 landscape photographs by Boulder photographer Robert Castellino. $${BOOK.promo.price}, shipped from Boulder. A gift for anyone who loves Colorado.`;
+
+export const metadata: Metadata = {
+  title: { absolute: BOOK_TITLE },
+  description: BOOK_DESCRIPTION,
+  alternates: { canonical: "/book" },
+  openGraph: {
+    type: "website",
+    url: "/book",
+    title: BOOK_TITLE,
+    description: BOOK_DESCRIPTION,
+    images: [{ url: "/gift-series/book-cover-hi.jpg", alt: "Colorado: Life and Light on the Land, by Robert Castellino" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: BOOK_TITLE,
+    description: BOOK_DESCRIPTION,
+    images: ["/gift-series/book-cover-hi.jpg"],
+  },
+};
 
 const bookLd = {
   "@context": "https://schema.org",
