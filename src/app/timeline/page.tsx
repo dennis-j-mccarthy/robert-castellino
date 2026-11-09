@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { Timeline } from "@/components/timeline";
 import { PageHero } from "@/components/page-hero";
+
+// Each page names itself as canonical (the root layout no longer points every page at "/").
+export const metadata: Metadata = { alternates: { canonical: "/timeline" } };
+
 
 export default function TimelinePage() {
   return (

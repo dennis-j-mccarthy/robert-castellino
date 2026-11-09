@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { prisma, isDatabaseConfigured } from "@/lib/prisma";
 import { COLLECTIONS } from "@/data/collections";
 import GalleryClient, { type CollectionData } from "./GalleryClient";
+
+// Each page names itself as canonical (the root layout no longer points every page at "/").
+export const metadata: Metadata = { alternates: { canonical: "/gallery" } };
+
 
 export const dynamic = "force-dynamic";
 

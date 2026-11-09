@@ -1,3 +1,8 @@
+import type { Metadata } from "next";
+
+// Each page names itself as canonical (the root layout no longer points every page at "/").
+export const metadata: Metadata = { alternates: { canonical: "/about" } };
+
 export default function AboutPage() {
   return (
     <section className="route route--about">

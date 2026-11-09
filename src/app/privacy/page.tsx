@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Privacy — Robert Castellino Photography",
   description:
     "How Robert Castellino Photography, LLC handles the information you share with us.",
+  alternates: { canonical: "/privacy" },
 };
 
 // Plain-language privacy policy. Also serves as the privacy-policy and

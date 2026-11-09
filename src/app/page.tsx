@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { MUSINGS, CAT_META } from "@/data/musings";
 import { Testimonials } from "@/components/testimonials";
+
+// Each page names itself as canonical (the root layout no longer points every page at "/").
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 
 // Curated trio for the home-page journal teaser — one per category for variety.
 const FEATURED_MUSINGS = ["m01", "m07", "m13"]

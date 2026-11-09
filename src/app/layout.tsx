@@ -49,7 +49,6 @@ export const metadata: Metadata = {
     "fine art prints",
     "Colorado: Life and Light on the Land",
   ],
-  alternates: { canonical: "/" },
   // Meta Business domain verification for robertcastellino.com.
   other: { "facebook-domain-verification": "plm1u57m1ri6029ui33x8fsbnv73o9" },
   openGraph: {
