@@ -42,7 +42,7 @@ type Group = { label: string; nodes: Node[] };
 
 function buildNav(counts: NavCounts): Group[] {
   return [
-    { label: "Strategy", nodes: [{ href: "/creator/essence", label: "Essence" }, { href: "/creator/keywords", label: "Keywords" }] },
+    { label: "Strategy", nodes: [{ href: "/creator/essence", label: "Essence" }, { href: "/creator/keywords", label: "Keywords" }, { href: "/creator/competitors", label: "Competitors" }] },
     { label: "Creative", nodes: [{ href: "/creator/library", label: "Library", chip: counts.library != null ? String(counts.library) : null }] },
     {
       label: "Channels",
