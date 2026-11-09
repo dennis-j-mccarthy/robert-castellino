@@ -305,3 +305,24 @@ model LibraryTag {
 
   @@index([pillarId])
 }
+
+/// Creator → Strategy → Keywords. Phrases people type when looking for the
+/// book, a Colorado gift or Bob's photography. `priority` (0–100) is our own
+/// judgement of value, not a search volume; it sizes the word cloud.
+/// Photography and the book only — Fluid Pathways keywords never go here.
+model Keyword {
+  id        String   @id
+  phrase    String   @unique
+  /// "gift" | "book" | "photography" | "question"
+  kind      String   @default("gift")
+  priority  Int      @default(50)
+  /// "idea" | "target" | "dropped"
+  status    String   @default("idea")
+  /// "seed" | "claude" | "manual"
+  source    String   @default("manual")
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kind, priority])
+}
