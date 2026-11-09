@@ -188,7 +188,7 @@ export function winners(run: RankRun, skip: (d: string) => boolean, limit = 10):
 }
 
 export const COMPETE_TODO: string[] = [
-  "Give robertcastellino.com/book its own page title and description, with the words “Colorado coffee table book” and the book’s title. Today it has the same title as the home page, and Google shows the print store and the Timeline page for the book’s name instead.",
+  "Done 11/09: robertcastellino.com/book has its own title (“Colorado: Life & Light on the Land — A Signed Colorado Coffee Table Book”), description and canonical. Next, once Search Console is set up for robertcastellino.com, ask Google to re-crawl /book.",
   "List the book on Amazon, Goodreads and Etsy (signed copies). These three hold most of the book searches.",
   "Once it is on Goodreads, ask early readers to shelve it as “Colorado” and “photography”, which is how the “Popular Colorado Photography Books” page is built.",
   "Send a copy to the holiday gift guides at 5280, the Denver Post and Colorado Homes & Lifestyles before December.",
