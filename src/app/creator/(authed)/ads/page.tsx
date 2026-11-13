@@ -3,6 +3,7 @@ import { BOOK_CAMPAIGN_ID } from "@/lib/creator/in-market";
 import { loadLibrary } from "@/lib/creator/library";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import NextSteps from "./NextSteps";
+import PhaseUpdate from "./PhaseUpdate";
 import RunningNow from "./RunningNow";
 import PaidSocialClient from "./PaidSocialClient";
 
@@ -45,6 +46,7 @@ export default async function PaidSocialPage() {
         level. Ads are created switched off and only from plates that are in the book. {CONCEPT_COUNT} concepts on the
         bench · campaign <code>{BOOK_CAMPAIGN_ID}</code>.
       </p>
+      <PhaseUpdate />
       <RunningNow />
       <NextSteps />
       <PaidSocialClient sets={CONCEPT_SETS} plates={plates} bookPages={bookPages} />

@@ -1041,3 +1041,15 @@
 .tl .cr-run__err, .tl .cr-run__empty, .tl .cr-run__foot { font-family: var(--tl-mono); font-size: 11px; color: var(--muted); }
 .tl .cr-run__foot { margin-top: 12px; }
 @media (max-width: 720px) { .tl .cr-run__stats { grid-template-columns: repeat(3, 1fr); } .tl .cr-run__camps { min-width: 0; width: 100%; } }
+
+/* ───── Phase update: the dated note above Running now ───── */
+.tl .cr-upd { margin: 18px 0 8px; }
+.tl .cr-upd__cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin-top: 18px; }
+.tl .cr-upd__h { font-family: var(--tl-mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
+.tl .cr-upd__dl { margin: 0; }
+.tl .cr-upd__dl > div { padding: 8px 0; border-top: 1px solid var(--line-2, var(--line)); }
+.tl .cr-upd__dl dt { font-family: var(--tl-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 0 0 2px; }
+.tl .cr-upd__dl dd { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.tl .cr-upd__ol { margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.tl .cr-upd__ol li { padding: 6px 0; border-top: 1px solid var(--line-2, var(--line)); }
+.tl .cr-upd__ol li::marker { font-family: var(--tl-mono); color: var(--accent); }
