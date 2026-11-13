@@ -29,7 +29,7 @@ Page: `public/gift-series.html` (static file in `public/`, not a Next route).
 - Until Save, edits live only in `localStorage` in that browser (`rc-gift-edits-v1`, `rc-gift-img-…`). Bob does not see them.
 - **Save** (top of the page) writes one JSON row to Postgres. Public `GET /api/gift-series` loads it for everyone. `PUT` requires the existing admin session. Unsigned visitors see the button **Sign in to save**, which goes to `/admin/login?next=/gift-series.html` and returns.
 - Table `GiftDraft`, id `current`, fields `edits` and `images`. Migration `prisma/migrations/0003_gift_draft`. Route `src/app/api/gift-series/route.ts`.
-- One admin login already exists and production uses it (`/admin` redirects to `/admin/login`). It is Bob’s single admin account. The password is in Vercel env (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_JWT_SECRET`), not in the repo. Setup notes: `docs/admin-setup.md`. Suggested email there is `rlcatellino@gmail.com`; confirm before assuming that is the live address.
+- One admin login already exists and production uses it (`/admin` redirects to `/admin/login`). It is Bob’s single admin account. The password is in Vercel env (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_JWT_SECRET`), not in the repo. Setup notes: `docs/admin-setup.md`. Suggested email there is `rlcastellino@gmail.com`; confirm before assuming that is the live address.
 
 ## Book pictures — do not inset these
 

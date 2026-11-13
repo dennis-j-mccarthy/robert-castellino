@@ -57,7 +57,7 @@ Set in the Vercel dashboard → Project → Settings → Environment Variables:
 
 | Name                  | Value                                                            |
 | --------------------- | ---------------------------------------------------------------- |
-| `ADMIN_EMAIL`         | `rlcatellino@gmail.com` (or whichever address Bob will sign in with) |
+| `ADMIN_EMAIL`         | `rlcastellino@gmail.com` (or whichever address Bob will sign in with) |
 | `ADMIN_PASSWORD_HASH` | The bcrypt hash from above                                       |
 | `ADMIN_JWT_SECRET`    | The random secret from above                                     |
 
@@ -71,7 +71,7 @@ Set in the Vercel dashboard → Project → Settings → Environment Variables:
 | Name                 | Value                                                |
 | -------------------- | ---------------------------------------------------- |
 | `RESEND_API_KEY`     | The Resend API key                                   |
-| `CONTACT_TO_EMAIL`   | `rlcatellino@gmail.com`                              |
+| `CONTACT_TO_EMAIL`   | `rlcastellino@gmail.com`                              |
 | `CONTACT_FROM_EMAIL` | `studio@robertcastellino.com` (must be on a verified Resend domain) |
 
 If you ever want to skip outbound email, leave `RESEND_API_KEY` unset —
