@@ -21,6 +21,7 @@ const WHAT_CHANGED = [
 
 const WATCH = [
   { k: "The number", v: "Purchases, in Meta's Events Manager and in Stripe. Clicks no longer matter." },
+  { k: "Expected spend next week", v: "About $245 for Nov 13–19: the sales campaign at $25 a day plus the trimmed traffic campaign at $10 a day, $35 a day together. Meta can run a single day up to 25 percent over, but the weekly total holds to the budget." },
   { k: "First read", v: "After the sales campaign has spent about $100, around Sunday, November 15." },
   { k: "Expect", v: "Far fewer clicks and a much higher cost per click than last week. That is the point." },
   { k: "If no sales by then", v: "Traffic quality is ruled out too, and the conversation turns to the offer itself." },
