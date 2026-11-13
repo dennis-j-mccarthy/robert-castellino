@@ -79,3 +79,34 @@ $49.95 with code 10OFF pre-applied for everyone, so the ad price matches the pag
 is a flat $12 at checkout (not in the ads). POST /api/checkout with the book returned a real
 Stripe Checkout URL. Success page fires Pixel Purchase + CAPI Purchase (same event id).
 **Watch:** audience 7 needs to populate before it delivers; check Monday.
+
+## 2026-11-12 — Phase 2: sales campaign (Dennis: "ok go - build the sales campaign with these three")
+
+Read of Nov 6–12 first: $216.50, 13,975 reached, 2,910 link clicks at $0.07, 2,280
+landing-page views; Pixel 2,347 ViewContent · 1 InitiateCheckout · 1 Purchase. Page and
+checkout verified working on emulated iPhone/Android (button → live Stripe). Conclusion:
+the LINK_CLICKS goal was buying photo-taps (13% CTR, 60% of spend to 65+), not shoppers.
+
+**New campaign "Book · Sales · Signed copy $49.95 · Holiday 2026"** `120251946538980171`,
+OUTCOME_SALES, CBO **$25/day**, ACTIVE. Ad sets, all OFFSITE_CONVERSIONS on pixel
+1160986453259804 / PURCHASE, purchasers (`120251853347530171`) excluded, FB feed/marketplace/
+story + IG feed/story/reels:
+
+| Ad set | ID | Audience |
+|---|---|---|
+| S1 · Warm | `120251946539640171` | Page engagers 365d + followers |
+| S3 · Colorado home · 45+ | `120251946544010171` | copied from traffic set 3 |
+| S7 · Retargeting | `120251946546940171` | /book visitors 14d (`120251853347230171`) |
+
+Creative: the three winning plates with the **real cover** (`public/gift-series/book-cover-hi.jpg`)
+inset bottom-right + lockup "116 pages · 84 plates · 11 × 11 in / Signed by the photographer ·
+$49.95". Files committed at `public/gift-series/ads/{24-aspens,02-cliff-palace,14-maroon-bells}-inset.jpg`;
+Meta image hashes dc1cb46b… / 8c3f1bda… / 0ceb0199…. Primary text = Concept 24 gift line +
+book facts; headlines = each plate's own winner. 9 ads ACTIVE (3 per set):
+S1 `120251946541440171` `…542670171` `…543550171` · S3 `…544650171` `…545630171` `…546330171` ·
+S7 `…548320171` `…549150171` `…549870171`.
+
+**Traffic campaign** `120251354161250171` cut **$30 → $10/day**; 66 non-winning ads PAUSED,
+11 kept (Concepts 02/14/18/24 in sets 1, 3, 7). Sets 2/4/5/6 untouched (paused).
+
+**Undo:** pause `120251946538980171` (sales) and/or set traffic `daily_budget` back to 3000.
