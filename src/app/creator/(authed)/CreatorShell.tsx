@@ -51,6 +51,7 @@ function buildNav(counts: NavCounts): Group[] {
         { href: "/creator/email", label: "Email" },
         { href: "/creator/social", label: "Post machine", chip: counts.queued ? `${counts.queued} queued` : null },
         { href: "/creator/ads", label: "Paid social" },
+        { href: "/creator/google-ads", label: "Google Ads" },
       ],
     },
   ];

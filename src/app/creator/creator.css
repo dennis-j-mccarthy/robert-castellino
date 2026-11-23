@@ -1053,3 +1053,32 @@
 .tl .cr-upd__ol { margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
 .tl .cr-upd__ol li { padding: 6px 0; border-top: 1px solid var(--line-2, var(--line)); }
 .tl .cr-upd__ol li::marker { font-family: var(--tl-mono); color: var(--accent); }
+
+/* ── Google Ads plan (/creator/google-ads) ── */
+.tl .gads-sec { margin-top: 40px; }
+.tl .gads-sec > .kw-h2 { margin-bottom: 12px; }
+.tl .gads-h3 { font-family: var(--disp); font-weight: 700; font-size: 15px; color: var(--ink); margin: 22px 0 8px; }
+.tl .gads-box { margin: 12px 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); line-height: 1.55; }
+.tl .gads-box p { margin: 0 0 10px; max-width: 80ch; }
+.tl .gads-box p:last-child { margin-bottom: 0; }
+.tl .gads-box--ok { border-color: color-mix(in srgb, var(--good) 45%, transparent); background: var(--good-bg); }
+.tl .gads-box--warn { border-color: color-mix(in srgb, var(--warn) 45%, transparent); background: var(--warn-bg); }
+.tl .gads-settings { display: grid; gap: 10px; margin: 0; }
+.tl .gads-settings > div { display: grid; grid-template-columns: 130px 1fr; gap: 12px; padding: 10px 14px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); }
+.tl .gads-settings dt { font-weight: 700; color: var(--ink); }
+.tl .gads-settings dd { margin: 0; color: var(--ink-2); line-height: 1.5; }
+.tl .gads-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.tl .gads-card { padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.tl .gads-card h3 { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--ink); margin: 0 0 4px; }
+.tl .gads-why { margin: 8px 0 10px; color: var(--ink-2); font-size: 13px; line-height: 1.5; }
+.tl .gads-kw { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.tl .gads-kw li { padding: 4px 9px; border-radius: 999px; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); color: var(--ink); font-size: 12.5px; }
+.tl .gads-list { margin: 0; padding-left: 22px; color: var(--ink); line-height: 1.6; }
+.tl .gads-list li { margin: 4px 0; }
+.tl .gads-steps li { margin: 8px 0; max-width: 80ch; }
+.tl .gads-two { display: grid; grid-template-columns: 1fr 1.4fr; gap: 28px; }
+.tl .gads-over { color: var(--bad); font-weight: 700; font-size: 12px; }
+@media (max-width: 760px) {
+  .tl .gads-two { grid-template-columns: 1fr; gap: 4px; }
+  .tl .gads-settings > div { grid-template-columns: 1fr; gap: 4px; }
+}
