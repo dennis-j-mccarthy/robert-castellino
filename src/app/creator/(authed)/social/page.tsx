@@ -3,6 +3,7 @@ import { getBrandEssence } from "@/lib/creator/essence-store";
 import { loadLibrary } from "@/lib/creator/library";
 import { loadPillars } from "@/lib/creator/pillar-store";
 import { getConnection, isConnected } from "@/lib/meta/store";
+import PostBoard, { loadPosts } from "./PostBoard";
 import PostMaker from "./PostMaker";
 
 export const dynamic = "force-dynamic";
@@ -11,15 +12,14 @@ export const dynamic = "force-dynamic";
 // publish / schedule to Bob's Facebook Page through the existing
 // /api/admin/facebook/post route. Below it: the drafts picker and the queue.
 export default async function SocialPage() {
-  const [lib, pillars, essence, conn] = await Promise.all([loadLibrary(), loadPillars(), getBrandEssence(), getConnection()]);
+  const [lib, pillars, essence, conn, rows] = await Promise.all([loadLibrary(), loadPillars(), getBrandEssence(), getConnection(), loadPosts()]);
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">Channels</div>
-      <h1>Post machine</h1>
-      <p>
-        One post at a time, from a real plate. Facebook publishes through Meta; Instagram is copy-only until
-        a Business account is linked to the Page.
-      </p>
+      <div className="tl-eyebrow">4 · Posts</div>
+      <h1>Posts</h1>
+      <p>Everything you have posted, scheduled or left unfinished, then the maker. Facebook publishes through Meta; Instagram is copy-only until the account is linked.</p>
+      <PostBoard rows={rows} />
+      <h2 className="mc__h2" id="make">Make a post <span className="cr-h2sub">· picture, words, when</span></h2>
       <PostMaker
         // The picker never offers mockups — adEligible is the real-plates set.
         library={lib.items.filter((i) => i.adEligible)}

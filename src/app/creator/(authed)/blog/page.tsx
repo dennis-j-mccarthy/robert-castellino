@@ -4,6 +4,7 @@ import { loadPillars } from "@/lib/creator/pillar-store";
 import { getTone } from "@/lib/creator/tone-store";
 import { hasAnthropicKey } from "@/lib/creator/ai";
 import BlogGenerator from "./BlogGenerator";
+import MusingCards, { loadMusingCards } from "./MusingCards";
 
 export const dynamic = "force-dynamic";
 
@@ -11,20 +12,19 @@ export const dynamic = "force-dynamic";
 // Publishes into the existing Musing model through /api/admin/musings, so
 // the piece appears at /musings exactly like one typed in /admin/musings.
 export default async function BlogPage() {
-  const [pillars, tone, library] = await Promise.all([loadPillars(), getTone(), loadLibrary()]);
+  const [pillars, tone, library, cards] = await Promise.all([loadPillars(), getTone(), loadLibrary(), loadMusingCards()]);
   return (
     <section className="admin-page cr-page">
       <div className="cr-pagehead">
         <div>
-          <div className="tl-eyebrow">Channels</div>
+          <div className="tl-eyebrow">3 · Blog</div>
           <h1>Blog</h1>
         </div>
         <Link className="btn btn--ghost ads-btn-sm" href="/creator/blog/posts">All Musings →</Link>
       </div>
-      <p>
-        A new Musing in four steps. The draft lands in the same place as the ones written by hand, and
-        publishing it fires the same hooks (revalidate, IndexNow, social drafts).
-      </p>
+      <p>Your Musings first; the writer below. A new piece lands with the ones written by hand, and publishing it can make the week&rsquo;s posts.</p>
+      <MusingCards cards={cards} />
+      <h2 className="mc__h2" id="write">Write a Musing <span className="cr-h2sub">· four steps</span></h2>
       <BlogGenerator pillars={pillars} tone={tone.tone} ai={hasAnthropicKey()} library={library.items.filter((i) => !i.mockup)} />
     </section>
   );

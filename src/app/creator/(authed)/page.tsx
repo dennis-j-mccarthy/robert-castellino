@@ -38,7 +38,7 @@ export default async function ThisWeek() {
 
       <div className="wk-grid">
         <section className="tl-card wk-card">
-          <h4><span className="cr-n">9</span>The week ahead</h4>
+          <h4><span className="cr-n">8</span>The week ahead</h4>
           <p className="wk-exp">Built from your Plan: {settings.posts.perWeek} post{settings.posts.perWeek === 1 ? "" : "s"}{settings.newsletter.cadence !== "off" ? `, newsletter ${settings.newsletter.cadence === "weekly" ? "weekly" : settings.newsletter.cadence === "biweekly" ? "every 2 weeks" : "monthly"}` : ""}. Click anything to change it.</p>
           <div className="wk-week">
             {WEEKDAYS.map((w, i) => (
@@ -79,7 +79,7 @@ export default async function ThisWeek() {
         </section>
 
         <section className="tl-card wk-card">
-          <h4><span className="cr-n">7</span>Ads, last 7 days</h4>
+          <h4><span className="cr-n">6</span>Ads, last 7 days</h4>
           <p className="wk-exp">{ads?.campaigns.filter((c) => c.status === "ACTIVE").length ?? 0} campaign{(ads?.campaigns.filter((c) => c.status === "ACTIVE").length ?? 0) === 1 ? "" : "s"} running. From Meta.</p>
           <div className="wk-stats">
             <div><b>${spend.toFixed(0)}</b><span>spent</span></div>
@@ -91,7 +91,7 @@ export default async function ThisWeek() {
         </section>
 
         <section className="tl-card wk-card">
-          <h4><span className="cr-n">9</span>Your plan</h4>
+          <h4><span className="cr-n">8</span>Your plan</h4>
           <p className="wk-exp">Change a number and next Monday&rsquo;s plan follows it.</p>
           <dl className="wk-dl">
             <div><dt>Posts</dt><dd>{settings.posts.perWeek === 0 ? "off" : settings.posts.perWeek === 7 ? "daily" : settings.posts.perWeek === 5 ? "weekdays" : `${settings.posts.perWeek} a week · ${settings.posts.days.map((d) => WEEKDAYS[d]).join(" ")}`}</dd></div>

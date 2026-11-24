@@ -49,19 +49,18 @@ const I = {
 
 const TOOLS: Tool[] = [
   { n: 1, href: "/creator/essence", label: "Essence", hint: "who you are", icon: I.essence },
-  { n: 2, href: "/creator/library", label: "Library", hint: "your pictures", icon: I.library },
+  { n: 2, href: "/creator/library", label: "Brand kit", hint: "pictures & marks", icon: I.library, match: ["/creator/library", "/creator/brand"] },
   { n: 3, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
   { n: 4, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
-  { n: 5, href: "/creator/email", label: "Email", hint: "one note", icon: I.email, soon: true },
-  { n: 6, href: "/creator/newsletter", label: "Newsletter", hint: "the issue", icon: I.newsletter },
-  { n: 7, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
-  { n: 8, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads, soon: true },
-  { n: 9, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
+  { n: 5, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
+  { n: 6, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
+  { n: 7, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads, soon: true },
+  { n: 8, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
 ];
 
 // Tools that are "set up" show a check. Kept simple and honest: the ones
 // that have real data behind them today.
-const DONE = new Set([1, 2, 3, 7]);
+const DONE = new Set([1, 2, 3, 6]);
 
 const MORE: Array<{ label: string; href: string; ext?: boolean }> = [
   { label: "Keywords", href: "/creator/keywords" },
@@ -138,7 +137,7 @@ export default function CreatorShell({ children, fontClass, counts }: { children
               )}
             </button>
           </div>
-          <nav className="ts-seq" ref={seqRef} aria-label="The nine tools, in order">
+          <nav className="ts-seq" ref={seqRef} aria-label="The eight tools, in order">
             {TOOLS.map((t) => {
               const on = active?.n === t.n;
               const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 4 && counts.queued ? counts.queued : null;
