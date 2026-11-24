@@ -20,14 +20,14 @@ const IDS = ["keywords", "technical-seo", "competitors", "google-ads"] as const;
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ open?: string }> }) {
   const sp = await searchParams;
-  const initial = IDS.find((i) => i === sp.open) ?? IDS[0]; // Search opens on Keywords; Blog and Posts arrive closed
+  const initial = IDS.find((i) => i === sp.open) ?? null; // all closed on arrival; ?open= (from the old routes) opens one
   return (
     <section className="admin-page cr-page">
       <div className="sr-head">
         <div className="sr-head__text">
           <div className="tl-eyebrow">Search</div>
           <h1>Being found on Google</h1>
-          <p>The words people type, the plumbing Google needs, who wins today, and the paid lane. One at a time, top to bottom.</p>
+          <p>The words people type, the plumbing Google needs, who wins today, and the paid lane. Open one at a time, top to bottom.</p>
         </div>
         <div className="sr-head__bar" aria-hidden="true">
           <span className="sr-head__g">G</span>
