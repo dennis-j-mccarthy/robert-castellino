@@ -368,3 +368,22 @@ before 24x36. Fix the row's `img` in /admin/collections.
   (`captionOne`); the popup shows a "No caption yet" block with the same
   button when the title is empty, otherwise "Describe again".
 - Ads page update restated to Stripe's 5 sales (Meta claims 6).
+
+### 2026-11-24, night — Landing pages (Search panel 2)
+
+- Model `LandingPage` + `Keyword.landingSlug`, migration 0013. Generator
+  `src/lib/creator/landing.ts` (`writeLanding`: Essence + pillars system
+  prompt, searcher's words in the H1, hero = a real plate chosen from the
+  library by src, never generated; `markdownToHtml` for the body).
+- API `GET/POST /api/creator/landing`, `PATCH/DELETE /api/creator/landing/[slug]`
+  (creatorDbGuard; PATCH revalidates `/for/<slug>` and the sitemap).
+- Public `/for/[slug]`: drafts visible to signed-in admins only and
+  noindex; published pages get WebPage + Book + FAQPage JSON-LD, a Meta
+  ViewContent event, and the sitemap. Order button → `/book?code=10OFF&utm_source=landing&utm_campaign=<slug>`.
+- Studio: `search/LandingSection.tsx` + `LandingClient.tsx` (pick a Keyword
+  or type a phrase → Make the page; edit title/description/H1/opening/
+  sections/body/FAQ/hero plate/alt; Preview, Publish/Unpublish, Delete).
+  `?open=landing&keyword=…` preselects. Styles `ld-*` (studio) and `lp-*`
+  (public, in globals.css).
+- This is the model to port to the other studios: same panel, site-specific
+  offer and plates come from config.
