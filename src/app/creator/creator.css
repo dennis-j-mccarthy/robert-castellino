@@ -1448,3 +1448,22 @@
 .ts-tool { grid-template-columns: auto 1fr; align-items: center; padding: 10px 12px 12px; }
 .ts-tool__l { font-size: 13px; }
 .ts-tool__ic { margin-top: 0; }
+
+/* ═════════ Blog stars + newsletter popup (nl-*) ═════════ */
+.tl .mc__star { position: absolute; right: 10px; top: 10px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(10, 14, 20, 0.6); color: #f4efe6; font-size: 16px; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.tl .mc__star:hover { background: rgba(10, 14, 20, 0.85); }
+.tl .mc__star.is-on { background: var(--accent); color: #fff; }
+.tl .mc__star.is-used { width: auto; border-radius: 20px; padding: 0 9px; font-family: var(--tl-mono); font-size: 10px; letter-spacing: 0.08em; background: rgba(10, 14, 20, 0.6); cursor: default; }
+.tl .mc__card.is-starred { border-color: var(--accent); }
+.tl .nl__h { margin: 0 0 4px; font-size: 18px; }
+.tl .nl__grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px; margin-top: 10px; }
+.tl .nl__list { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.tl .nl__item { display: grid; grid-template-columns: auto auto 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--surface); cursor: grab; }
+.tl .nl__item.is-drag { opacity: 0.5; border-style: dashed; }
+.tl .nl__grip { color: var(--faint); letter-spacing: -2px; }
+.tl .nl__n { font-family: var(--tl-mono); font-size: 11px; color: var(--muted); width: 16px; }
+.tl .nl__item img, .tl .nl__noimg { width: 44px; height: 44px; border-radius: 7px; object-fit: cover; background: var(--surface-2); display: block; }
+.tl .nl__t { display: flex; flex-direction: column; min-width: 0; }
+.tl .nl__t b { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl .nl__t small { font-size: 11px; color: var(--muted); }
+@media (max-width: 760px) { .tl .nl__grid { grid-template-columns: 1fr; } }

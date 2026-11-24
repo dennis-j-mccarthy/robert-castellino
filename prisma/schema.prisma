@@ -54,6 +54,8 @@ model Musing {
   /// Paragraphs; may contain inline <em>...</em>
   body      String[]
   published Boolean        @default(true)
+  /// Marked on the Blog cards to go in the next newsletter (migration 0012).
+  starred   Boolean        @default(false)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   order     Int            @default(0)

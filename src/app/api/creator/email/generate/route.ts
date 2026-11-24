@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 
 /*
   POST /api/creator/email/generate — the newsletter maker (/creator/email).
-  Body: { musingIds: string[1..3], pillarId?, topic? }
+  Body: { musingIds: string[1..6], pillarId?, topic?, intro? }  (intro = Bob's own preamble, used as written)
   Returns: { draft, subjects: string[3], preheader, copy, generated }
 
   Pulls the chosen PUBLISHED Musings, asks the model for the COPY only
@@ -50,11 +50,12 @@ const SCHEMA = {
 export async function POST(req: Request) {
   const blocked = await creatorDbGuard();
   if (blocked) return blocked;
-  const body = await readJson<{ musingIds?: unknown; pillarId?: string; topic?: string }>(req);
+  const body = await readJson<{ musingIds?: unknown; pillarId?: string; topic?: string; intro?: string }>(req);
   if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
 
-  const ids = (Array.isArray(body.musingIds) ? body.musingIds : []).map((v) => String(v).trim()).filter(Boolean).slice(0, 3);
-  if (!ids.length) return NextResponse.json({ error: "Pick 1–3 published Musings." }, { status: 400 });
+  const ids = (Array.isArray(body.musingIds) ? body.musingIds : []).map((v) => String(v).trim()).filter(Boolean).slice(0, 6);
+  if (!ids.length) return NextResponse.json({ error: "Pick 1–6 published Musings." }, { status: 400 });
+  const introOverride = typeof body.intro === "string" ? body.intro.trim().slice(0, 1500) : "";
   const pillar = typeof body.pillarId === "string" ? await findPillar(body.pillarId) : null;
   const topic = String(body.topic ?? "").trim().slice(0, 300);
 
@@ -103,6 +104,7 @@ export async function POST(req: Request) {
     }
   }
 
+  if (introOverride) copy = { ...copy, intro: introOverride };
   const subject = subjects[0];
   const rendered = renderNewsletter(musings, copy, { subject, preheader });
   try {

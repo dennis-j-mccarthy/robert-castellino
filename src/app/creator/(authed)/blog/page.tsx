@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 // Publishes into the existing Musing model through /api/admin/musings, so
 // the piece appears at /musings exactly like one typed in /admin/musings.
 export default async function BlogPage() {
-  const [pillars, tone, library, cards] = await Promise.all([loadPillars(), getTone(), loadLibrary(), loadMusingCards()]);
+  const [pillars, tone, library, musings] = await Promise.all([loadPillars(), getTone(), loadLibrary(), loadMusingCards()]);
   return (
     <section className="admin-page cr-page">
       <div className="cr-pagehead">
@@ -23,7 +23,7 @@ export default async function BlogPage() {
         <Link className="btn btn--ghost ads-btn-sm" href="/creator/blog/posts">All Musings →</Link>
       </div>
       <p>Your Musings first; the writer below. A new piece lands with the ones written by hand, and publishing it can make the week&rsquo;s posts.</p>
-      <MusingCards cards={cards} />
+      <MusingCards cards={musings.cards} db={musings.db} />
       <h2 className="mc__h2" id="write">Write a Musing <span className="cr-h2sub">· four steps</span></h2>
       <BlogGenerator pillars={pillars} tone={tone.tone} ai={hasAnthropicKey()} library={library.items.filter((i) => !i.mockup)} />
     </section>

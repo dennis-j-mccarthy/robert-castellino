@@ -17,7 +17,7 @@ import { creatorGuard, readJson } from "@/lib/creator/guard";
 */
 export const runtime = "nodejs";
 
-type Body = { kind: string; current?: string; note?: string; have?: string[]; pillarId?: string; voice?: { playful: number; formal: number; bold: number } };
+type Body = { kind: string; current?: string; note?: string; have?: string[]; pillarId?: string; voice?: { playful: number; formal: number; bold: number }; titles?: string[] };
 
 const FIELD_GUIDE: Record<string, string> = {
   line: "THE LINE: one sentence a stranger could repeat. Not a slogan, not a claim; the truest short thing about this work. Under 10 words each.",
@@ -43,6 +43,14 @@ export async function POST(req: Request) {
         system: brandSystemPrompt(ctx, { role, includePillars: true, extra: FIELD_GUIDE[b.kind] }),
         user: `Current ${b.kind}: "${b.current ?? ""}".${b.note ? ` Bob's note: "${b.note}".` : ""}\nGive 3 alternatives. Keep what is true in the current one; vary rhythm and emphasis, not facts. Return JSON { options: [3 strings] }.`,
         schema: strList, maxTokens: 800,
+      });
+      return NextResponse.json({ options: out.options.slice(0, 3) });
+    }
+    if (b.kind === "preamble") {
+      const out = await generateJson<{ options: string[] }>({
+        system: brandSystemPrompt(ctx, { role, includePillars: true, extra: "A newsletter preamble is 2–4 sentences from Bob opening the issue: where he has been, what the light did, why these pieces sit together. First person. No pitch, no exclamation marks." }),
+        user: `This issue includes: ${JSON.stringify(b.titles ?? [])}.${b.current ? ` His draft so far: "${b.current}".` : ""}${b.note ? ` His note: "${b.note}".` : ""} Give 3 preambles. Return JSON { options: [3 strings] }.`,
+        schema: strList, maxTokens: 900,
       });
       return NextResponse.json({ options: out.options.slice(0, 3) });
     }
