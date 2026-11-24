@@ -52,19 +52,17 @@ const TOOLS: Tool[] = [
   { n: 1, href: "/creator/essence", label: "Essence", hint: "who you are", icon: I.essence },
   { n: 2, href: "/creator/library", label: "Brand kit", hint: "pictures & marks", icon: I.library, match: ["/creator/library", "/creator/brand"] },
   { n: 3, href: "/creator/audience", label: "Audience", hint: "who it's for", icon: I.leads },
-  { n: 4, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
-  { n: 5, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
-  { n: 6, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
-  { n: 7, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
-  { n: 8, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.search, soon: true },
-  { n: 9, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
+  { n: 4, href: "/creator/search", label: "Search", hint: "being found on Google", icon: I.search, match: ["/creator/search", "/creator/keywords", "/creator/competitors", "/creator/google-ads"] },
+  { n: 5, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
+  { n: 6, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
+  { n: 7, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
+  { n: 8, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads"] },
+  { n: 9, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads, soon: true },
+  { n: 10, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
 ];
 
 
 const MORE: Array<{ label: string; href: string; ext?: boolean }> = [
-  { label: "Keywords", href: "/creator/keywords" },
-  { label: "Competitors", href: "/creator/competitors" },
-  { label: "Google Ads", href: "/creator/google-ads" },
   { label: "Comments & DMs (Meta)", href: `https://business.facebook.com/latest/inbox/all?asset_id=${PAGE_ID}`, ext: true },
   { label: "Budgets & bidding (Meta)", href: `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${AD_ACCOUNT}&selected_campaign_ids=${CAMPAIGN_ID}`, ext: true },
   { label: "Build audiences (Meta)", href: `https://adsmanager.facebook.com/adsmanager/audiences?act=${AD_ACCOUNT}`, ext: true },
@@ -136,10 +134,10 @@ export default function CreatorShell({ children, fontClass, counts }: { children
               )}
             </button>
           </div>
-          <nav className="ts-seq" ref={seqRef} aria-label="The nine tools, in order">
+          <nav className="ts-seq" ref={seqRef} aria-label="The tools, in order">
             {TOOLS.map((t) => {
               const on = active?.n === t.n;
-              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 6 && counts.queued ? counts.queued : null;
+              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 7 && counts.queued ? counts.queued : null;
               return (
                 <Link key={t.n} href={t.href} className={`ts-tool${on ? " is-on" : ""}${t.soon ? " is-soon" : ""}`} aria-current={on ? "page" : undefined}>
                   <span className="ts-tool__ic" aria-hidden="true">{t.icon}</span>

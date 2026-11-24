@@ -17,7 +17,12 @@ export function openPanel(id: string) {
 }
 
 export default function TwoAccordion({ panels }: { panels: [Panel, Panel] }) {
-  const [open, setOpenRaw] = useState<string>(panels[0].id);
+  return <Accordion panels={panels} />;
+}
+
+/** Any number of panels, one open at a time; the first is open on arrival. */
+export function Accordion({ panels, initial }: { panels: Panel[]; initial?: string }) {
+  const [open, setOpenRaw] = useState<string>(initial ?? panels[0].id);
   const setOpen = (id: string) => {
     setOpenRaw(id);
     requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "start", behavior: "smooth" }));
