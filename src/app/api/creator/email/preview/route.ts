@@ -26,6 +26,8 @@ export async function POST(req: Request) {
   let copy = fallbackNewsletterCopy(musings);
   const intro = typeof body.intro === "string" ? body.intro.trim().slice(0, 1500) : "";
   if (intro) copy = { ...copy, intro };
-  const { html } = renderNewsletter(musings, copy, { subject: musings[0].title, preheader: stripTags(musings[0].excerpt).slice(0, 110) });
+  // The real subject lines are written on save; until then a neutral masthead so the lead title does not print twice.
+  const month = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "America/Denver" });
+  const { html } = renderNewsletter(musings, copy, { subject: `Notes from the studio · ${month}`, preheader: stripTags(musings[0].excerpt).slice(0, 110) });
   return NextResponse.json({ html });
 }
