@@ -350,3 +350,21 @@ before 24x36. Fix the row's `img` in /admin/collections.
   over 60 chars, /book description 202 chars, /book 1.1s TTFB).
 - The More menu lost Keywords / Competitors / Google Ads; Ads no longer
   matches /creator/google-ads. Nav is ten items.
+
+### 2026-11-24, evening — Instant post, phone-first Pictures, closed accordions
+
+- Accordions (`Accordion` / `TwoAccordion`) arrive **closed** on Blog, Posts
+  and Search; header carries an Open ⌄ / Close ⌃ pill; clicking the open
+  header closes it. `?open=` still opens one (old Search routes).
+- Posts = ① **Instant post** (`social/InstantPost.tsx` + `POST
+  /api/creator/social/instant`: photo from device/camera roll via
+  /api/admin/upload → library "studio-uploads", three bullets, Claude vision
+  writes caption/pillar/alt/place; Publish / Schedule / Copy / Fine-tune in
+  the maker) ② Make a post ③ My posts.
+- Pictures: `AddPictures` is a big tap target ("Tap to add a photo") with
+  Choose photos / Take a photo (`capture="environment"`) / Create with AI,
+  full-width on phones (modelled on Beth's gallery Add a Photo). Blank
+  cards get an orange border and a "✦ Make a caption with AI" button
+  (`captionOne`); the popup shows a "No caption yet" block with the same
+  button when the title is empty, otherwise "Describe again".
+- Ads page update restated to Stripe's 5 sales (Meta claims 6).
