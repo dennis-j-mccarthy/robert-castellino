@@ -130,3 +130,6 @@ Changes made via Graph API with META_ADS_TOKEN:
 Net daily spend unchanged at $35. Undo: POST status=ACTIVE to the two
 paused ids; daily_budget=2500 on the sales campaign; daily_min_spend_target=0
 on S3. Ads page PhaseUpdate rewritten for Nov 24. Next read Dec 1.
+
+**Stripe check 11/24 (Dennis):** 5 sales, not Meta's 6. PhaseUpdate and
+the thresholds (under $40 scale / near $60 hold) updated to Stripe's number.

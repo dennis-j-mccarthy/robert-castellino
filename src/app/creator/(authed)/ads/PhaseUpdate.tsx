@@ -6,9 +6,9 @@ const UPDATED = "Tuesday, November 24, 2026";
 
 const WHAT_HAPPENED = [
   { k: "Spent", v: "$649 since November 6, about $35 a day. Nothing before that date." },
-  { k: "Sold", v: "6 signed books, $371.70, all attributed by Meta to the sales campaign that started November 12. Three in each of the last two weeks. Meta's count, not Stripe's; Stripe is the final word." },
-  { k: "Cost per sale", v: "About $50 against a $49.95 book. The first order is a wash; it pays if buyers come back for prints, or as Meta learns and the cost drops, which usually happens after the first ten or so sales." },
-  { k: "What sold", v: "The warm audience (people who already follow Bob) made 4 sales on $220. Colorado homes 45 and over made 2 on $47, the best ratio on the account. Retargeting book-page visitors made 0 sales on $140 across both campaigns." },
+  { k: "Sold", v: "5 signed books in Stripe since the ads began (checked November 24). Meta claims 6 for the sales campaign; Meta counts a sale if the buyer clicked an ad in the last 7 days or saw one in the last day, so it sometimes claims a sale that would have happened anyway. Stripe is the final word." },
+  { k: "Cost per sale", v: "About $60 on the sales campaign alone ($298 for 5), or $130 counting everything spent since November 6. Against a $49.95 book the first order loses money. It pays if buyers come back for prints, or as Meta learns and the cost drops, which usually happens after the first ten or so sales." },
+  { k: "What sold", v: "By Meta's attribution: the warm audience (people who already follow Bob) 4 sales on $220, Colorado homes 45 and over 2 on $47, the best ratio on the account. Retargeting book-page visitors 0 on $140 across both campaigns." },
   { k: "What did not", v: "The original traffic campaign: $351, 6,388 clicks, no purchase. It was buying photo taps, as we found on the 12th." },
 ];
 
@@ -23,8 +23,8 @@ const WATCH = [
   { k: "The number", v: "Purchases and cost per purchase on the sales campaign, in Meta and in Stripe." },
   { k: "Expected spend", v: "About $245 for Nov 25 to Dec 1, the same $35 a day as before, now in one campaign." },
   { k: "Next read", v: "Tuesday, December 1. By then the Colorado set will have had a full week at a real budget." },
-  { k: "If cost per sale falls under $35", v: "Raise the budget for the Christmas window; ordering deadlines start to bite around December 12." },
-  { k: "If it stays near $50", v: "Keep spending only what the print follow-ons justify, and test a 2-for-1 or a print-plus-book offer." },
+  { k: "If cost per sale falls under $40", v: "Raise the budget for the Christmas window; ordering deadlines start to bite around December 12." },
+  { k: "If it stays near $60", v: "Keep spending only what the print follow-ons justify, and test a 2-for-1 or a print-plus-book offer." },
 ];
 
 export default function PhaseUpdate() {
