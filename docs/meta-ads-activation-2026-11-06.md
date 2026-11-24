@@ -110,3 +110,23 @@ S7 `…548320171` `…549150171` `…549870171`.
 11 kept (Concepts 02/14/18/24 in sets 1, 3, 7). Sets 2/4/5/6 untouched (paused).
 
 **Undo:** pause `120251946538980171` (sales) and/or set traffic `daily_budget` back to 3000.
+
+## 2026-11-24 — Consolidation (Dennis: "ok do it")
+
+Numbers at decision time (Meta insights, Nov 1–24): traffic campaign
+$350.66 / 6,388 clicks / 0 purchases; sales campaign $298.07 / 568 clicks /
+6 purchases $371.70 (S1 warm 4 on $219.61, S3 Colorado 2 on $46.99, S7
+retargeting 0 on $31.47; traffic-side retargeting set 7: 0 on $108.96).
+
+Changes made via Graph API with META_ADS_TOKEN:
+
+| Object | Before | After |
+|---|---|---|
+| Campaign 120251354161250171 "Book · Signed copy $49.95 · Holiday 2026" (traffic) | ACTIVE, $10/day | **PAUSED** |
+| Ad set 120251946546940171 "S7 · Retargeting · /book visitors 14d" | ACTIVE | **PAUSED** |
+| Campaign 120251946538980171 "Book · Sales …" daily_budget | 2500 | **3500** |
+| Ad set 120251946544010171 "S3 · Colorado home · 45+ · interests" daily_min_spend_target | none | **1000** |
+
+Net daily spend unchanged at $35. Undo: POST status=ACTIVE to the two
+paused ids; daily_budget=2500 on the sales campaign; daily_min_spend_target=0
+on S3. Ads page PhaseUpdate rewritten for Nov 24. Next read Dec 1.

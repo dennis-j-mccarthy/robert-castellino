@@ -1,30 +1,30 @@
-// "Phase 2 update" — the dated note at the top of Paid social: what Phase 1
-// showed, what changed on Nov 12, and what we are watching. Static copy,
+// The dated note at the top of Ads: where things stand, what changed on the
+// last decision day, and what we are watching. Static copy,
 // edited by hand when the next decision lands. Plain language for Bob.
 
-const UPDATED = "Thursday, November 12, 2026";
+const UPDATED = "Tuesday, November 24, 2026";
 
 const WHAT_HAPPENED = [
-  { k: "Spent", v: "$216.50 over six and a half days, about $33 a day." },
-  { k: "Reached", v: "13,975 people. 2,910 clicked through to the book page at 7 cents each." },
-  { k: "On the page", v: "2,347 visits to the book page. One person started checkout. One purchase." },
-  { k: "What won", v: "Concept 24 (the red aspens, gift copy), then Concept 02 (Mesa Verde), 14 (Maroon Bells) and 18 (the same aspens, love-letter copy). Twenty of the 41 ads barely ran." },
-  { k: "Where it went", v: "Three quarters Facebook feed, a quarter Instagram Reels. Sixty percent of the money reached people 65 and over." },
+  { k: "Spent", v: "$649 since November 6, about $35 a day. Nothing before that date." },
+  { k: "Sold", v: "6 signed books, $371.70, all attributed by Meta to the sales campaign that started November 12. Three in each of the last two weeks. Meta's count, not Stripe's; Stripe is the final word." },
+  { k: "Cost per sale", v: "About $50 against a $49.95 book. The first order is a wash; it pays if buyers come back for prints, or as Meta learns and the cost drops, which usually happens after the first ten or so sales." },
+  { k: "What sold", v: "The warm audience (people who already follow Bob) made 4 sales on $220. Colorado homes 45 and over made 2 on $47, the best ratio on the account. Retargeting book-page visitors made 0 sales on $140 across both campaigns." },
+  { k: "What did not", v: "The original traffic campaign: $351, 6,388 clicks, no purchase. It was buying photo taps, as we found on the 12th." },
 ];
 
 const WHAT_CHANGED = [
-  "A new campaign, Book · Sales, at $25 a day. Meta is now asked to find people who buy, not people who click. Same three audiences: people who already follow Bob, Colorado homes 45 and over, and everyone who visited the book page in the last 14 days.",
-  "The ads in it are the three winning plates with the real book cover set into the corner and the book facts beside it, so the picture reads as a book for sale, not just a photograph.",
-  "The original campaign was cut from $30 to $10 a day and trimmed to the four winning concepts. It keeps the retargeting pool filled and nothing else.",
-  "The book page and checkout were tested on an iPhone and an Android phone. Both go straight to Stripe. Nothing on the page was changed.",
+  "The original traffic campaign is paused. Its $10 a day moves to the sales campaign.",
+  "The retargeting set inside the sales campaign is paused. Book-page visitors have not bought in three weeks of trying.",
+  "The sales campaign goes from $25 to $35 a day, with at least $10 a day guaranteed to the Colorado homes set. All of the money is now on the two audiences that have sold books.",
+  "Nothing else changed: same three plates with the cover inset, same Pixel and Conversions API, Instagram still not linked.",
 ];
 
 const WATCH = [
-  { k: "The number", v: "Purchases, in Meta's Events Manager and in Stripe. Clicks no longer matter." },
-  { k: "Expected spend next week", v: "About $245 for Nov 13–19: the sales campaign at $25 a day plus the trimmed traffic campaign at $10 a day, $35 a day together. Meta can run a single day up to 25 percent over, but the weekly total holds to the budget." },
-  { k: "First read", v: "After the sales campaign has spent about $100, around Sunday, November 15." },
-  { k: "Expect", v: "Far fewer clicks and a much higher cost per click than last week. That is the point." },
-  { k: "If no sales by then", v: "Traffic quality is ruled out too, and the conversation turns to the offer itself." },
+  { k: "The number", v: "Purchases and cost per purchase on the sales campaign, in Meta and in Stripe." },
+  { k: "Expected spend", v: "About $245 for Nov 25 to Dec 1, the same $35 a day as before, now in one campaign." },
+  { k: "Next read", v: "Tuesday, December 1. By then the Colorado set will have had a full week at a real budget." },
+  { k: "If cost per sale falls under $35", v: "Raise the budget for the Christmas window; ordering deadlines start to bite around December 12." },
+  { k: "If it stays near $50", v: "Keep spending only what the print follow-ons justify, and test a 2-for-1 or a print-plus-book offer." },
 ];
 
 export default function PhaseUpdate() {
@@ -32,15 +32,15 @@ export default function PhaseUpdate() {
     <section className="cr-next cr-upd" aria-labelledby="cr-upd-title">
       <header className="cr-next__head">
         <div>
-          <div className="cr-next__kicker">Phase 2 update</div>
-          <h2 id="cr-upd-title">Phase 1 results, and what changed for Phase 2</h2>
+          <div className="cr-next__kicker">Update</div>
+          <h2 id="cr-upd-title">Where the ads stand, and what changed today</h2>
           <p className="cr-next__goal">Updated {UPDATED}.</p>
         </div>
       </header>
 
       <div className="cr-upd__cols">
         <div>
-          <h3 className="cr-upd__h">What Phase 1 showed · Nov 6–12</h3>
+          <h3 className="cr-upd__h">Nov 6 to Nov 24</h3>
           <dl className="cr-upd__dl">
             {WHAT_HAPPENED.map((r) => (
               <div key={r.k}><dt>{r.k}</dt><dd>{r.v}</dd></div>
@@ -48,7 +48,7 @@ export default function PhaseUpdate() {
           </dl>
         </div>
         <div>
-          <h3 className="cr-upd__h">What changed on Nov 12</h3>
+          <h3 className="cr-upd__h">What changed on Nov 24</h3>
           <ol className="cr-upd__ol">
             {WHAT_CHANGED.map((t) => <li key={t}>{t}</li>)}
           </ol>
