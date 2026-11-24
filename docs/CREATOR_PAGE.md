@@ -293,3 +293,8 @@ before 24x36. Fix the row's `img` in /admin/collections.
   published ones. CSS block `pc-*` replaces `pb-*`.
 - Local dev has no `DATABASE_URL` (`.env.local` blanks it), so the grid is
   always empty locally; verify on production.
+- Follow-up (8793207): Published and Scheduled now come from the Page via
+  `listPublishedPosts` / `listScheduledPosts` in `src/lib/meta/graph.ts`
+  (Page token; `published_posts` + `scheduled_posts`). SocialDraft rows
+  with a matching `metaPostId` fold into the Page card; drafts and failures
+  still come from the table. First 12 shown, "Show 12 more" after that.
