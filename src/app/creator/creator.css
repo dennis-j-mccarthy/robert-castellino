@@ -1554,3 +1554,13 @@
 .tl .pa__body { padding: 4px 20px 22px; border-top: 1px solid var(--line); }
 .tl .pa__body .pc { margin: 14px 0 6px; }
 .tl .pa__body .pm { margin-top: 12px; }
+
+/* Make newsletter: calls to action */
+.tl .nl__item { grid-template-columns: auto auto 44px minmax(0, 1fr) auto; }
+.tl .nl__item-actions { display: flex; align-items: center; gap: 6px; }
+.tl .nl__ctabtn { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 20px; padding: 3px 9px; font: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.tl .nl__ctabtn:hover { border-color: var(--accent); color: var(--ink); }
+.tl .nl__ctabtn.is-on { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.tl .nl__cta { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 8px; padding-top: 4px; cursor: default; }
+.tl .nl__cta .ads-input { margin: 0; font-size: 12.5px; padding: 7px 10px; }
+.tl .nl__cta--whole { padding-top: 0; }

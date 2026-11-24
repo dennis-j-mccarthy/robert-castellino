@@ -6,10 +6,12 @@ import { creatorDbGuard, errorResponse, readJson } from "@/lib/creator/guard";
 import { fallbackNewsletterCopy, renderNewsletter, stripTags, type NewsletterCopy, type NewsletterMusing } from "@/lib/creator/newsletter";
 import { findPillar } from "@/lib/creator/pillar-store";
 import { prisma } from "@/lib/prisma";
+import { getBrandEssence } from "@/lib/creator/essence-store";
+import { readCtas } from "@/lib/creator/newsletter-ctas";
 
 /*
   POST /api/creator/email/generate — the newsletter maker (/creator/email).
-  Body: { musingIds: string[1..6], pillarId?, topic?, intro? }  (intro = Bob's own preamble, used as written)
+  Body: { musingIds: string[1..6], pillarId?, topic?, intro?, ctas?: [{musingId,label,url}], cta?: {label,url} }  (intro = Bob's own preamble, used as written)
   Returns: { draft, subjects: string[3], preheader, copy, generated }
 
   Pulls the chosen PUBLISHED Musings, asks the model for the COPY only
@@ -50,7 +52,7 @@ const SCHEMA = {
 export async function POST(req: Request) {
   const blocked = await creatorDbGuard();
   if (blocked) return blocked;
-  const body = await readJson<{ musingIds?: unknown; pillarId?: string; topic?: string; intro?: string }>(req);
+  const body = await readJson<{ musingIds?: unknown; pillarId?: string; topic?: string; intro?: string; ctas?: unknown; cta?: unknown }>(req);
   if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
 
   const ids = (Array.isArray(body.musingIds) ? body.musingIds : []).map((v) => String(v).trim()).filter(Boolean).slice(0, 6);
@@ -105,8 +107,11 @@ export async function POST(req: Request) {
   }
 
   if (introOverride) copy = { ...copy, intro: introOverride };
+  const { perMusing, whole } = readCtas(body.ctas, body.cta);
+  copy = { ...copy, blurbs: copy.blurbs.map((b) => ({ ...b, cta: perMusing[b.musingId] ?? null })), cta: whole };
+  const essence = await getBrandEssence().catch(() => null);
   const subject = subjects[0];
-  const rendered = renderNewsletter(musings, copy, { subject, preheader });
+  const rendered = renderNewsletter(musings, copy, { subject, preheader, tagline: essence?.line ?? null });
   try {
     const draft = await createEmailDraft({
       name: subject,

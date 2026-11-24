@@ -17,11 +17,30 @@ export interface NewsletterMusing {
   loc: string | null;
 }
 
+export interface NewsletterCta {
+  label: string;
+  url: string;
+}
+
 export interface NewsletterCopy {
   intro: string;
-  blurbs: { musingId: string; heading: string; blurb: string }[];
+  blurbs: { musingId: string; heading: string; blurb: string; cta?: NewsletterCta | null }[];
   outro: string;
+  /** One call to action for the whole issue, shown as a featured block before the sign-off. */
+  cta?: NewsletterCta | null;
 }
+
+export interface NewsletterRenderOptions {
+  subject: string;
+  preheader: string;
+  /** Under the logo in the masthead. Falls back to the studio line. */
+  tagline?: string | null;
+  /** Preview only: when the intro is blank, show a placeholder where Bob's preamble will go. */
+  introPlaceholder?: string | null;
+}
+
+export const LOGO_URL = `${SITE.url}/assets/logo-script.png`;
+export const DEFAULT_TAGLINE = "Fifty years of Colorado light, one morning at a time";
 
 export interface RenderedNewsletter {
   html: string;
@@ -71,11 +90,33 @@ function button(label: string, url: string, filled: boolean): string {
     : `<a href="${url}" style="${base}border:1px solid ${GOLD};color:${GOLD};">${escapeHtml(label)}</a>`;
 }
 
+const SANS = `-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif`;
+
+function ctaBlock(cta: NewsletterCta, featured: boolean): string {
+  if (!cta.label.trim() || !cta.url.trim()) return "";
+  if (!featured) return `<p style="margin:14px 0 0;">${button(cta.label, cta.url, true)}</p>`;
+  return `
+  <tr><td style="padding:30px 32px 0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:${PAPER};border-radius:14px;">
+      <tr><td align="center" style="padding:26px 24px;">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:${MUTED};font-family:${SANS};">This issue</p>
+        ${button(cta.label, cta.url, true)}
+      </td></tr>
+    </table>
+  </td></tr>`;
+}
+
 export function renderNewsletter(
   musings: NewsletterMusing[],
   copy: NewsletterCopy,
-  opts: { subject: string; preheader: string },
+  opts: NewsletterRenderOptions,
 ): RenderedNewsletter {
+  const tagline = (opts.tagline ?? "").trim() || DEFAULT_TAGLINE;
+  const introHtml = copy.intro.trim()
+    ? paras(copy.intro, P)
+    : opts.introPlaceholder
+      ? `<p style="${P}color:${MUTED};font-style:italic;border-left:3px solid ${RULE};padding-left:14px;">${escapeHtml(opts.introPlaceholder)}</p>`
+      : "";
   const hero = musings[0]?.img ? absoluteImageUrl(musings[0].img) : null;
   const blurbFor = (m: NewsletterMusing) =>
     copy.blurbs.find((b) => b.musingId === m.id) ?? { musingId: m.id, heading: m.title, blurb: stripTags(m.excerpt) };
@@ -92,6 +133,7 @@ export function renderNewsletter(
           ${m.loc ? `<p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:${MUTED};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">${escapeHtml(m.loc)}</p>` : ""}
           ${paras(b.blurb || stripTags(m.excerpt), P)}
           <p style="margin:0;"><a href="${url}" style="color:${GOLD};font-size:15px;text-decoration:none;font-family:Georgia,'Times New Roman',serif;">Read the musing &rarr;</a></p>
+          ${b.cta ? ctaBlock(b.cta, false) : ""}
         </td></tr>`;
     })
     .join("\n");
@@ -109,19 +151,25 @@ export function renderNewsletter(
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:${PAPER};">
 <tr><td align="center" style="padding:28px 12px;">
 <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;">
-  <tr><td style="padding:26px 32px 0;">
-    <a href="${SITE.url}" style="font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:${GOLD};text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">${escapeHtml(SITE.name)}</a>
+  <tr><td align="center" style="padding:34px 32px 0;">
+    <a href="${SITE.url}" style="display:inline-block;text-decoration:none;"><img src="${LOGO_URL}" alt="${escapeHtml(SITE.name)}" width="300" style="display:block;width:300px;max-width:100%;height:auto;border:0;"></a>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:16px auto 0;"><tr>
+      <td style="width:36px;border-top:1px solid ${GOLD};font-size:0;line-height:0;">&nbsp;</td>
+      <td style="padding:0 12px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:${GOLD};font-family:${SANS};white-space:nowrap;">${escapeHtml(tagline)}</td>
+      <td style="width:36px;border-top:1px solid ${GOLD};font-size:0;line-height:0;">&nbsp;</td>
+    </tr></table>
   </td></tr>
   ${hero ? `<tr><td style="padding:18px 32px 0;"><a href="${musingUrl(musings[0].id)}" style="display:block;"><img src="${escapeHtml(hero)}" alt="" width="536" style="display:block;width:100%;height:auto;border:0;"></a></td></tr>` : ""}
   <tr><td style="padding:24px 32px 0;">
     <h1 style="margin:0 0 16px;font-size:30px;line-height:1.15;color:${INK};font-weight:300;font-family:Georgia,'Times New Roman',serif;">${escapeHtml(opts.subject)}</h1>
-    ${paras(copy.intro, P)}
+    ${introHtml}
   </td></tr>
   <tr><td style="padding:6px 32px 0;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
       ${sections}
     </table>
   </td></tr>
+  ${copy.cta ? ctaBlock(copy.cta, true) : ""}
   <tr><td style="padding:30px 32px 0;">
     ${paras(copy.outro, P)}
     <p style="margin:0 0 6px;font-size:15px;line-height:1.6;color:${MUTED};font-family:Georgia,'Times New Roman',serif;">&mdash; Bob</p>
@@ -146,11 +194,14 @@ export function renderNewsletter(
   const textSections = musings
     .map((m) => {
       const b = blurbFor(m);
-      return `${(b.heading || m.title).toUpperCase()}${m.loc ? `\n${m.loc}` : ""}\n\n${b.blurb || stripTags(m.excerpt)}\n\nRead the musing: ${musingUrl(m.id)}`;
+      return `${(b.heading || m.title).toUpperCase()}${m.loc ? `\n${m.loc}` : ""}\n\n${b.blurb || stripTags(m.excerpt)}\n\nRead the musing: ${musingUrl(m.id)}${b.cta?.label && b.cta.url ? `\n${b.cta.label}: ${b.cta.url}` : ""}`;
     })
     .join("\n\n— — —\n\n");
 
   const text = [
+    SITE.name,
+    tagline,
+    "",
     opts.subject,
     opts.preheader || null,
     "",
@@ -158,6 +209,7 @@ export function renderNewsletter(
     "",
     textSections,
     "",
+    copy.cta?.label && copy.cta.url ? `${copy.cta.label}: ${copy.cta.url}` : null,
     copy.outro,
     "— Bob",
     "",

@@ -81,6 +81,10 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
   const [done, setDone] = useState<{ subject: string; id: string } | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [html, setHtml] = useState<string>("");
+  const [ctas, setCtas] = useState<Record<string, { label: string; url: string }>>({});
+  const [ctaOpen, setCtaOpen] = useState<Record<string, boolean>>({});
+  const [cta, setCta] = useState<{ label: string; url: string }>({ label: "", url: "" });
+  const ctaPayload = () => ({ ctas: items.map((i) => ({ musingId: i.id, ...(ctas[i.id] ?? { label: "", url: "" }) })), cta });
   const [previewing, setPreviewing] = useState(false);
   const previewSeq = useRef(0);
 
@@ -90,13 +94,14 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
     const t = setTimeout(() => {
       if (!items.length) { setHtml(""); setPreviewing(false); return; }
       setPreviewing(true);
-      api<{ html: string }>("/api/creator/email/preview", { method: "POST", json: { musingIds: items.map((i) => i.id), intro: preamble } })
+      api<{ html: string }>("/api/creator/email/preview", { method: "POST", json: { musingIds: items.map((i) => i.id), intro: preamble, ...ctaPayload() } })
         .then((r) => { if (seq === previewSeq.current) setHtml(r.html); })
         .catch(() => undefined)
         .finally(() => { if (seq === previewSeq.current) setPreviewing(false); });
     }, 350);
     return () => clearTimeout(t);
-  }, [items, preamble]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, preamble, ctas, cta]);
 
   function move(fromId: string, toId: string) {
     if (fromId === toId) return;
@@ -110,7 +115,7 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
   async function save() {
     setBusy("save"); setErr(null);
     try {
-      const r = await api<{ draft: { id: string; subject: string; html: string } }>("/api/creator/email/generate", { method: "POST", json: { musingIds: items.map((i) => i.id), intro: preamble } });
+      const r = await api<{ draft: { id: string; subject: string; html: string } }>("/api/creator/email/generate", { method: "POST", json: { musingIds: items.map((i) => i.id), intro: preamble, ...ctaPayload() } });
       const file = `newsletter-${new Date().toISOString().slice(0, 10)}.html`;
       download(file, r.draft.html, "text/html");
       setDone({ subject: r.draft.subject, id: r.draft.id });
@@ -129,14 +134,23 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
             <label className="es-label">Pieces · {items.length} · drag to reorder</label>
             <ul className="nl__list">
               {items.map((it, i) => (
-                <li key={it.id} draggable className={`nl__item${drag === it.id ? " is-drag" : ""}`}
+                <li key={it.id} draggable={!ctaOpen[it.id]} className={`nl__item${drag === it.id ? " is-drag" : ""}`}
                   onDragStart={() => setDrag(it.id)} onDragEnd={() => setDrag(null)}
                   onDragOver={(e) => { e.preventDefault(); if (drag) move(drag, it.id); }}>
                   <span className="nl__grip" aria-hidden="true">⋮⋮</span>
                   <span className="nl__n">{i + 1}</span>
                   {it.img ? <img src={it.img} alt="" /> : <span className="nl__noimg" />}
                   <span className="nl__t"><b>{it.title}</b><small>{it.date}{i === 0 ? " · lead piece, its picture is the hero" : ""}</small></span>
-                  <button type="button" className="es-msg__x" aria-label="Remove from this issue" onClick={() => setItems((l) => l.filter((x) => x.id !== it.id))}>×</button>
+                  <span className="nl__item-actions">
+                    <button type="button" className={`nl__ctabtn${ctas[it.id]?.label && ctas[it.id]?.url ? " is-on" : ""}`} onClick={() => setCtaOpen((o) => ({ ...o, [it.id]: !o[it.id] }))} title="Add a button under this piece">{ctas[it.id]?.label && ctas[it.id]?.url ? "Button ✓" : "+ Button"}</button>
+                    <button type="button" className="es-msg__x" aria-label="Remove from this issue" onClick={() => setItems((l) => l.filter((x) => x.id !== it.id))}>×</button>
+                  </span>
+                  {ctaOpen[it.id] && (
+                    <span className="nl__cta" onPointerDown={(e) => e.stopPropagation()}>
+                      <input className="ads-input" placeholder="Button says… (e.g. See the print)" value={ctas[it.id]?.label ?? ""} onChange={(e) => setCtas((c) => ({ ...c, [it.id]: { label: e.target.value, url: c[it.id]?.url ?? "" } }))} />
+                      <input className="ads-input" placeholder="and goes to… (link)" value={ctas[it.id]?.url ?? ""} onChange={(e) => setCtas((c) => ({ ...c, [it.id]: { label: c[it.id]?.label ?? "", url: e.target.value } }))} />
+                    </span>
+                  )}
                 </li>
               ))}
               {!items.length && <li className="au-muted">Nothing left in this issue. Close and star a Musing.</li>}
@@ -151,7 +165,12 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
                 <button type="button" className="es-option es-option--quiet" onClick={() => setOpts([])}>Keep mine</button>
               </div>
             )}
-            <p className="es-hint">Leave it blank and the studio writes the opening. Subject lines, blurbs and the sign-off are written when you save; the preview shows each piece&rsquo;s own excerpt until then.</p>
+            <div className="es-field__head" style={{ marginTop: 14 }}><label className="es-label">One button for the whole issue · optional</label></div>
+            <div className="nl__cta nl__cta--whole">
+              <input className="ads-input" placeholder="Button says… (e.g. Order the signed book)" value={cta.label} onChange={(e) => setCta((c) => ({ ...c, label: e.target.value }))} />
+              <input className="ads-input" placeholder="and goes to… (link)" value={cta.url} onChange={(e) => setCta((c) => ({ ...c, url: e.target.value }))} />
+            </div>
+            <p className="es-hint">Leave the preamble blank and the studio writes the opening. Subject lines, blurbs and the sign-off are written when you save; the preview shows each piece&rsquo;s own excerpt until then.</p>
           </div>
           </div>
           <div className="nl__preview">
