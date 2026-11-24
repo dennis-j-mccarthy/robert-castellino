@@ -146,7 +146,7 @@ export default function BlogPosts({ pillars, library, musingPillars }: Props) {
                       <button type="button" className="btn btn--gold ads-btn-xs" disabled={!!busy} onClick={() => void setPublished(m, true)}>Publish</button>
                     )}
                     <Link className="btn btn--ghost ads-btn-xs" href={`/creator/social?musingId=${m.id}${m.img ? `&imageId=${encodeURIComponent(m.img)}` : ""}${pid ? `&pillar=${pid}` : ""}`}>Post</Link>
-                    <Link className="btn btn--ghost ads-btn-xs" href={`/creator/email?musingIds=${m.id}`}>Email</Link>
+                    <Link className="btn btn--ghost ads-btn-xs" href={`/creator/newsletter?musingIds=${m.id}`}>Email</Link>
                     {m.published && <a className="btn btn--ghost ads-btn-xs" href={`/musings/${m.id}`} target="_blank" rel="noreferrer">View ↗</a>}
                     <button type="button" className="btn btn--ghost ads-btn-xs" disabled={!!busy} onClick={() => void remove(m)}>Delete</button>
                   </td>

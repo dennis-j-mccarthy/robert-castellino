@@ -326,3 +326,27 @@ model Keyword {
 
   @@index([kind, priority])
 }
+
+// ───────── CREATOR PLAN (tool 9) — migration 0011 ─────────
+// The rhythm: how often posts / newsletter / email / leads / blog go out,
+// which days, how much the studio does on its own, and when the weekly plan
+// arrives. `settings` is PlanSettings JSON (src/lib/creator/plan.ts).
+model CreatorPlan {
+  id        String   @id @default("default")
+  settings  Json     @default("{}")
+  updatedAt DateTime @updatedAt
+}
+
+/// One row per week (Monday 00:00 Mountain, stored as UTC instant): the plan
+/// built from CreatorPlan on Monday at noon and emailed. `items` is
+/// PlanItem[] JSON; the home screen (/creator) renders it.
+model WeeklyPlan {
+  id        String    @id @default(cuid())
+  weekStart DateTime  @unique
+  items     Json      @default("[]")
+  summary   String    @default("")
+  emailedTo String?
+  emailedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

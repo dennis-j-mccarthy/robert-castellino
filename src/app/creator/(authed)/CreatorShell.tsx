@@ -2,84 +2,82 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
 /*
-  The Throughline shell for /creator: left rail (brand → the thread of
-  grouped nav nodes → "Stays in Meta"), a sticky top bar with the
-  breadcrumb, quiet Admin / Sign out links and the theme toggle, and the
-  content column. Light by default; dark is `data-theme="dark"` on the
-  `.tl` root, remembered in localStorage. Pure presentation — the session
-  gate lives in layout.tsx.
+  The creator studio shell: a top sequence. Nine numbered tools run left to
+  right in the order the work happens, each with an icon, its number, its
+  name and a three-word explainer. A check marks a tool that is set up, the
+  orange underline marks where you are, "soon" marks a tool that isn't built
+  yet (it still has a page). Home ("This week") sits top right with Admin,
+  Sign out, More and the theme toggle. Pure presentation — the session gate
+  lives in layout.tsx.
 */
 
 const THEME_KEY = "tl-theme";
 const THEME_EVENT = "tl-theme-change";
 type Theme = "light" | "dark";
 function readTheme(): Theme {
-  try {
-    return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light";
-  } catch {
-    return "light";
-  }
+  try { return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"; } catch { return "light"; }
 }
 function subscribeTheme(cb: () => void) {
   window.addEventListener(THEME_EVENT, cb);
   window.addEventListener("storage", cb);
-  return () => {
-    window.removeEventListener(THEME_EVENT, cb);
-    window.removeEventListener("storage", cb);
-  };
+  return () => { window.removeEventListener(THEME_EVENT, cb); window.removeEventListener("storage", cb); };
 }
+
 const PAGE_ID = "134235743309639";
 const AD_ACCOUNT = "1788471615529613";
 const CAMPAIGN_ID = "120251354161250171";
 
 export type NavCounts = { library: number | null; queued: number | null };
 
-type Node = { href: string; label: string; chip?: string | null; chipWarn?: boolean };
-type Group = { label: string; nodes: Node[] };
+type Tool = { n: number; href: string; label: string; hint: string; icon: ReactNode; soon?: boolean; match?: string[] };
 
-function buildNav(counts: NavCounts): Group[] {
-  return [
-    { label: "Strategy", nodes: [{ href: "/creator/essence", label: "Essence" }, { href: "/creator/keywords", label: "Keywords" }, { href: "/creator/competitors", label: "Competitors" }] },
-    { label: "Creative", nodes: [{ href: "/creator/library", label: "Library", chip: counts.library != null ? String(counts.library) : null }] },
-    {
-      label: "Channels",
-      nodes: [
-        { href: "/creator/blog", label: "Blog" },
-        { href: "/creator/email", label: "Email" },
-        { href: "/creator/social", label: "Post machine", chip: counts.queued ? `${counts.queued} queued` : null },
-        { href: "/creator/ads", label: "Paid social" },
-        { href: "/creator/google-ads", label: "Google Ads" },
-      ],
-    },
-  ];
-}
+const I = {
+  essence: <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" /></svg>,
+  library: <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 16l5-5 4 4 3-3 6 6" /></svg>,
+  blog: <svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16z" /></svg>,
+  posts: <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /></svg>,
+  email: <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>,
+  newsletter: <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>,
+  ads: <svg viewBox="0 0 24 24"><path d="M3 11v2a2 2 0 0 0 2 2h2l6 4V5L7 9H5a2 2 0 0 0-2 2z" /><path d="M17 9a4 4 0 0 1 0 6" /></svg>,
+  leads: <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" /><path d="M2 20a7 7 0 0 1 14 0" /><path d="M17 4a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6" /></svg>,
+  plan: <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>,
+  home: <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>,
+};
 
-const STAYS_IN_META: Array<[string, string]> = [
-  ["Comments & DMs", `https://business.facebook.com/latest/inbox/all?asset_id=${PAGE_ID}`],
-  ["Budgets & bidding", `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${AD_ACCOUNT}&selected_campaign_ids=${CAMPAIGN_ID}`],
-  ["Build audiences", `https://adsmanager.facebook.com/adsmanager/audiences?act=${AD_ACCOUNT}`],
+const TOOLS: Tool[] = [
+  { n: 1, href: "/creator/essence", label: "Essence", hint: "who you are", icon: I.essence },
+  { n: 2, href: "/creator/library", label: "Library", hint: "your pictures", icon: I.library },
+  { n: 3, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
+  { n: 4, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
+  { n: 5, href: "/creator/email", label: "Email", hint: "one note", icon: I.email, soon: true },
+  { n: 6, href: "/creator/newsletter", label: "Newsletter", hint: "the issue", icon: I.newsletter },
+  { n: 7, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
+  { n: 8, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads, soon: true },
+  { n: 9, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
 ];
 
-const Chev = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-);
-const Out = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>
-);
+// Tools that are "set up" show a check. Kept simple and honest: the ones
+// that have real data behind them today.
+const DONE = new Set([1, 2, 3, 7]);
+
+const MORE: Array<{ label: string; href: string; ext?: boolean }> = [
+  { label: "Keywords", href: "/creator/keywords" },
+  { label: "Competitors", href: "/creator/competitors" },
+  { label: "Google Ads", href: "/creator/google-ads" },
+  { label: "Comments & DMs (Meta)", href: `https://business.facebook.com/latest/inbox/all?asset_id=${PAGE_ID}`, ext: true },
+  { label: "Budgets & bidding (Meta)", href: `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${AD_ACCOUNT}&selected_campaign_ids=${CAMPAIGN_ID}`, ext: true },
+  { label: "Build audiences (Meta)", href: `https://adsmanager.facebook.com/adsmanager/audiences?act=${AD_ACCOUNT}`, ext: true },
+  { label: "Admin", href: "/admin" },
+];
 
 export default function CreatorShell({ children, fontClass, counts }: { children: ReactNode; fontClass: string; counts: NavCounts }) {
   const path = usePathname() ?? "";
-  const nav = buildNav(counts);
-  const flat = nav.flatMap((g) => g.nodes.map((n) => ({ ...n, group: g.label })));
-  const activeIdx = flat.findIndex((n) => path === n.href || path.startsWith(n.href + "/"));
-  const active = activeIdx >= 0 ? flat[activeIdx] : null;
-  const leaf = path.startsWith("/creator/blog/posts") ? "Musings" : active?.label ?? "Creator";
+  const active = TOOLS.find((t) => (t.match ?? [t.href]).some((m) => path === m || path.startsWith(m + "/")));
+  const isHome = path === "/creator" || path === "/creator/";
 
-  // Theme lives in localStorage; the server always renders light and the
-  // inline script below paints the remembered choice before hydration.
   const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light" as const);
   const toggleTheme = useCallback(() => {
     const next = readTheme() === "dark" ? "light" : "dark";
@@ -87,113 +85,51 @@ export default function CreatorShell({ children, fontClass, counts }: { children
     window.dispatchEvent(new Event(THEME_EVENT));
   }, []);
 
-  // The mobile drawer is open only for the path it was opened on, so a
-  // navigation closes it without an effect.
-  const [openFor, setOpenFor] = useState<string | null>(null);
-  const open = openFor === path;
-  const rootRef = useRef<HTMLDivElement>(null);
-  const threadRef = useRef<HTMLElement>(null);
-  const [line, setLine] = useState<{ top: number; height: number; fill: number } | null>(null);
+  // "More" menu: closes on outside click, Escape, and navigation.
+  const [moreFor, setMoreFor] = useState<string | null>(null);
+  const moreOpen = moreFor === path;
+  const moreRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onDoc = (e: MouseEvent) => { if (!moreRef.current?.contains(e.target as Node)) setMoreFor(null); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMoreFor(null); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
+  }, [moreOpen]);
 
-  // The thread line: grey from the first dot to the last, orange up to the active one.
-  useLayoutEffect(() => {
-    const t = threadRef.current;
-    if (!t) return;
-    const measure = () => {
-      const dots = Array.from(t.querySelectorAll<HTMLElement>(".tl-dot"));
-      if (dots.length < 2 || getComputedStyle(dots[0]).display === "none") { setLine(null); return; }
-      const tb = t.getBoundingClientRect();
-      const c = (el: HTMLElement) => el.getBoundingClientRect().top - tb.top + t.scrollTop + el.offsetHeight / 2;
-      const first = c(dots[0]);
-      const last = c(dots[dots.length - 1]);
-      const act = activeIdx >= 0 && dots[activeIdx] ? c(dots[activeIdx]) : first;
-      setLine({ top: first, height: last - first, fill: Math.max(0, act - first) });
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [activeIdx]);
+  // Keep the active tool in view on narrow screens.
+  const seqRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = seqRef.current?.querySelector<HTMLElement>(".ts-tool.is-on");
+    el?.scrollIntoView({ block: "nearest", inline: "center" });
+  }, [path]);
 
   return (
-    <div ref={rootRef} className={`tl ${fontClass}`} data-theme={theme === "dark" ? "dark" : undefined} suppressHydrationWarning>
-      {/* Paint the remembered theme before hydration so dark mode doesn't flash. */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `try{if(localStorage.getItem(${JSON.stringify(THEME_KEY)})==="dark")document.currentScript.parentElement.setAttribute("data-theme","dark")}catch(e){}`,
-        }}
-      />
-      <div className="tl-app">
-        <aside className={`tl-rail${open ? " is-open" : ""}`}>
-          <div className="tl-brand">
-            <Link href="/creator" className="tl-brand__btn" aria-label="Creator home">
+    <div className={`tl ${fontClass}`} data-theme={theme === "dark" ? "dark" : undefined} suppressHydrationWarning>
+      <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem(${JSON.stringify(THEME_KEY)})==="dark")document.currentScript.parentElement.setAttribute("data-theme","dark")}catch(e){}` }} />
+      <div className="ts-app">
+        <header className="ts-top">
+          <div className="ts-bar">
+            <Link href="/creator" className="ts-brand" aria-label="This week, home">
               <span className="tl-mark">RC</span>
-              <span style={{ minWidth: 0 }}>
-                <span className="tl-brand__name">Robert Castellino</span>
-                <span className="tl-brand__ind">Fine-art landscape · Boulder, CO</span>
-              </span>
-              <svg className="tl-brand__chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M7 10l5 5 5-5" /></svg>
+              <span className="ts-brand__t"><b>Robert Castellino</b><span>Creator studio</span></span>
             </Link>
-            <button type="button" className="tl-burger" aria-expanded={open} aria-controls="tl-thread" aria-label="Menu" onClick={() => setOpenFor(open ? null : path)}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-              </svg>
-            </button>
-          </div>
-
-          <nav className="tl-thread" id="tl-thread" ref={threadRef} aria-label="Creator sections">
-            {line && (
-              <>
-                <span className="tl-line" style={{ top: line.top, height: line.height }} aria-hidden="true" />
-                <span className="tl-fill" style={{ top: line.top, height: line.fill }} aria-hidden="true" />
-              </>
-            )}
-            {nav.map((g) => (
-              <div className="tl-grp" key={g.label}>
-                <div className="tl-gl">{g.label}</div>
-                {g.nodes.map((n) => {
-                  const i = flat.findIndex((f) => f.href === n.href);
-                  const cls = i === activeIdx ? " is-active" : activeIdx > i ? " is-passed" : "";
-                  return (
-                    <Link key={n.href} href={n.href} className={`tl-node${cls}`} aria-current={i === activeIdx ? "page" : undefined}>
-                      <span className="tl-dot" aria-hidden="true" />
-                      <span className="tl-node__label">{n.label}</span>
-                      {n.chip && <span className={`tl-badge${n.chipWarn ? " tl-badge--warn" : ""}`}>{n.chip}</span>}
-                    </Link>
-                  );
-                })}
-              </div>
-            ))}
-          </nav>
-
-          <div className="tl-metabox">
-            <div className="tl-metabox__h">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" /></svg>
-              Stays in Meta
-            </div>
-            {STAYS_IN_META.map(([label, href]) => (
-              <a key={href} href={href} target="_blank" rel="noreferrer">{label}<Out /></a>
-            ))}
-          </div>
-        </aside>
-
-        <div className="tl-main">
-          <header className="tl-top">
-            <div className="tl-crumb">
-              <span className="tl-crumb__root">Robert Castellino</span>
-              <span className="tl-crumb__root"><Chev /></span>
-              {active && (
-                <>
-                  <span>{active.group}</span>
-                  <Chev />
-                </>
+            <div className="ts-bar__sp" />
+            <Link href="/creator" className={`ts-home${isHome ? " is-on" : ""}`}>{I.home}<span>This week</span></Link>
+            <div className="ts-more" ref={moreRef}>
+              <button type="button" className="tl-quiet" aria-expanded={moreOpen} aria-haspopup="menu" onClick={() => setMoreFor(moreOpen ? null : path)}>More ▾</button>
+              {moreOpen && (
+                <div className="ts-menu" role="menu">
+                  {MORE.map((m) => m.ext ? (
+                    <a key={m.href} role="menuitem" href={m.href} target="_blank" rel="noreferrer">{m.label} ↗</a>
+                  ) : (
+                    <Link key={m.href} role="menuitem" href={m.href} onClick={() => setMoreFor(null)}>{m.label}</Link>
+                  ))}
+                  <form action="/api/admin/logout" method="post"><button type="submit" role="menuitem">Sign out</button></form>
+                </div>
               )}
-              <b>{leaf}</b>
             </div>
-            <div className="tl-top__sp" />
-            <Link href="/admin" className="tl-quiet">← Admin</Link>
-            <form action="/api/admin/logout" method="post" className="tl-quiet-form">
-              <button type="submit" className="tl-quiet">Sign out</button>
-            </form>
             <button type="button" className="tl-icbtn" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"} title="Theme">
               {theme === "dark" ? (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
@@ -201,9 +137,23 @@ export default function CreatorShell({ children, fontClass, counts }: { children
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
               )}
             </button>
-          </header>
-          <main className="tl-view">{children}</main>
-        </div>
+          </div>
+          <nav className="ts-seq" ref={seqRef} aria-label="The nine tools, in order">
+            {TOOLS.map((t) => {
+              const on = active?.n === t.n;
+              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 4 && counts.queued ? counts.queued : null;
+              return (
+                <Link key={t.n} href={t.href} className={`ts-tool${on ? " is-on" : ""}${t.soon ? " is-soon" : ""}${DONE.has(t.n) ? " is-done" : ""}`} aria-current={on ? "page" : undefined}>
+                  <span className="ts-tool__ic" aria-hidden="true">{t.icon}</span>
+                  <span className="ts-tool__n">{t.n}{DONE.has(t.n) && <i aria-label="set up"> ✓</i>}</span>
+                  <span className="ts-tool__l">{t.label}{chip != null && <span className="ts-tool__chip">{chip}</span>}</span>
+                  <span className="ts-tool__h">{t.hint}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </header>
+        <main className="tl-view ts-view">{children}</main>
       </div>
     </div>
   );
