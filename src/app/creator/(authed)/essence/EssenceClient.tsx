@@ -7,14 +7,13 @@ import type { BlogTone } from "@/lib/creator/blog-tone";
 import { pillarTagCls, type BrandEssenceRecord, type CoreMessage, type Pillar } from "@/lib/creator/pillars";
 
 /*
-  Tool 1 · Essence. Hub and spokes, with guidance and AI assist.
-
-  The hub (the line, promise, purpose, call to action) sits on top. Five
-  spokes open one at a time as accordions: Always / Never, Voice, Who it's
-  for, Pillars & messages (each pillar an accordion with its core messages
-  nested inside), and the Tone brief, which is written from everything
-  above. Every field has a one-line hint and a "Suggest" button; nothing the
-  model suggests is saved until Bob clicks it.
+  Tool 1 · Essence. Six accordions, one open at a time, with guidance and
+  AI assist: Essence and Value Proposition (the line, promise, purpose, call
+  to action), Always / Never, Voice, Who it's for, Pillars & messages (each
+  pillar an accordion with its core messages nested inside), and the Tone
+  brief, which is written from everything above. Every field has a one-line
+  hint and a "Suggest" button; nothing the model suggests is saved until Bob
+  clicks it.
 */
 
 interface Props {
@@ -26,14 +25,15 @@ interface Props {
 }
 
 type Draft = Pick<BrandEssenceRecord, "line" | "purpose" | "promise" | "cta" | "doList" | "dontList" | "voice">;
-type SpokeId = "lists" | "voice" | "who" | "pillars" | "tone";
+type SpokeId = "core" | "lists" | "voice" | "who" | "pillars" | "tone";
 
 const SPOKES: Array<{ id: SpokeId; n: string; title: string; hint: string }> = [
-  { id: "lists", n: "a", title: "Always say · Never say", hint: "Short phrases that keep every caption on the rails." },
-  { id: "voice", n: "b", title: "Voice", hint: "Three dials. Move one and hear a sentence change." },
-  { id: "who", n: "c", title: "Who it's for", hint: "The reader every piece is written to." },
-  { id: "pillars", n: "d", title: "Pillars and their messages", hint: "The five themes, and the sentences that live under each." },
-  { id: "tone", n: "e", title: "Tone brief", hint: "Written from the cards above. Regenerate it when they change." },
+  { id: "core", n: "1", title: "Essence and Value Proposition", hint: "The line, the promise, the purpose, and the call to action." },
+  { id: "lists", n: "2", title: "Always say · Never say", hint: "Short phrases that keep every caption on the rails." },
+  { id: "voice", n: "3", title: "Voice", hint: "Three dials. Move one and hear a sentence change." },
+  { id: "who", n: "4", title: "Who it's for", hint: "The reader every piece is written to." },
+  { id: "pillars", n: "5", title: "Pillars and their messages", hint: "The five themes, and the sentences that live under each." },
+  { id: "tone", n: "6", title: "Tone brief", hint: "Written from the sections above. Regenerate it when they change." },
 ];
 
 /* ───────── small pieces ───────── */
@@ -130,7 +130,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
   const clear = (key: string) => setOpts((o) => ({ ...o, [key]: [] }));
 
   /* spokes: one open at a time */
-  const [open, setOpen] = useState<SpokeId | null>("pillars");
+  const [open, setOpen] = useState<SpokeId | null>("core");
 
   /* pillars */
   const [pillars, setPillars] = useState<Pillar[]>(initialPillars);
@@ -250,24 +250,13 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
       <div className="es-guide">
-        <div><b>1</b><span>Fill the hub. The line is the sentence a stranger could repeat; the promise is what every buyer can count on.</span></div>
-        <div><b>2</b><span>Open each spoke, fix what&rsquo;s wrong, press <i>✦ Suggest</i> when you want options. Nothing is saved until you click one.</span></div>
-        <div><b>3</b><span>Read the tone brief at the end. It is written from everything above; regenerate it when the cards change.</span></div>
+        <div><b>1</b><span>Start with Essence and Value Proposition. The line is the sentence a stranger could repeat; the promise is what every buyer can count on.</span></div>
+        <div><b>2</b><span>Open each section, fix what&rsquo;s wrong, press <i>✦ Suggest</i> when you want options. Nothing is saved until you click one.</span></div>
+        <div><b>3</b><span>Read the tone brief at the end. It is written from everything above; regenerate it when the sections change.</span></div>
         <div className="es-guide__state">{saved === "saving" ? "Saving…" : saved === "saved" ? "Saved" : essence.fromDb ? "Saved" : "Seed defaults"}</div>
       </div>
 
-      {/* ── the hub ── */}
-      <section className="tl-card es-hub">
-        <div className="es-hub__kick">The hub</div>
-        {field("line", "The line", "Under ten words. True, specific, no adjectives doing the work.")}
-        <div className="es-hub__grid">
-          {field("promise", "Promise", "What every buyer can count on. Concrete: a real place, signed by hand.", 3)}
-          {field("purpose", "Purpose", "Why the work exists, in his voice. Not a mission statement.", 3)}
-        </div>
-        {field("cta", "Call to action, when one is wanted", "One quiet sentence. No urgency words.")}
-      </section>
-
-      {/* ── the spokes ── */}
+      {/* ── the six sections ── */}
       <div className="es-spokes">
         {SPOKES.map((s) => {
           const isOpen = open === s.id;
@@ -280,6 +269,16 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
               </button>
               {isOpen && (
                 <div className="es-spoke__body">
+                  {s.id === "core" && (
+                    <div className="es-core">
+                      {field("line", "The line", "Under ten words. True, specific, no adjectives doing the work.")}
+                      <div className="es-hub__grid">
+                        {field("promise", "Promise", "What every buyer can count on. Concrete: a real place, signed by hand.", 3)}
+                        {field("purpose", "Purpose", "Why the work exists, in his voice. Not a mission statement.", 3)}
+                      </div>
+                      {field("cta", "Call to action, when one is wanted", "One quiet sentence. No urgency words.")}
+                    </div>
+                  )}
                   {s.id === "lists" && (
                     <div className="es-two">
                       <div>
@@ -391,7 +390,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                       <div className="es-field__head">
                         <label className="es-label">What the writers are told</label>
                         <div className="ads-row">
-                          {ai && !ro && <Suggest label="Rewrite from the cards above" busy={thinking === "tone"} onClick={() => void rewriteTone()} />}
+                          {ai && !ro && <Suggest label="Rewrite from the sections above" busy={thinking === "tone"} onClick={() => void rewriteTone()} />}
                           {!ro && <button type="button" className="btn ads-btn-xs" onClick={() => setToneEdit((v) => !v)}>{toneEdit ? "Done" : "Edit by hand"}</button>}
                         </div>
                       </div>
@@ -411,7 +410,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                           <div><dt>Don&rsquo;t</dt><dd>{t.donts}</dd></div>
                         </dl>
                       )}
-                      <Hint>This is the brief every generator reads. It should say nothing the hub and spokes don&rsquo;t.</Hint>
+                      <Hint>This is the brief every generator reads. It should say nothing the sections above don&rsquo;t.</Hint>
                     </div>
                   )}
                 </div>

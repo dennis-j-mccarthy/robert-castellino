@@ -16,7 +16,7 @@ export default async function EssencePage() {
     <section className="admin-page cr-page">
       <div className="tl-eyebrow">1 · Essence</div>
       <h1>Who you are, in your words</h1>
-      <p>The hub on top, five spokes below. Everything the studio writes starts here; change a word and the next caption, Musing and newsletter follow it.</p>
+      <p>Six sections, top to bottom. Everything the studio writes starts here; change a word and the next caption, Musing and newsletter follow it.</p>
       <EssenceClient essence={essence} pillars={pillars} tone={tone.tone} db={isDatabaseConfigured()} ai={hasAnthropicKey()} />
     </section>
   );

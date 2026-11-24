@@ -1406,3 +1406,4 @@
 .tl .lb__savebar__msg { flex: 1; font-family: var(--tl-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--accent); }
 .tl .lb__savebar__msg.is-ok { color: var(--muted); }
 .tl .es-field__head--bare { justify-content: flex-end; margin-bottom: -26px; position: relative; z-index: 1; padding-right: 8px; }
+.tl .es-core { padding-top: 4px; }
