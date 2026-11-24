@@ -242,3 +242,22 @@ Newsletter = the old EmailMaker at `/creator/newsletter`). Sequence is now
 Known data nit seen 11/24: a Photo row points at
 `lep-19road-less-traveled-24x36.jpg` (404); the real file has no hyphen
 before 24x36. Fix the row's `img` in /admin/collections.
+
+### 2026-11-24, evening — nine tools, Audience, un-numbered nav, webpack build
+
+- Sequence: Essence · Brand kit · **Audience** (new, `/creator/audience`) ·
+  Blog · Posts · Email · Ads · Leads · Plan. Nav items carry no numbers
+  (Dennis); "✓ set up" marks tools with real data. Page eyebrows are just
+  the tool name.
+- **Audience** (`src/lib/creator/audience.ts`): the reader
+  (BlogSettings.tone.audience, Save/Discard, ✦ Suggest kind `reader`), the
+  email list (Subscriber counts), and the segments: `BrandEssence.audiences`
+  cards (the October plain-words write-ups: define/geo/age/best/caution)
+  matched by name to Meta `act_/customaudiences` (size, delivery status)
+  and to every ad set that targets them, with last-7-day spend/clicks/
+  purchases per set. Read-only toward Meta; "Open in Meta" per card.
+- Essence lost "Who it's for" (now the reader on Audience); five sections.
+- Pictures popup saves explicitly (Save/Discard, unsaved guard).
+- **Build runs `next build --webpack`.** Turbopack failed two Vercel builds
+  in a row with "next/font/google queries have exactly one entry" (a Google
+  Fonts fetch hiccup); webpack falls back to system fonts and warns.
