@@ -20,7 +20,7 @@ const IDS = ["keywords", "technical-seo", "competitors", "google-ads"] as const;
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ open?: string }> }) {
   const sp = await searchParams;
-  const initial = IDS.find((i) => i === sp.open) ?? IDS[0];
+  const initial = IDS.find((i) => i === sp.open) ?? IDS[0]; // Search opens on Keywords; Blog and Posts arrive closed
   return (
     <section className="admin-page cr-page">
       <div className="sr-head">

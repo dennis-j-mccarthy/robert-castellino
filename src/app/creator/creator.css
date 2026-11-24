@@ -1550,7 +1550,14 @@
 .tl .pa__t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .tl .pa__t b { font-size: 17px; }
 .tl .pa__t small { font-size: 12px; color: var(--muted); }
-.tl .pa__chev { font-size: 20px; color: var(--muted); width: 24px; text-align: center; }
+.tl .pa__ctl { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ink); border-radius: 999px; padding: 8px 12px 8px 16px; font-size: 13px; font-weight: 600; color: var(--ink); background: var(--surface); transition: background .15s, color .15s; }
+.tl .pa__ctl svg { transition: transform .2s; }
+.tl .pa__ctl.is-open { background: var(--ink); color: #f4efe6; }
+.tl .pa__ctl.is-open svg { transform: rotate(180deg); }
+.tl .pa__head:hover .pa__ctl { background: var(--accent); border-color: var(--accent); color: #1a1408; }
+.tl .pa__head:hover .pa__ctl.is-open { background: var(--ink); border-color: var(--ink); color: #f4efe6; }
+.tl .pa__head { padding: 18px 20px; }
+.tl .pa:not(.is-open) .pa__head:hover { background: var(--accent-soft); }
 .tl .pa__body { padding: 4px 20px 22px; border-top: 1px solid var(--line); }
 .tl .pa__body .pc { margin: 14px 0 6px; }
 .tl .pa__body .pm { margin-top: 12px; }
