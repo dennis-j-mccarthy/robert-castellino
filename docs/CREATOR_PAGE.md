@@ -310,3 +310,18 @@ before 24x36. Fix the row's `img` in /admin/collections.
   as writing by hand. "Steer the writing" (core message, topic, Musing id)
   lives in a collapsed details. Drafts and Queue lists are gone from the
   maker: the card board above covers them. CSS `pm-*`.
+
+### 2026-11-24, late — nav order, Posts accordions, newsletter preview
+
+- Nav: Essence · Brand kit · Audience · Blog · **Email** · **Posts** · Ads ·
+  Leads · Plan (Email moved to 5, Posts to 6; the queued chip follows Posts).
+- Posts page = `social/PostsAccordion.tsx`: ① Make a post (open on
+  arrival) ② My posts (the card board). One open at a time; opening one
+  scrolls its header to the top. "+ New post" removed from the board.
+- Blog → Make newsletter popup now has the issue on the right in an
+  iframe (`srcDoc`, sandboxed), redrawn 350ms after any drag or keystroke
+  via `POST /api/creator/email/preview` (deterministic copy, no model,
+  masthead "Notes from the studio · Month Year"). Popup is 1240px wide.
+- Email is one tool again: `EmailTabs.tsx` deleted, the Newsletter tab is
+  gone from Email and from `/creator/newsletter` (that page still serves
+  the saved copies and is linked from the popup's "Saved" state only).
