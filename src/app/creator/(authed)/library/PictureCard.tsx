@@ -77,12 +77,18 @@ export default function PictureCard({ item, pillars, messages, db, ai, onClose, 
             {item.mockup && <div className="ads-notice ads-notice--err" style={{ marginTop: 10 }}>This is an AI mockup of the book. It is never used in ads or posts — the real plates are.</div>}
           </div>
           <div className="lb__mform">
-            {ai && !item.mockup && (
-              <div className="ap__describe">
-                <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || busy || describing} onClick={() => void describe()}>{describing ? "Looking…" : "✦ Describe with AI"}</button>
-                <span>Fills the fields from the picture. Read them, then Save.</span>
+            {ai && !item.mockup && (!f.title ? (
+              <div className="ap__blank">
+                <b>No caption yet.</b>
+                <span>Let the studio look at the picture and write the title, place and blurb. You read them, fix anything, then Save.</span>
+                <button type="button" className="btn btn--gold ads-btn-sm" disabled={!db || busy || describing} onClick={() => void describe()}>{describing ? "Looking at the picture…" : "✦ Make a caption with AI"}</button>
               </div>
-            )}
+            ) : (
+              <div className="ap__describe">
+                <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || busy || describing} onClick={() => void describe()}>{describing ? "Looking…" : "✦ Describe again with AI"}</button>
+                <span>Rewrites the fields from the picture. Read them, then Save.</span>
+              </div>
+            ))}
             {caption && (
               <div className="ap__caption">
                 <b>A caption, ready for a post</b>{caption.confidence !== "high" && <small> · place is a {caption.confidence} guess, check it</small>}

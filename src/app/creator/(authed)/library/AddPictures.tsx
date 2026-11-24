@@ -21,8 +21,11 @@ export default function AddPictures({ imageAi, onAdded }: { imageAi: boolean; on
   const [jobs, setJobs] = useState<Job[]>([]);
   const [over, setOver] = useState(false);
   const [showAi, setShowAi] = useState(false);
+  const camRef = useRef<HTMLInputElement>(null);
+  const [lastPreview, setLastPreview] = useState<string | null>(null);
 
   async function uploadFiles(files: File[]) {
+    if (files[0]) setLastPreview(URL.createObjectURL(files[0]));
     const imgs = files.filter((f) => f.type.startsWith("image/"));
     if (!imgs.length) return;
     for (const f of imgs) {
@@ -65,14 +68,22 @@ export default function AddPictures({ imageAi, onAdded }: { imageAi: boolean; on
       onDrop={(e) => { e.preventDefault(); setOver(false); void uploadFiles(Array.from(e.dataTransfer.files)); }}
     >
       <div className="ap__row">
-        <div className="ap__text">
-          <b>Add pictures</b>
-          <span>Drop files here, paste one from your clipboard, or choose from your computer. They land in &ldquo;Studio uploads&rdquo; and are ready for posts right away.</span>
-        </div>
+        <label className="ap__tap">
+          <input ref={inputRef} type="file" accept="image/*" multiple className="sr-only" onChange={(e) => { void uploadFiles(Array.from(e.target.files ?? [])); e.target.value = ""; }} />
+          {lastPreview ? (
+            // eslint-disable-next-line @next/next/no-img-element -- just-added preview
+            <img src={lastPreview} alt="" />
+          ) : (
+            <span className="ap__plus" aria-hidden="true">+</span>
+          )}
+          <b>{lastPreview ? "Tap to add another" : "Tap to add a photo"}</b>
+          <span>From your camera roll or computer. Drop files here or paste one. They land in &ldquo;Studio uploads&rdquo;, ready for posts.</span>
+        </label>
         <div className="ap__actions">
-          <button type="button" className="btn btn--gold ads-btn-sm" onClick={() => inputRef.current?.click()}>Choose files</button>
-          <button type="button" className="btn ads-btn-sm" onClick={() => setShowAi((v) => !v)}>Create with AI</button>
-          <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={(e) => { void uploadFiles(Array.from(e.target.files ?? [])); e.target.value = ""; }} />
+          <button type="button" className="btn btn--gold ads-btn-sm ap__big" onClick={() => inputRef.current?.click()}>Choose photos</button>
+          <button type="button" className="btn ads-btn-sm ap__big" onClick={() => camRef.current?.click()}>Take a photo</button>
+          <button type="button" className="btn btn--ghost ads-btn-sm ap__big" onClick={() => setShowAi((v) => !v)}>Create with AI</button>
+          <input ref={camRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { void uploadFiles(Array.from(e.target.files ?? [])); e.target.value = ""; }} />
         </div>
       </div>
       {showAi && (

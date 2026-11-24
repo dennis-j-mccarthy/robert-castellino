@@ -36,6 +36,7 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
   const [notice, setNotice] = useState<NoticeState>(null);
   const [showMockups, setShowMockups] = useState(false);
   const [blankOnly, setBlankOnly] = useState(false);
+  const [captioning, setCaptioning] = useState<string | null>(null);
   const [collection, setCollection] = useState("");
   const [pillar, setPillar] = useState("");
   const [query, setQuery] = useState("");
@@ -68,6 +69,13 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
     await api("/api/creator/library", { method: "PATCH", json: { src: target.src, title: out.title, loc: out.loc, blurb: out.blurb, pillarId: out.pillarId || null, messageId: null } });
     applyLocal(target.src, { title: out.title, loc: out.loc, blurb: out.blurb, pillarId: out.pillarId || null, messageId: null });
     return out;
+  }
+
+  async function captionOne(it: LibraryItem) {
+    setCaptioning(it.src);
+    try { await describeOne(it); }
+    catch (e) { setNotice({ kind: "err", text: `${it.label}: ${errText(e)}` }); }
+    finally { setCaptioning(null); }
   }
 
   async function captionBlanks() {
@@ -112,7 +120,9 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
 
       <div className="lb__grid">
         {shown.map((img) => (
-          <button key={img.src} type="button" className={`lb__card${img.mockup ? " is-mockup" : ""}`} onClick={() => { setSel(img); setFormKey((k) => k + 1); }}>
+          <div key={img.src} role="button" tabIndex={0} className={`lb__card${img.mockup ? " is-mockup" : ""}${!img.title && !img.mockup ? " is-blank" : ""}`}
+            onClick={() => { setSel(img); setFormKey((k) => k + 1); }}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSel(img); setFormKey((k) => k + 1); } }}>
             <span className="lb__img">
               {/* eslint-disable-next-line @next/next/no-img-element -- library thumbs */}
               <img src={img.src} alt={img.title ?? img.label} loading="lazy" />
@@ -121,8 +131,13 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
             <span className="lb__cap">
               {img.title ? <b>{img.title}</b> : <b className="is-blank">No caption yet</b>}
               <small>{img.loc || (img.pillarId ? pillars.find((p) => p.id === img.pillarId)?.name : img.collection.replace(/-/g, " "))}</small>
+              {!img.title && !img.mockup && ai && db && (
+                <button type="button" className="lb__capbtn" disabled={captioning === img.src || batch?.running} onClick={(e) => { e.stopPropagation(); void captionOne(img); }}>
+                  {captioning === img.src ? "Looking…" : "✦ Make a caption with AI"}
+                </button>
+              )}
             </span>
-          </button>
+          </div>
         ))}
         {!shown.length && <div className="ads-hint">Nothing matches.</div>}
       </div>
