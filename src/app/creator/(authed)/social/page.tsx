@@ -19,7 +19,7 @@ export default async function SocialPage() {
       <h1>Posts</h1>
       <p>Every post as a card. Filter by what is live, what is waiting, and what is still a draft. The maker is below.</p>
       <PostBoard rows={rows} />
-      <h2 className="mc__h2" id="make">Make a post <span className="cr-h2sub">· picture, words, when</span></h2>
+      <h2 className="mc__h2" id="make">Make a post</h2>
       <PostMaker
         // The picker never offers mockups — adEligible is the real-plates set.
         library={lib.items.filter((i) => i.adEligible)}

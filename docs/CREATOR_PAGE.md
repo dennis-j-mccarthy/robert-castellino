@@ -298,3 +298,15 @@ before 24x36. Fix the row's `img` in /admin/collections.
   (Page token; `published_posts` + `scheduled_posts`). SocialDraft rows
   with a matching `metaPostId` fold into the Page card; drafts and failures
   still come from the table. First 12 shown, "Show 12 more" after that.
+
+### 2026-11-24, late — Post maker rebuilt
+
+- `social/PostMaker.tsx`: steps ① Where (Facebook / Instagram chips) ②
+  Picture ③ What it's about (pillar cards). Picking a pillar auto-calls
+  `/api/creator/social/captions` with `count: 5` (new body field, max 6)
+  and shows five editable tiles; "Use this" puts a tile on the post, and
+  editing the used tile edits the post. The post itself (right, sticky) is
+  the preview and its caption is a textarea, so typing there is the same
+  as writing by hand. "Steer the writing" (core message, topic, Musing id)
+  lives in a collapsed details. Drafts and Queue lists are gone from the
+  maker: the card board above covers them. CSS `pm-*`.

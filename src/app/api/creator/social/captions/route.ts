@@ -10,7 +10,7 @@ import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 /*
   POST /api/creator/social/captions — step 4 of the Post maker.
   Body: { pillarId, platform, messageId?, imageSrc?, musingId?, topic? }
-  Returns: { captions: string[3], pillarId, platform }
+  Returns: { captions: string[count], pillarId, platform }   count defaults to 3, max 6
 
   Three options for ONE platform in Bob's voice. `imageSrc` pulls the
   library item's title / place / blurb so the copy can name what's in the
@@ -20,12 +20,12 @@ import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 export const runtime = "nodejs";
 export const maxDuration = 120;
 
-const COUNT = 3;
+const DEFAULT_COUNT = 3;
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
   properties: {
-    captions: { type: "array", items: { type: "string" }, description: "Exactly three distinct, ready-to-post captions for the named platform." },
+    captions: { type: "array", items: { type: "string" }, description: "The requested number of distinct, ready-to-post captions for the named platform." },
   },
   required: ["captions"],
 };
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   const blocked = await creatorGuard();
   if (blocked) return blocked;
   if (!hasAnthropicKey()) return NextResponse.json({ error: AI_NOT_CONFIGURED }, { status: 503 });
-  const body = await readJson<{ pillarId?: string; platform?: string; messageId?: string; imageSrc?: string; musingId?: string; topic?: string }>(req);
+  const body = await readJson<{ pillarId?: string; platform?: string; messageId?: string; imageSrc?: string; musingId?: string; topic?: string; count?: number }>(req);
   if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
 
   const ctx = await loadBrandContext({
@@ -44,6 +44,7 @@ export async function POST(req: Request) {
   if (!ctx.pillar) return NextResponse.json({ error: "Choose a pillar first (step 3)." }, { status: 400 });
   const platform: SocialPlatform = isSocialPlatform(body.platform) ? body.platform : "facebook";
   const topic = String(body.topic ?? "").trim().slice(0, 600);
+  const COUNT = Math.min(6, Math.max(1, Number(body.count) || DEFAULT_COUNT));
 
   // What's in the frame, from the library's enrichment.
   let image: string | null = null;
@@ -77,7 +78,7 @@ export async function POST(req: Request) {
   try {
     const data = await generateJson<{ captions?: unknown }>({
       system: brandSystemPrompt(ctx, {
-        role: "You write Bob's social posts. Write for ONE platform at a time, in its native shape. Each of the three options must take a different angle — not three rewordings of one idea. Describe only what the image notes say is in the frame; never invent a place or a time.",
+        role: "You write Bob's social posts. Write for ONE platform at a time, in its native shape. Each option must take a different angle — not rewordings of one idea. Vary length too: at least one short (one or two lines), at least one that tells a small story. Describe only what the image notes say is in the frame; never invent a place or a time.",
         extra: `PLATFORM:\n${PLATFORM_BRIEF[platform]}`,
       }),
       user: `Write exactly ${COUNT} ${PLATFORM_LABELS[platform]} caption options for the "${ctx.pillar.name}" pillar.
