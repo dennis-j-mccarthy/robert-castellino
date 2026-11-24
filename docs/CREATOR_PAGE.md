@@ -325,3 +325,11 @@ before 24x36. Fix the row's `img` in /admin/collections.
 - Email is one tool again: `EmailTabs.tsx` deleted, the Newsletter tab is
   gone from Email and from `/creator/newsletter` (that page still serves
   the saved copies and is linked from the popup's "Saved" state only).
+- Blog page = same two-panel pattern via the shared
+  `src/components/creator/TwoAccordion.tsx` (Posts uses it too): ① Write a
+  Musing (open on arrival) ② My Musings. The "+ New Musing" card opens
+  panel 1 through `openPanel("write")` (a window event).
+- Newsletter template (`src/lib/creator/newsletter.ts`): logo + tagline
+  masthead (Essence line, fallback in code), placeholder preamble in the
+  preview when the intro is blank, optional `cta` per blurb and one for the
+  whole issue (`newsletter-ctas.ts` parses them; both routes accept them).
