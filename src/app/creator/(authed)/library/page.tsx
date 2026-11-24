@@ -22,7 +22,7 @@ export default async function LibraryPage() {
         {lib.counts.mockups ? ` · ${lib.counts.mockups} mockup${lib.counts.mockups === 1 ? "" : "s"} (never for ads or posts)` : ""}.
       </p>
       <KitTabs />
-      <LibraryClient initial={lib} pillars={pillars} messages={essence.messages} db={isDatabaseConfigured()} ai={hasAnthropicKey()} imageAi={!!process.env.OPENAI_API_KEY} />
+      <LibraryClient key={`${lib.counts.total}-${lib.counts.tagged}`} initial={lib} pillars={pillars} messages={essence.messages} db={isDatabaseConfigured()} ai={hasAnthropicKey()} imageAi={!!process.env.OPENAI_API_KEY} />
     </section>
   );
 }
