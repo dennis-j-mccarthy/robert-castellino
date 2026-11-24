@@ -1105,7 +1105,7 @@
 .ts-seq::-webkit-scrollbar { display: none; }
 .ts-tool { flex: 1 0 118px; display: grid; grid-template-columns: auto 1fr; column-gap: 9px; align-items: center; padding: 8px 10px 10px; border-bottom: 3px solid transparent; position: relative; min-width: 0; color: var(--ink); }
 .ts-tool + .ts-tool::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 1px; background: var(--line); }
-.ts-tool__ic { grid-row: 1 / 3; width: 32px; height: 32px; border-radius: 9px; background: var(--surface-2); display: grid; place-items: center; margin-top: 4px; }
+.ts-tool__ic { grid-row: 1; width: 32px; height: 32px; border-radius: 9px; background: var(--surface-2); display: grid; place-items: center; margin-top: 4px; }
 .ts-tool__ic svg { width: 17px; height: 17px; stroke: var(--ink-2); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .ts-tool__n { font-family: var(--tl-mono); font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.06em; }
 .ts-tool__n i { font-style: normal; color: var(--good); }
@@ -1444,3 +1444,7 @@
 
 .ts-tool__n { grid-column: 2; order: 3; font-size: 9.5px; letter-spacing: 0.04em; color: var(--good); font-weight: 600; margin-top: 1px; }
 .ts-tool__n:empty { display: none; }
+
+.ts-tool { grid-template-columns: auto 1fr; align-items: center; padding: 10px 12px 12px; }
+.ts-tool__l { font-size: 13px; }
+.ts-tool__ic { margin-top: 0; }

@@ -60,9 +60,6 @@ const TOOLS: Tool[] = [
   { n: 9, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
 ];
 
-// Tools that are "set up" show a check. Kept simple and honest: the ones
-// that have real data behind them today.
-const DONE = new Set([1, 2, 3, 4, 7]);
 
 const MORE: Array<{ label: string; href: string; ext?: boolean }> = [
   { label: "Keywords", href: "/creator/keywords" },
@@ -144,11 +141,9 @@ export default function CreatorShell({ children, fontClass, counts }: { children
               const on = active?.n === t.n;
               const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 5 && counts.queued ? counts.queued : null;
               return (
-                <Link key={t.n} href={t.href} className={`ts-tool${on ? " is-on" : ""}${t.soon ? " is-soon" : ""}${DONE.has(t.n) ? " is-done" : ""}`} aria-current={on ? "page" : undefined}>
+                <Link key={t.n} href={t.href} className={`ts-tool${on ? " is-on" : ""}${t.soon ? " is-soon" : ""}`} aria-current={on ? "page" : undefined}>
                   <span className="ts-tool__ic" aria-hidden="true">{t.icon}</span>
-                  {DONE.has(t.n) && <span className="ts-tool__n" aria-label="set up">✓ set up</span>}
                   <span className="ts-tool__l">{t.label}{chip != null && <span className="ts-tool__chip">{chip}</span>}</span>
-                  <span className="ts-tool__h">{t.hint}</span>
                 </Link>
               );
             })}
