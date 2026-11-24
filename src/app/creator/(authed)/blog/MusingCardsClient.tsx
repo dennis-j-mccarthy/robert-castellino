@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, download, errText } from "@/lib/creator/client";
 
 export type Card = { id: string; title: string; date: string; img: string | null; excerpt: string; published: boolean; starred: boolean; usedIn: string | null };
@@ -80,6 +80,23 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
   const [drag, setDrag] = useState<string | null>(null);
   const [done, setDone] = useState<{ subject: string; id: string } | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [html, setHtml] = useState<string>("");
+  const [previewing, setPreviewing] = useState(false);
+  const previewSeq = useRef(0);
+
+  // The picture on the right: re-rendered (deterministic copy, no model) 350ms after any drag or keystroke.
+  useEffect(() => {
+    const seq = ++previewSeq.current;
+    const t = setTimeout(() => {
+      if (!items.length) { setHtml(""); setPreviewing(false); return; }
+      setPreviewing(true);
+      api<{ html: string }>("/api/creator/email/preview", { method: "POST", json: { musingIds: items.map((i) => i.id), intro: preamble } })
+        .then((r) => { if (seq === previewSeq.current) setHtml(r.html); })
+        .catch(() => undefined)
+        .finally(() => { if (seq === previewSeq.current) setPreviewing(false); });
+    }, 350);
+    return () => clearTimeout(t);
+  }, [items, preamble]);
 
   function move(fromId: string, toId: string) {
     if (fromId === toId) return;
@@ -105,8 +122,9 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
       <div className="ads-modal__card lb__card-modal nl">
         <button type="button" className="lb__close" aria-label="Close" onClick={onClose}>×</button>
         <h3 className="nl__h">Make newsletter</h3>
-        <p className="au-exp">Drag the pieces into the order you want. Write a few lines to open the issue, or ask for a suggestion. Save as HTML builds the issue, keeps it as a draft under Email → Newsletter, and downloads the file.</p>
-        <div className="nl__grid">
+        <p className="au-exp">Drag the pieces into the order you want and open the issue in a few lines. The issue on the right redraws as you go. Save as HTML writes the subject lines and blurbs, keeps a copy, and downloads the file.</p>
+        <div className="nl__grid nl__grid--3">
+          <div className="nl__left">
           <div>
             <label className="es-label">Pieces · {items.length} · drag to reorder</label>
             <ul className="nl__list">
@@ -133,12 +151,19 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
                 <button type="button" className="es-option es-option--quiet" onClick={() => setOpts([])}>Keep mine</button>
               </div>
             )}
-            <p className="es-hint">Leave it blank and the studio writes the opening. Subject lines, blurbs and the sign-off are always written for you; you can change them on the Newsletter page.</p>
+            <p className="es-hint">Leave it blank and the studio writes the opening. Subject lines, blurbs and the sign-off are written when you save; the preview shows each piece&rsquo;s own excerpt until then.</p>
+          </div>
+          </div>
+          <div className="nl__preview">
+            <div className="nl__preview-h"><span>The issue</span>{previewing && <small>redrawing…</small>}</div>
+            <div className="nl__frame">
+              {html ? <iframe title="Newsletter preview" srcDoc={html} sandbox="" /> : <div className="nl__frame-empty">Add a piece to see the issue.</div>}
+            </div>
           </div>
         </div>
         {err && <p className="au-err">{err}</p>}
         {done ? (
-          <div className="ap__caption"><b>Saved and downloaded.</b><p>&ldquo;{done.subject}&rdquo; is now a draft. <Link href="/creator/newsletter">Open it on the Newsletter page →</Link></p></div>
+          <div className="ap__caption"><b>Saved and downloaded.</b><p>&ldquo;{done.subject}&rdquo; is now a draft. <Link href="/creator/newsletter">Open the saved copy →</Link></p></div>
         ) : (
           <div className="ads-row" style={{ marginTop: 14 }}>
             <button type="button" className="btn btn--gold ads-btn-sm" disabled={busy !== null || !items.length} onClick={() => void save()}>{busy === "save" ? "Building…" : "Save as HTML"}</button>
