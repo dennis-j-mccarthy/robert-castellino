@@ -53,8 +53,8 @@ const TOOLS: Tool[] = [
   { n: 2, href: "/creator/library", label: "Brand kit", hint: "pictures & marks", icon: I.library, match: ["/creator/library", "/creator/brand"] },
   { n: 3, href: "/creator/audience", label: "Audience", hint: "who it's for", icon: I.leads },
   { n: 4, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
-  { n: 5, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
-  { n: 6, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
+  { n: 5, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
+  { n: 6, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
   { n: 7, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
   { n: 8, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.search, soon: true },
   { n: 9, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
@@ -139,7 +139,7 @@ export default function CreatorShell({ children, fontClass, counts }: { children
           <nav className="ts-seq" ref={seqRef} aria-label="The nine tools, in order">
             {TOOLS.map((t) => {
               const on = active?.n === t.n;
-              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 5 && counts.queued ? counts.queued : null;
+              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 6 && counts.queued ? counts.queued : null;
               return (
                 <Link key={t.n} href={t.href} className={`ts-tool${on ? " is-on" : ""}${t.soon ? " is-soon" : ""}`} aria-current={on ? "page" : undefined}>
                   <span className="ts-tool__ic" aria-hidden="true">{t.icon}</span>
