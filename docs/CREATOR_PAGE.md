@@ -174,3 +174,39 @@ curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" localhost:3457/creator 
 `AdsClient.tsx` applies the prefill after mount and shows "Loaded from the
 Creator page". Nothing is created until an ad set is picked there, and even
 then the ad is created **paused**; book ads must use an in-book plate.
+
+## 2026-11-24 — The studio frame, This week, and Plan
+
+The left rail is gone. `/creator` is now a **top sequence** of nine numbered
+tools (`CreatorShell.tsx`): 1 Essence · 2 Library · 3 Blog · 4 Posts
+(`/creator/social`) · 5 Email (placeholder) · 6 Newsletter (the old
+`/creator/email` page, moved to `/creator/newsletter`; its API stays at
+`/api/creator/email`) · 7 Ads · 8 Leads (placeholder) · 9 Plan. Keywords,
+Competitors, Google Ads, the Meta links, Admin and Sign out live under
+**More**. Mockups that led here: `~/Desktop/creator-tour/` (nav-concepts.html,
+pages-c.html).
+
+**Home `/creator` = This week.** Renders the `WeeklyPlan` row for the current
+Mountain-time week: a 7-day strip, "Needs you" with Open & draft / Skip per
+slot (`/api/creator/plan/item`), the ads at a glance (`getRunningNow`), and
+the Plan dials in one line.
+
+**Tool 9 · Plan `/creator/plan`.** `CreatorPlan` singleton (`settings` JSON,
+`PlanSettings` in `src/lib/creator/plan-types.ts`): posts per week + days +
+time, newsletter cadence/day/time, email mode, leads cadence, blog cadence,
+autonomy ladder (only "draft" is wired), arrival day/time and the address the
+plan is emailed to. Autosaves via `PUT /api/creator/plan`.
+
+**The Monday run.** `runWeeklyPlan()` in `src/lib/creator/plan.ts` builds
+`PlanItem`s for the week (post slots pick in-book plates spread across pillars,
+rotated by ISO week; newsletter on its cadence; blog/email/leads when set),
+saves them, and emails the summary through Resend **only to the address set in
+Plan** (never the contact address). Vercel Cron: `vercel.json`
+`0 19 * * 1` → `GET /api/creator/plan/run` with `Authorization: Bearer
+$CRON_SECRET` (set in Vercel production 11/24). 19:00 UTC is noon MST, 1 pm
+MDT. "Build this week now" on the Plan page calls the same thing with the
+admin session (`POST`, `{force}` rebuilds from the dials).
+
+Migration `0011_creator_plan` (CreatorPlan, WeeklyPlan). First plan built on
+prod 11/24 for the week of Nov 23: 3 posts + newsletter, no email (no address
+set).
