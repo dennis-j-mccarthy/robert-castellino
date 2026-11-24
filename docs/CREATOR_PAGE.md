@@ -261,3 +261,22 @@ before 24x36. Fix the row's `img` in /admin/collections.
 - **Build runs `next build --webpack`.** Turbopack failed two Vercel builds
   in a row with "next/font/google queries have exactly one entry" (a Google
   Fonts fetch hiccup); webpack falls back to system fonts and warns.
+
+### 2026-11-24, night — Blog stars → newsletter
+
+- `Musing.starred` (migration 0012). On the Blog cards a ☆ marks a published
+  Musing for the next issue; a Musing that is in a `ready`/`sent` EmailDraft
+  shows "In issue" instead (`loadMusingCards` joins `EmailDraft.musingIds`).
+  `POST /api/creator/blog/star { id, starred }`.
+- **Make newsletter** (`MusingCardsClient.tsx`): popup with the starred
+  pieces (HTML5 drag to reorder; first = hero), a preamble textarea with
+  ✦ Suggest (`essence/suggest` kind `preamble`, given the titles) and
+  **Save as HTML** → `POST /api/creator/email/generate` (now up to 6 musings
+  and an `intro` override) → saves the EmailDraft (shows on Email →
+  Newsletter) and downloads `newsletter-YYYY-MM-DD.html`.
+- Verified on prod 11/24: starred two Musings, popup opened, Suggest returned
+  three preambles in Bob's voice. Two Musings left starred ("The Wild Horse,
+  Late Winter", "On Conservation, Briefly") — unstar or use them.
+- Noticed: many Musings have no picture (`img` null), so cards and the
+  newsletter hero are blank for those. Worth a pass in /admin/musings or the
+  Blog editor.
