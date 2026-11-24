@@ -1607,3 +1607,17 @@
 .tl .seo-standing p { margin: 2px 0 0; font-size: 13px; color: var(--ink-2); }
 .tl .seo-standing i { color: var(--muted); font-style: normal; }
 @media (max-width: 800px) { .tl .seo-pages { grid-template-columns: 1fr; } }
+
+/* Instant post */
+.tl .ip__grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 22px; align-items: start; margin-top: 12px; }
+.tl .ip__left { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.tl .ip__drop { border: 2px dashed var(--line); border-radius: 14px; padding: 22px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; background: var(--surface-2); min-height: 180px; justify-content: center; }
+.tl .ip__drop.has-img { border-style: solid; background: var(--surface); }
+.tl .ip__drop img { max-height: 320px; max-width: 100%; border-radius: 10px; object-fit: contain; }
+.tl .ip__drop p { margin: 0; color: var(--muted); }
+.tl .ip__drop-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.tl .ip__bullets { display: flex; flex-direction: column; gap: 8px; }
+.tl .ip__bullet { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center; gap: 8px; }
+.tl .ip__bullet span { font-size: 20px; color: var(--accent); line-height: 1; }
+.tl .ip__bullet .ads-input { margin: 0; }
+@media (max-width: 1100px) { .tl .ip__grid { grid-template-columns: 1fr; } }

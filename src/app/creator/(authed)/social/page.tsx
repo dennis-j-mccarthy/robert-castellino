@@ -5,6 +5,7 @@ import { loadPillars } from "@/lib/creator/pillar-store";
 import { getConnection, isConnected } from "@/lib/meta/store";
 import PostBoard, { loadPosts } from "./PostBoard";
 import PostsAccordion from "./PostsAccordion";
+import InstantPost from "./InstantPost";
 import PostMaker from "./PostMaker";
 
 export const dynamic = "force-dynamic";
@@ -18,9 +19,10 @@ export default async function SocialPage() {
     <section className="admin-page cr-page">
       <div className="tl-eyebrow">Posts</div>
       <h1>Posts</h1>
-      <p>Make a post, then see it beside everything else on the Page.</p>
+      <p>Instant post when you have a photo and a minute. Make a post when you want to choose. My posts is everything on the Page.</p>
       <PostsAccordion
         postCount={rows.length}
+        instant={<InstantPost config={{ connected: isConnected(conn), page: conn?.pageName ?? null, ai: hasAnthropicKey() }} />}
         make={
           <PostMaker
             // The picker never offers mockups — adEligible is the real-plates set.
