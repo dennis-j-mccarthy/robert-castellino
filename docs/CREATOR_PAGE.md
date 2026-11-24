@@ -210,3 +210,35 @@ admin session (`POST`, `{force}` rebuilds from the dials).
 Migration `0011_creator_plan` (CreatorPlan, WeeklyPlan). First plan built on
 prod 11/24 for the week of Nov 23: 3 posts + newsletter, no email (no address
 set).
+
+### 2026-11-24, later — the eight tools, and what each page does now
+
+Email + Newsletter folded into **5 · Email** (tabs: A note = placeholder,
+Newsletter = the old EmailMaker at `/creator/newsletter`). Sequence is now
+1 Essence · 2 Brand kit · 3 Blog · 4 Posts · 5 Email · 6 Ads · 7 Leads · 8 Plan.
+
+- **1 Essence** (`EssenceClient.tsx`): hub (line / promise / purpose / CTA)
+  + five accordion spokes (always/never, voice, who it's for, pillars with
+  their core messages nested, tone brief). Every field has a hint and a
+  ✦ Suggest button → `POST /api/creator/essence/suggest { kind }` (kinds:
+  line|purpose|promise|cta|dos|donts|voice-sample|messages|tone). Suggestions
+  are never saved until clicked; core messages are added to
+  `BrandEssence.messages` via PUT essence; tone rewrite saves BlogSettings.
+- **2 Brand kit**: tabs Pictures (`/creator/library`) and Brand kit
+  (`/creator/brand`: logos, colours, type, the words, copy/download).
+  Pictures = full-width captioned grid (blank caption flagged orange),
+  details in a popup, Add pictures (choose / drop / paste → `/api/admin/upload`
+  → `/api/creator/library/add` registers a Photo in the unpublished
+  "Studio uploads" collection), ✦ Describe with AI per picture and
+  "Caption the blank ones" in batches of 12 → `/api/creator/library/describe`
+  (Claude vision; `generateJson` now takes `imageUrl`). "Create with AI" is a
+  placeholder: needs an image-model key (OPENAI_API_KEY) which this project
+  does not have.
+- **3 Blog**: Musing cards 4-across first (`MusingCards.tsx`, live + draft),
+  writer below at `#write`.
+- **4 Posts**: `PostBoard.tsx` first — Published / Scheduled / Unpublished
+  from SocialDraft — then the maker at `#make`.
+
+Known data nit seen 11/24: a Photo row points at
+`lep-19road-less-traveled-24x36.jpg` (404); the real file has no hyphen
+before 24x36. Fix the row's `img` in /admin/collections.
