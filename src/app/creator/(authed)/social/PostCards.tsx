@@ -36,7 +36,7 @@ export default function PostCards({ rows }: { rows: PostCard[] }) {
   return (
     <section className="pc" aria-labelledby="pc-title">
       <div className="pc__head">
-        <h2 id="pc-title">All posts</h2>
+        <h2 id="pc-title">Show</h2>
         <div className="pc__chips" role="tablist" aria-label="Show">
           {chips.map(([k, label, n]) => (
             <button key={k} type="button" role="tab" aria-selected={filter === k} className={`pc__chip is-${k}${filter === k ? " is-on" : ""}`} onClick={() => setFilter(k)}>
@@ -44,11 +44,10 @@ export default function PostCards({ rows }: { rows: PostCard[] }) {
             </button>
           ))}
         </div>
-        <a href="#make" className="btn btn--gold ads-btn-xs">+ New post</a>
       </div>
 
       {shown.length === 0 ? (
-        <p className="pc__empty">{rows.length === 0 ? "No posts yet. Make the first one below." : `Nothing ${filter === "draft" ? "in drafts" : filter}.`}</p>
+        <p className="pc__empty">{rows.length === 0 ? "No posts yet. Make the first one above." : `Nothing ${filter === "draft" ? "in drafts" : filter}.`}</p>
       ) : (
         <div className="pc__grid">
           {shown.slice(0, limit).map((r) => {

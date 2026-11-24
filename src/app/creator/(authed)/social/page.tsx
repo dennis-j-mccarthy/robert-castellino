@@ -4,6 +4,7 @@ import { loadLibrary } from "@/lib/creator/library";
 import { loadPillars } from "@/lib/creator/pillar-store";
 import { getConnection, isConnected } from "@/lib/meta/store";
 import PostBoard, { loadPosts } from "./PostBoard";
+import PostsAccordion from "./PostsAccordion";
 import PostMaker from "./PostMaker";
 
 export const dynamic = "force-dynamic";
@@ -17,15 +18,19 @@ export default async function SocialPage() {
     <section className="admin-page cr-page">
       <div className="tl-eyebrow">Posts</div>
       <h1>Posts</h1>
-      <p>Every post as a card. Filter by what is live, what is waiting, and what is still a draft. The maker is below.</p>
-      <PostBoard rows={rows} />
-      <h2 className="mc__h2" id="make">Make a post</h2>
-      <PostMaker
-        // The picker never offers mockups — adEligible is the real-plates set.
-        library={lib.items.filter((i) => i.adEligible)}
-        pillars={pillars}
-        messages={essence.messages}
-        config={{ connected: isConnected(conn), page: conn?.pageName ?? null, pageId: conn?.pageId ?? null, ai: hasAnthropicKey() }}
+      <p>Make a post, then see it beside everything else on the Page.</p>
+      <PostsAccordion
+        postCount={rows.length}
+        make={
+          <PostMaker
+            // The picker never offers mockups — adEligible is the real-plates set.
+            library={lib.items.filter((i) => i.adEligible)}
+            pillars={pillars}
+            messages={essence.messages}
+            config={{ connected: isConnected(conn), page: conn?.pageName ?? null, pageId: conn?.pageId ?? null, ai: hasAnthropicKey() }}
+          />
+        }
+        posts={<PostBoard rows={rows} />}
       />
     </section>
   );
