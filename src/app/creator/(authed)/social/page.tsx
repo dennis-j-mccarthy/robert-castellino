@@ -17,7 +17,7 @@ export default async function SocialPage() {
     <section className="admin-page cr-page">
       <div className="tl-eyebrow">Posts</div>
       <h1>Posts</h1>
-      <p>Everything you have posted, scheduled or left unfinished, then the maker. Facebook publishes through Meta; Instagram is copy-only until the account is linked.</p>
+      <p>Every post as a card. Filter by what is live, what is waiting, and what is still a draft. The maker is below.</p>
       <PostBoard rows={rows} />
       <h2 className="mc__h2" id="make">Make a post <span className="cr-h2sub">· picture, words, when</span></h2>
       <PostMaker
