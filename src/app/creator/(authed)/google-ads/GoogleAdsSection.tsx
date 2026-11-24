@@ -30,11 +30,20 @@ export default function GoogleAdsSection() {
       </div>
 
       <div className="gads-sec">
-        <h2 className="kw-h2">The $500 credit</h2>
+        <h2 className="kw-h2">The new-advertiser credit</h2>
         <div className="gads-box gads-box--ok">
           Google already offered it to Bob. His Google Business Profile email of October 9, 2026 says: get $500 in ad
           credit when you spend $500, offer for new advertisers only, with a &ldquo;Claim your credit&rdquo; button.
+          That is the entry tier. The sign-up page usually shows three, and the amounts move month to month
+          (checked November 24, 2026):
         </div>
+        <ul className="gads-list">
+          <li><b>Spend $500</b> in 60 days → <b>$500</b> credit. The one in Bob&rsquo;s email.</li>
+          <li><b>Spend $1,500</b> in 60 days → about <b>$1,000 to $2,000</b>, depending on the day.</li>
+          <li><b>Spend $3,000</b> in 60 days → about <b>$1,500 to $4,500</b>, depending on the day.</li>
+          <li>Through a Google Partner agency: larger tiers, reported up to $6,000 on $12,000. Only if an agency opens the account.</li>
+        </ul>
+        <p className="ads-hint">Every tier has the same rules: one offer per advertiser, new advertisers only, US billing address, spend inside 60 days, credit lands within 35 days, usable on future ads only. The &ldquo;is he new&rdquo; question below applies at every tier. If the 2021 account shows $0 spent, the $1,500 tier is a fair stretch: it roughly doubles a campaign we want to run anyway.</p>
         <div className="gads-box gads-box--warn">
           <p>
             <b>The risk:</b> Bob is probably not a new advertiser. On December 22, 2021 he linked a Google Ads account,{" "}
