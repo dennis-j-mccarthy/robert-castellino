@@ -69,6 +69,21 @@ export default function GoogleAdsSection() {
       </div>
 
       <div className="gads-sec">
+        <h2 className="kw-h2">Give Dennis access</h2>
+        <div className="gads-box">
+          <p>So the Google channel can be set up for the book and for Fluid Pathways from this studio, Dennis needs to be an admin on the account. Two minutes; Bob stays the owner and can remove him any time.</p>
+          <ol className="gads-list gads-steps">
+            <li>Go to <a href="https://ads.google.com" target="_blank" rel="noreferrer">ads.google.com</a> and sign in as rlcastellino@gmail.com. No account yet? Start from the &ldquo;Claim your credit&rdquo; button in Google&rsquo;s October 9 email and finish sign-up first. If Google insists on a campaign before letting you in, choose &ldquo;Switch to Expert Mode&rdquo; at the bottom, then &ldquo;Create an account without a campaign.&rdquo;</li>
+            <li>Left menu → <b>Admin</b> (the gear near the bottom) → <b>Access and security</b>.</li>
+            <li>On the <b>Users</b> tab click the blue <b>+</b>.</li>
+            <li>Enter Dennis&rsquo;s Google email, set Access level to <b>Admin</b>, click <b>Send invitation</b>.</li>
+            <li>Send Dennis the 10-digit account number from the top right (123-456-7890) so he knows it is the right account.</li>
+          </ol>
+          <p className="ads-hint">If the 2021 account still exists, do this in whichever account will run ads going forward, and say which. One account can carry both the book and Fluid Pathways as separate campaigns.</p>
+        </div>
+      </div>
+
+      <div className="gads-sec">
         <h2 className="kw-h2">Campaign settings</h2>
         <dl className="gads-settings">
           {SETTINGS.map(([k, v]) => (
