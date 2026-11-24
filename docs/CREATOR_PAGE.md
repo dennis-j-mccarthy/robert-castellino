@@ -333,3 +333,20 @@ before 24x36. Fix the row's `img` in /admin/collections.
   masthead (Essence line, fallback in code), placeholder preamble in the
   preview when the intro is blank, optional `cta` per blurb and one for the
   whole issue (`newsletter-ctas.ts` parses them; both routes accept them).
+
+### 2026-11-24, late — Search
+
+- `/creator/search` is the 4th tool (after Audience): four one-at-a-time
+  accordions via `Accordion` in `TwoAccordion.tsx` — Keywords, Technical
+  SEO, Competitors, Google Ads. `?open=<id>` opens a panel; the old
+  `/creator/keywords`, `/creator/competitors`, `/creator/google-ads` routes
+  redirect there and their bodies now live in `*Section.tsx` next to them.
+- Technical SEO = `src/lib/creator/seo-audit.ts`: live fetch of /, /book,
+  /musings, /gallery + robots.txt + sitemap.xml; per-page title/description/
+  canonical/H1/alt/OG/JSON-LD/viewport/noindex/speed; site-level HTTPS,
+  robots, sitemap, Musings-in-sitemap. `SEO_STANDING` is the list a fetch
+  cannot check (Search Console, GBP, one phrase per page, alt text, speed,
+  links in). First run 11/24: 37 OK · 6 look · 2 fix (home and /book titles
+  over 60 chars, /book description 202 chars, /book 1.1s TTFB).
+- The More menu lost Keywords / Competitors / Google Ads; Ads no longer
+  matches /creator/google-ads. Nav is ten items.
