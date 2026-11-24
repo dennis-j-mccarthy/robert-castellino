@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllMusings } from "@/lib/data-source";
+import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 
 const base = "https://robertcastellino.com";
 
@@ -37,5 +38,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     posts = [];
   }
 
-  return [...routes, ...posts];
+  // Landing pages appear only once published (drafts are noindex).
+  let landing: MetadataRoute.Sitemap = [];
+  if (isDatabaseConfigured()) {
+    try {
+      const rows = await prisma.landingPage.findMany({ where: { published: true }, select: { slug: true, updatedAt: true } });
+      landing = rows.map((r) => ({ url: `${base}/for/${r.slug}`, lastModified: r.updatedAt, changeFrequency: "monthly" as const, priority: 0.8 }));
+    } catch {
+      landing = [];
+    }
+  }
+
+  return [...routes, ...landing, ...posts];
 }

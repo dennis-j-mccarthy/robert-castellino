@@ -323,10 +323,38 @@ model Keyword {
   /// "seed" | "claude" | "manual"
   source    String   @default("manual")
   note      String?
+  /// Slug of the landing page built for this phrase (Search → Landing pages).
+  landingSlug String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([kind, priority])
+}
+
+// ───────── LANDING PAGES (Search → Landing pages) — migration 0013 ─────────
+// One page per search phrase at /for/<slug>. Claude writes the draft in
+// Bob's voice from Essence + pillars; the hero is a real plate from the
+// library (never generated). Drafts are visible to signed-in admins only
+// and noindex until published.
+model LandingPage {
+  slug            String   @id
+  keyword         String
+  title           String
+  metaDescription String   @default("")
+  h1              String
+  intro           String   @default("")
+  /// Markdown body (## subheads, paragraphs, lists)
+  body            String
+  /// [{ q, a }]
+  faq             Json?
+  /// Library src of the hero plate (site path) and its alt text
+  heroImage       String?
+  heroAlt         String?
+  /// LandingSections JSON (src/lib/creator/landing.ts)
+  sections        Json?
+  published       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 // ───────── CREATOR PLAN (tool 9) — migration 0011 ─────────
