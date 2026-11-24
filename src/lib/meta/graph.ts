@@ -226,3 +226,38 @@ export async function deletePagePost(postId: string, pageToken: string): Promise
   });
   await handleGraphResponse(res);
 }
+
+/* ── Reading the Page's own posts (for the Posts board) ─────────────────── */
+
+export interface PagePost {
+  id: string;
+  message: string;
+  picture: string | null;
+  permalink: string | null;
+  createdAt: Date | null;
+  scheduledFor: Date | null;
+}
+
+function toPagePost(p: Record<string, unknown>): PagePost {
+  const sched = typeof p.scheduled_publish_time === "number" ? new Date(p.scheduled_publish_time * 1000) : typeof p.scheduled_publish_time === "string" ? new Date(p.scheduled_publish_time) : null;
+  return {
+    id: String(p.id ?? ""),
+    message: typeof p.message === "string" ? p.message : "",
+    picture: typeof p.full_picture === "string" ? p.full_picture : null,
+    permalink: typeof p.permalink_url === "string" ? p.permalink_url : null,
+    createdAt: typeof p.created_time === "string" ? new Date(p.created_time) : null,
+    scheduledFor: sched && !Number.isNaN(sched.getTime()) ? sched : null,
+  };
+}
+
+/** Published posts on the Page, newest first. Needs pages_read_engagement. */
+export async function listPublishedPosts(pageId: string, pageToken: string, limit = 60): Promise<PagePost[]> {
+  const r = await graphGet(`${pageId}/published_posts`, { access_token: pageToken, fields: "id,message,created_time,full_picture,permalink_url", limit: String(limit) });
+  return ((r.data as Array<Record<string, unknown>>) ?? []).map(toPagePost);
+}
+
+/** Posts Meta is holding to publish later. */
+export async function listScheduledPosts(pageId: string, pageToken: string, limit = 60): Promise<PagePost[]> {
+  const r = await graphGet(`${pageId}/scheduled_posts`, { access_token: pageToken, fields: "id,message,scheduled_publish_time,full_picture,permalink_url", limit: String(limit) });
+  return ((r.data as Array<Record<string, unknown>>) ?? []).map(toPagePost);
+}

@@ -13,7 +13,9 @@ const PLATFORM: Record<string, string> = { facebook: "Facebook", instagram: "Ins
 const STATE: Record<PostCard["state"], string> = { published: "Published", scheduled: "Scheduled", draft: "Draft", failed: "Failed" };
 
 export default function PostCards({ rows }: { rows: PostCard[] }) {
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilterRaw] = useState<Filter>("all");
+  const [limit, setLimit] = useState(12);
+  const setFilter = (f: Filter) => { setFilterRaw(f); setLimit(12); };
   const count = (s: PostCard["state"]) => rows.filter((r) => r.state === s).length;
   const chips: Array<[Filter, string, number]> = [
     ["all", "All", rows.length],
@@ -49,8 +51,11 @@ export default function PostCards({ rows }: { rows: PostCard[] }) {
         <p className="pc__empty">{rows.length === 0 ? "No posts yet. Make the first one below." : `Nothing ${filter === "draft" ? "in drafts" : filter}.`}</p>
       ) : (
         <div className="pc__grid">
-          {shown.map((r) => {
-            const edit = `/creator/social?draftId=${r.id}&imageId=${encodeURIComponent(r.imageId ?? "")}&caption=${encodeURIComponent(r.caption.slice(0, 500))}&platform=${r.platform}#make`;
+          {shown.slice(0, limit).map((r) => {
+            const fromPage = r.id.startsWith("fb:");
+            const edit = fromPage
+              ? `/creator/social?caption=${encodeURIComponent(r.caption.slice(0, 500))}&platform=${r.platform}#make`
+              : `/creator/social?draftId=${r.id}&imageId=${encodeURIComponent(r.imageId ?? "")}&caption=${encodeURIComponent(r.caption.slice(0, 500))}&platform=${r.platform}#make`;
             return (
               <article key={r.id} className={`pc__card is-${r.state}`}>
                 <div className="pc__img">
@@ -64,16 +69,21 @@ export default function PostCards({ rows }: { rows: PostCard[] }) {
                   <div className="pc__actions">
                     {r.link ? (
                       <a className="btn btn--ghost ads-btn-xs" href={r.link} target="_blank" rel="noreferrer">View on Facebook ↗</a>
+                    ) : fromPage ? (
+                      <span className="pc__meta">Scheduled in Meta</span>
                     ) : (
                       <a className="btn ads-btn-xs" href={edit}>{r.state === "scheduled" ? "Change" : "Open"}</a>
                     )}
-                    {r.link && <a className="btn ads-btn-xs" href={edit}>Post again</a>}
+                    {r.link && <a className="btn ads-btn-xs" href={edit}>Use these words again</a>}
                   </div>
                 </div>
               </article>
             );
           })}
         </div>
+      )}
+      {shown.length > limit && (
+        <div className="pc__more"><button type="button" className="btn ads-btn-sm" onClick={() => setLimit((n) => n + 12)}>Show 12 more · {shown.length - limit} left</button></div>
       )}
     </section>
   );
