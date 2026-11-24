@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { api, download, errText } from "@/lib/creator/client";
+import { openPanel } from "@/components/creator/TwoAccordion";
 
 export type Card = { id: string; title: string; date: string; img: string | null; excerpt: string; published: boolean; starred: boolean; usedIn: string | null };
 
@@ -40,7 +41,7 @@ export default function MusingCardsClient({ cards: initial, db, ai }: { cards: C
       </div>
       {err && <p className="au-err">{err}</p>}
       <div className="mc__grid">
-        <a href="#write" className="mc__card mc__card--new"><span className="mc__plus">+</span><b>New Musing</b><span>Write one below, from a note or from nothing.</span></a>
+        <button type="button" className="mc__card mc__card--new" onClick={() => openPanel("write")}><span className="mc__plus">+</span><b>New Musing</b><span>Open the writer, from a note or from nothing.</span></button>
         {cards.map((c) => (
           <article key={c.id} className={`mc__card${c.starred ? " is-starred" : ""}`}>
             <div className="mc__img">

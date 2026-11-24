@@ -5,6 +5,7 @@ import { getTone } from "@/lib/creator/tone-store";
 import { hasAnthropicKey } from "@/lib/creator/ai";
 import BlogGenerator from "./BlogGenerator";
 import MusingCards, { loadMusingCards } from "./MusingCards";
+import BlogAccordion from "./BlogAccordion";
 
 export const dynamic = "force-dynamic";
 
@@ -22,10 +23,13 @@ export default async function BlogPage() {
         </div>
         <Link className="btn btn--ghost ads-btn-sm" href="/creator/blog/posts">All Musings →</Link>
       </div>
-      <p>Your Musings first; the writer below. A new piece lands with the ones written by hand, and publishing it can make the week&rsquo;s posts.</p>
-      <MusingCards cards={musings.cards} db={musings.db} />
-      <h2 className="mc__h2" id="write">Write a Musing <span className="cr-h2sub">· four steps</span></h2>
-      <BlogGenerator pillars={pillars} tone={tone.tone} ai={hasAnthropicKey()} library={library.items.filter((i) => !i.mockup)} />
+      <p>Write a new piece, then see it with everything already published. Star Musings to put them in the next newsletter.</p>
+      <BlogAccordion
+        live={musings.cards.filter((c) => c.published).length}
+        drafts={musings.cards.filter((c) => !c.published).length}
+        write={<BlogGenerator pillars={pillars} tone={tone.tone} ai={hasAnthropicKey()} library={library.items.filter((i) => !i.mockup)} />}
+        musings={<MusingCards cards={musings.cards} db={musings.db} />}
+      />
     </section>
   );
 }
