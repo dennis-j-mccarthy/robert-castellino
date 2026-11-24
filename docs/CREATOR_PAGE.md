@@ -280,3 +280,16 @@ before 24x36. Fix the row's `img` in /admin/collections.
 - Noticed: many Musings have no picture (`img` null), so cards and the
   newsletter hero are blank for those. Worth a pass in /admin/musings or the
   Blog editor.
+
+### 2026-11-24, late — Posts as cards
+
+- `social/PostBoard.tsx` now only loads and serialises `SocialDraft` rows
+  (state = published | scheduled | draft | failed; `approved` is a flag on
+  draft). `social/PostCards.tsx` (client) renders them 4 across like the
+  Blog cards, with filter chips All · Published · Scheduled · Drafts, and
+  Failed only when one exists. Scheduled sorts soonest-first, the rest
+  newest-first. Buttons: Open / Change (prefill the maker via the existing
+  query string, then `#make`), View on Facebook ↗ and Post again for
+  published ones. CSS block `pc-*` replaces `pb-*`.
+- Local dev has no `DATABASE_URL` (`.env.local` blanks it), so the grid is
+  always empty locally; verify on production.
