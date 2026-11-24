@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Badges } from "@/components/creator/ImageGrid";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import { api, errText } from "@/lib/creator/client";
 import type { LibraryItem, LibraryView } from "@/lib/creator/library";
 import { pillarTagClsFor, type CoreMessage, type Pillar } from "@/lib/creator/pillars";
+import PictureCard from "./PictureCard";
 import AddPictures from "./AddPictures";
 
 /*
@@ -34,14 +34,11 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
   const [items, setItems] = useState<LibraryItem[]>(initial.items);
   const [sel, setSel] = useState<LibraryItem | null>(null);
   const [notice, setNotice] = useState<NoticeState>(null);
-  const [busy, setBusy] = useState(false);
   const [showMockups, setShowMockups] = useState(false);
   const [blankOnly, setBlankOnly] = useState(false);
   const [collection, setCollection] = useState("");
   const [pillar, setPillar] = useState("");
   const [query, setQuery] = useState("");
-  const [describing, setDescribing] = useState(false);
-  const [suggested, setSuggested] = useState<Described | null>(null);
   const [formKey, setFormKey] = useState(0);
   const [batch, setBatch] = useState<{ done: number; total: number; running: boolean } | null>(null);
 
@@ -66,38 +63,11 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
     setSel((s) => (s && s.src === src ? { ...s, ...patch } : s));
   }
 
-  async function save(patch: Partial<Pick<LibraryItem, "pillarId" | "messageId" | "title" | "blurb" | "loc">>, target = sel) {
-    if (!target) return;
-    setBusy(true);
-    try {
-      await api("/api/creator/library", { method: "PATCH", json: { src: target.src, ...patch } });
-      applyLocal(target.src, patch);
-    } catch (e) {
-      setNotice({ kind: "err", text: errText(e) });
-    } finally {
-      setBusy(false);
-    }
-  }
-
   async function describeOne(target: LibraryItem): Promise<Described> {
     const out = await api<Described>("/api/creator/library/describe", { method: "POST", json: { src: target.src } });
     await api("/api/creator/library", { method: "PATCH", json: { src: target.src, title: out.title, loc: out.loc, blurb: out.blurb, pillarId: out.pillarId || null, messageId: null } });
     applyLocal(target.src, { title: out.title, loc: out.loc, blurb: out.blurb, pillarId: out.pillarId || null, messageId: null });
     return out;
-  }
-
-  async function describe() {
-    if (!sel) return;
-    setDescribing(true);
-    setSuggested(null);
-    try {
-      setSuggested(await describeOne(sel));
-      setFormKey((k) => k + 1);
-    } catch (e) {
-      setNotice({ kind: "err", text: errText(e) });
-    } finally {
-      setDescribing(false);
-    }
   }
 
   async function captionBlanks() {
@@ -112,8 +82,6 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
     }
     setBatch({ done, total: todo.length, running: false });
   }
-
-  const pillarMessages = messages.filter((m) => !sel?.pillarId || m.pillar === sel.pillarId);
 
   return (
     <div className="cr-library lb">
@@ -144,7 +112,7 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
 
       <div className="lb__grid">
         {shown.map((img) => (
-          <button key={img.src} type="button" className={`lb__card${img.mockup ? " is-mockup" : ""}`} onClick={() => { setSel(img); setSuggested(null); }}>
+          <button key={img.src} type="button" className={`lb__card${img.mockup ? " is-mockup" : ""}`} onClick={() => { setSel(img); setFormKey((k) => k + 1); }}>
             <span className="lb__img">
               {/* eslint-disable-next-line @next/next/no-img-element -- library thumbs */}
               <img src={img.src} alt={img.title ?? img.label} loading="lazy" />
@@ -160,63 +128,17 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
       </div>
 
       {sel && (
-        <div className="ads-modal lb__modal" role="dialog" aria-modal="true" aria-label={sel.title ?? sel.label} onClick={(e) => { if (e.target === e.currentTarget) setSel(null); }}>
-          <div className="ads-modal__card lb__card-modal">
-            <button type="button" className="lb__close" aria-label="Close" onClick={() => setSel(null)}>×</button>
-            <div className="lb__mgrid">
-              <div className="lb__mimg">
-                {/* eslint-disable-next-line @next/next/no-img-element -- library preview */}
-                <img src={sel.src} alt={sel.title ?? sel.label} />
-                <div className="ads-row" style={{ marginTop: 8 }}><Badges item={sel} /></div>
-                <div className="lb__path"><span>{sel.collection.replace(/-/g, " ")}</span> · <span>{sel.source === "both" ? "gallery + ad manifest" : sel.source === "photo" ? "gallery" : "ad manifest"}</span></div>
-                {sel.mockup && <div className="ads-notice ads-notice--err" style={{ marginTop: 10 }}>This is an AI mockup of the book. It is never used in ads or posts — the real plates are.</div>}
-              </div>
-              <div className="lb__mform">
-                {ai && !sel.mockup && (
-                  <div className="ap__describe">
-                    <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || busy || describing} onClick={() => void describe()}>{describing ? "Looking…" : "✦ Describe with AI"}</button>
-                    <span>Fills title, place, blurb and pillar from the picture.</span>
-                  </div>
-                )}
-                {suggested && (
-                  <div className="ap__caption">
-                    <b>A caption, ready for a post</b>{suggested.confidence !== "high" && <small> · place is a {suggested.confidence} guess, check it</small>}
-                    <p>{suggested.caption}</p>
-                    <Link className="btn ads-btn-xs" href={`/creator/social?imageId=${encodeURIComponent(sel.src)}&caption=${encodeURIComponent(suggested.caption)}${sel.pillarId ? `&pillar=${sel.pillarId}` : ""}`}>Use it in a post</Link>
-                  </div>
-                )}
-                <label className="ads-label">Title</label>
-                <input className="ads-input" defaultValue={sel.title ?? ""} key={`t-${sel.src}-${formKey}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.title ?? "") && void save({ title: e.target.value })} />
-                <label className="ads-label">Place</label>
-                <input className="ads-input" defaultValue={sel.loc ?? ""} key={`l-${sel.src}-${formKey}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.loc ?? "") && void save({ loc: e.target.value })} />
-                <label className="ads-label">Blurb</label>
-                <textarea className="ads-input" rows={3} defaultValue={sel.blurb ?? ""} key={`b-${sel.src}-${formKey}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.blurb ?? "") && void save({ blurb: e.target.value })} />
-                <div className="ads-row--2">
-                  <div>
-                    <label className="ads-label">Pillar</label>
-                    <select className="ads-input" value={sel.pillarId ?? ""} disabled={!db || busy} onChange={(e) => void save({ pillarId: e.target.value || null, messageId: null })}>
-                      <option value="">— none —</option>
-                      {pillars.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="ads-label">Core message</label>
-                    <select className="ads-input" value={sel.messageId ?? ""} disabled={!db || busy} onChange={(e) => void save({ messageId: e.target.value || null })}>
-                      <option value="">— none —</option>
-                      {pillarMessages.map((m) => <option key={m.id} value={m.id}>{m.text}</option>)}
-                    </select>
-                  </div>
-                </div>
-                {sel.pillarId && <div style={{ marginTop: 8 }}><span className={pillarTagClsFor(pillars, sel.pillarId)}>{pillars.find((p) => p.id === sel.pillarId)?.name}</span></div>}
-                <div className="ads-row" style={{ marginTop: 16 }}>
-                  {!sel.mockup && <Link className="btn btn--gold ads-btn-xs" href={`/creator/social?imageId=${encodeURIComponent(sel.src)}${sel.pillarId ? `&pillar=${sel.pillarId}` : ""}`}>Use in a post</Link>}
-                  {sel.inBook && <Link className="btn btn--ghost ads-btn-xs" href={`/admin/ads?img=${encodeURIComponent(sel.src)}`}>Stage in Ads maker</Link>}
-                  <a className="btn btn--ghost ads-btn-xs" href={sel.url} target="_blank" rel="noreferrer">Open ↗</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PictureCard
+          key={`${sel.src}-${formKey}`}
+          item={sel}
+          pillars={pillars}
+          messages={messages}
+          db={db}
+          ai={ai}
+          onClose={() => setSel(null)}
+          onSaved={(patch) => applyLocal(sel.src, patch)}
+          onError={(text) => setNotice({ kind: "err", text })}
+        />
       )}
     </div>
   );

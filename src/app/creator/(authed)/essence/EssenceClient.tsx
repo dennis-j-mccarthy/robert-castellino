@@ -233,7 +233,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
 
   const field = (key: keyof Pick<Draft, "line" | "purpose" | "promise" | "cta">, label: string, hint: string, rows?: number) => (
     <div className={`es-field${key === "line" ? " es-field--line" : ""}`}>
-      <div className="es-field__head"><label className="es-label">{label}</label>{ai && <Suggest busy={thinking === key} disabled={ro} onClick={() => void suggest(key, { current: d[key] })} />}</div>
+      <div className={`es-field__head${key === "line" ? " es-field__head--bare" : ""}`}>{key !== "line" && <label className="es-label">{label}</label>}{ai && <Suggest busy={thinking === key} disabled={ro} onClick={() => void suggest(key, { current: d[key] })} />}</div>
       {rows ? (
         <textarea className="ads-input" rows={rows} value={d[key]} disabled={ro} onChange={(e) => patch({ [key]: e.target.value } as Partial<Draft>)} />
       ) : (
