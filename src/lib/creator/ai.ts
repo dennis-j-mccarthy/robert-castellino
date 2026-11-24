@@ -23,6 +23,8 @@ export interface GenerateJsonOptions {
   schema: Record<string, unknown>;
   maxTokens?: number;
   effort?: "low" | "medium" | "high";
+  /** An https image the model should look at before answering. */
+  imageUrl?: string;
 }
 
 export async function generateJson<T>(opts: GenerateJsonOptions): Promise<T> {
@@ -37,7 +39,14 @@ export async function generateJson<T>(opts: GenerateJsonOptions): Promise<T> {
       format: { type: "json_schema", schema: opts.schema },
     },
     system: opts.system,
-    messages: [{ role: "user", content: opts.user }],
+    messages: [
+      {
+        role: "user",
+        content: opts.imageUrl
+          ? [{ type: "image", source: { type: "url", url: opts.imageUrl } }, { type: "text", text: opts.user }]
+          : opts.user,
+      },
+    ],
   });
   if (res.stop_reason === "max_tokens") throw new Error("The model ran out of room — try again.");
   if (res.stop_reason === "refusal") throw new Error("The model declined this request.");

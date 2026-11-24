@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import ImageGrid, { Badges } from "@/components/creator/ImageGrid";
+import AddPictures from "./AddPictures";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import { api, errText } from "@/lib/creator/client";
 import type { LibraryItem, LibraryView } from "@/lib/creator/library";
@@ -13,14 +14,37 @@ interface Props {
   pillars: Pillar[];
   messages: CoreMessage[];
   db: boolean;
+  ai: boolean;
+  imageAi: boolean;
 }
 
-export default function LibraryClient({ initial, pillars, messages, db }: Props) {
+export default function LibraryClient({ initial, pillars, messages, db, ai, imageAi }: Props) {
   const [items, setItems] = useState<LibraryItem[]>(initial.items);
   const [sel, setSel] = useState<LibraryItem | null>(null);
   const [notice, setNotice] = useState<NoticeState>(null);
   const [busy, setBusy] = useState(false);
   const [showMockups, setShowMockups] = useState(true);
+  const [describing, setDescribing] = useState(false);
+  const [suggested, setSuggested] = useState<{ caption: string; confidence: string } | null>(null);
+  const [formKey, setFormKey] = useState(0);
+
+  // Ask Claude to look at the picture and fill the card; the fields are
+  // saved straight away so the grid and the pickers see them.
+  async function describe() {
+    if (!sel) return;
+    setDescribing(true);
+    setSuggested(null);
+    try {
+      const out = await api<{ title: string; loc: string; blurb: string; pillarId: string; caption: string; confidence: string }>("/api/creator/library/describe", { method: "POST", json: { src: sel.src } });
+      await save({ title: out.title, loc: out.loc, blurb: out.blurb, pillarId: out.pillarId || null, messageId: null });
+      setSuggested({ caption: out.caption, confidence: out.confidence });
+      setFormKey((k) => k + 1);
+    } catch (e) {
+      setNotice({ kind: "err", text: errText(e) });
+    } finally {
+      setDescribing(false);
+    }
+  }
 
   async function save(patch: Partial<Pick<LibraryItem, "pillarId" | "messageId" | "title" | "blurb" | "loc">>) {
     if (!sel) return;
@@ -42,13 +66,14 @@ export default function LibraryClient({ initial, pillars, messages, db }: Props)
   return (
     <div className="cr-library">
       <Notice notice={notice} onClose={() => setNotice(null)} />
+      <AddPictures imageAi={imageAi} />
       <div className="cr-two">
         <div>
           <label className="ads-check" style={{ display: "inline-grid", marginBottom: 8 }}>
             <input type="checkbox" checked={showMockups} onChange={(e) => setShowMockups(e.target.checked)} />
             <span>Show mockups (badged — never used in ads or posts)</span>
           </label>
-          <ImageGrid items={items} pillars={pillars} selected={sel?.src} onSelect={setSel} allowMockups={showMockups} maxHeight={720} />
+          <ImageGrid items={items} pillars={pillars} selected={sel?.src} onSelect={(i) => { setSel(i); setSuggested(null); }} allowMockups={showMockups} scroll={false} />
         </div>
         <aside className="cr-detail">
           {!sel ? (
@@ -67,12 +92,25 @@ export default function LibraryClient({ initial, pillars, messages, db }: Props)
               <div className="cr-kv"><span>Collection</span><span>{sel.collection}</span></div>
               <div className="cr-kv"><span>Source</span><span>{sel.source === "both" ? "gallery + ad manifest" : sel.source === "photo" ? "gallery" : "ad manifest"}</span></div>
 
+              {ai && !sel.mockup && (
+                <div className="ap__describe">
+                  <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || busy || describing} onClick={() => void describe()}>{describing ? "Looking…" : "Describe with AI"}</button>
+                  <span>Fills title, place, blurb and pillar from the picture. You can change any of it.</span>
+                </div>
+              )}
+              {suggested && (
+                <div className="ap__caption">
+                  <b>A caption, ready for a post</b>{suggested.confidence !== "high" && <small> · place is a {suggested.confidence} guess, check it</small>}
+                  <p>{suggested.caption}</p>
+                  <Link className="btn ads-btn-xs" href={`/creator/social?imageId=${encodeURIComponent(sel.src)}&caption=${encodeURIComponent(suggested.caption)}${sel.pillarId ? `&pillar=${sel.pillarId}` : ""}`}>Use it in a post</Link>
+                </div>
+              )}
               <label className="ads-label">Title</label>
-              <input className="ads-input" defaultValue={sel.title ?? ""} key={`t-${sel.src}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.title ?? "") && void save({ title: e.target.value })} />
+              <input className="ads-input" defaultValue={sel.title ?? ""} key={`t-${sel.src}-${formKey}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.title ?? "") && void save({ title: e.target.value })} />
               <label className="ads-label">Place</label>
-              <input className="ads-input" defaultValue={sel.loc ?? ""} key={`l-${sel.src}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.loc ?? "") && void save({ loc: e.target.value })} />
+              <input className="ads-input" defaultValue={sel.loc ?? ""} key={`l-${sel.src}-${formKey}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.loc ?? "") && void save({ loc: e.target.value })} />
               <label className="ads-label">Blurb</label>
-              <textarea className="ads-input" rows={3} defaultValue={sel.blurb ?? ""} key={`b-${sel.src}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.blurb ?? "") && void save({ blurb: e.target.value })} />
+              <textarea className="ads-input" rows={3} defaultValue={sel.blurb ?? ""} key={`b-${sel.src}-${formKey}`} disabled={!db || busy} onBlur={(e) => e.target.value !== (sel.blurb ?? "") && void save({ blurb: e.target.value })} />
               <label className="ads-label">Pillar</label>
               <select className="ads-input" value={sel.pillarId ?? ""} disabled={!db || busy} onChange={(e) => void save({ pillarId: e.target.value || null, messageId: null })}>
                 <option value="">— none —</option>

@@ -25,6 +25,8 @@ interface Props {
   initialPillar?: string;
   maxHeight?: number;
   compact?: boolean;
+  /** false = the grid grows with its content instead of scrolling inside itself. */
+  scroll?: boolean;
 }
 
 export function Badges({ item, compact }: { item: LibraryItem; compact?: boolean }) {
@@ -45,7 +47,7 @@ export function Badges({ item, compact }: { item: LibraryItem; compact?: boolean
 }
 
 export default function ImageGrid(props: Props) {
-  const { items, pillars, selected, onSelect, allowMockups = false, maxHeight = 420, compact } = props;
+  const { items, pillars, selected, onSelect, allowMockups = false, maxHeight = 420, compact, scroll = true } = props;
   const [collection, setCollection] = useState<string>(props.initialCollection ?? "");
   const [pillar, setPillar] = useState<string>(props.initialPillar ?? "");
   const [query, setQuery] = useState("");
@@ -83,7 +85,7 @@ export default function ImageGrid(props: Props) {
         </select>
         <input className="ads-input ads-input--sm cr-search" placeholder="Search…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
-      <div className={`ads-grid${compact ? " ads-grid--compact" : ""}`} style={{ maxHeight }}>
+      <div className={`ads-grid${compact ? " ads-grid--compact" : ""}${scroll ? "" : " ads-grid--open"}`} style={scroll ? { maxHeight } : undefined}>
         {shown.map((img) => (
           <button
             key={img.src}
