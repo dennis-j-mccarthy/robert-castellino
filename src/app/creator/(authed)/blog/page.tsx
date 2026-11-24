@@ -17,7 +17,7 @@ export default async function BlogPage() {
     <section className="admin-page cr-page">
       <div className="cr-pagehead">
         <div>
-          <div className="tl-eyebrow">3 · Blog</div>
+          <div className="tl-eyebrow">Blog</div>
           <h1>Blog</h1>
         </div>
         <Link className="btn btn--ghost ads-btn-sm" href="/creator/blog/posts">All Musings →</Link>

@@ -24,6 +24,7 @@ const FIELD_GUIDE: Record<string, string> = {
   purpose: "PURPOSE: why the work exists, one or two sentences, in his voice. Not a mission statement.",
   promise: "PROMISE: what every buyer can count on, one or two sentences, concrete (real place, signed by hand).",
   cta: "CALL TO ACTION: one quiet sentence to use when a piece needs one. No urgency words.",
+  reader: "THE READER: who every piece is written to, one or two sentences. Specific enough to picture (where they live, what they already love, why they would buy a signed book), never a demographic list.",
 };
 
 export async function POST(req: Request) {

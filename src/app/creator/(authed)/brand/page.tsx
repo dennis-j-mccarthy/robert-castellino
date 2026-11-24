@@ -48,7 +48,7 @@ export default async function BrandKitPage() {
 
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">2 · Brand kit</div>
+      <div className="tl-eyebrow">Brand kit</div>
       <h1>Brand kit</h1>
       <p>The marks, the colours, the type and the words. Copy or download from here so anything made outside the studio matches the site. The words come from Essence; change them there.</p>
       <KitTabs />

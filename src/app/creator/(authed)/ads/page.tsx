@@ -39,7 +39,7 @@ export default async function PaidSocialPage() {
   const bookPages = await bookPagesByAdId(plates);
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">6 · Ads</div>
+      <div className="tl-eyebrow">Ads</div>
       <h1>Ads, built here — launched in Meta</h1>
       <p>
         The book campaign, run from here. Same names and statuses as Meta Ads Manager, with a direct link at every

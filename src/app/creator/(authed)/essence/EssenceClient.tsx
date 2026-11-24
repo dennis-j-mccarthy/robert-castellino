@@ -25,15 +25,14 @@ interface Props {
 }
 
 type Draft = Pick<BrandEssenceRecord, "line" | "purpose" | "promise" | "cta" | "doList" | "dontList" | "voice">;
-type SpokeId = "core" | "lists" | "voice" | "who" | "pillars" | "tone";
+type SpokeId = "core" | "lists" | "voice" | "pillars" | "tone";
 
 const SPOKES: Array<{ id: SpokeId; n: string; title: string; hint: string }> = [
   { id: "core", n: "1", title: "Essence and Value Proposition", hint: "The line, the promise, the purpose, and the call to action." },
   { id: "lists", n: "2", title: "Always say · Never say", hint: "Short phrases that keep every caption on the rails." },
   { id: "voice", n: "3", title: "Voice", hint: "Three dials. Move one and hear a sentence change." },
-  { id: "who", n: "4", title: "Who it's for", hint: "The reader every piece is written to." },
-  { id: "pillars", n: "5", title: "Pillars and their messages", hint: "The five themes, and the sentences that live under each." },
-  { id: "tone", n: "6", title: "Tone brief", hint: "Written from the sections above. Regenerate it when they change." },
+  { id: "pillars", n: "4", title: "Pillars and their messages", hint: "The five themes, and the sentences that live under each." },
+  { id: "tone", n: "5", title: "Tone brief", hint: "Written from the sections above and the reader on the Audience page. Regenerate it when they change." },
 ];
 
 /* ───────── small pieces ───────── */
@@ -311,20 +310,6 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                     </div>
                   )}
 
-                  {s.id === "who" && (
-                    <div>
-                      <label className="es-label">The reader</label>
-                      <textarea className="ads-input" rows={3} value={t.audience} disabled={ro} onChange={(e) => setT({ ...t, audience: e.target.value })} onBlur={() => t.audience !== tone.audience && void saveTone(t)} />
-                      <Hint>Who every Musing, caption and newsletter is written to. One or two sentences.</Hint>
-                      {essence.audiences.length > 0 && (
-                        <details className="es-audiences">
-                          <summary>The {essence.audiences.length} Meta ad audiences <small>· read-only, from Ads</small></summary>
-                          <ul>{essence.audiences.map((a) => <li key={a.id}><b>{a.name}</b> <small>{a.subtype} · {a.sizeNote} · {a.status}</small></li>)}</ul>
-                        </details>
-                      )}
-                    </div>
-                  )}
-
                   {s.id === "pillars" && (
                     <div className="es-pillars">
                       <Hint>Each pillar is a theme the studio keeps returning to. Under it live its core messages: the sentences a post or a newsletter can land. Open one.</Hint>
@@ -420,7 +405,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
         })}
       </div>
 
-      <div className="es-readby"><span className="es-label">Read by</span><span className="cr-chip">3 Blog</span><span className="cr-chip">4 Posts</span><span className="cr-chip">5 Email</span><span className="cr-chip">6 Ads</span></div>
+      <div className="es-readby"><span className="es-label">Read by</span><span className="cr-chip">4 Blog</span><span className="cr-chip">5 Posts</span><span className="cr-chip">6 Email</span><span className="cr-chip">7 Ads</span><span className="es-muted" style={{ marginLeft: "auto" }}>The reader lives on <a href="/creator/audience">3 · Audience</a>.</span></div>
 
       {/* Pillar editor */}
       {editing && (

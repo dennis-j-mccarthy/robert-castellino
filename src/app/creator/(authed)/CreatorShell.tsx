@@ -44,23 +44,25 @@ const I = {
   ads: <svg viewBox="0 0 24 24"><path d="M3 11v2a2 2 0 0 0 2 2h2l6 4V5L7 9H5a2 2 0 0 0-2 2z" /><path d="M17 9a4 4 0 0 1 0 6" /></svg>,
   leads: <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" /><path d="M2 20a7 7 0 0 1 14 0" /><path d="M17 4a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6" /></svg>,
   plan: <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>,
+  search: <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="M20 20l-4.2-4.2" /></svg>,
   home: <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>,
 };
 
 const TOOLS: Tool[] = [
   { n: 1, href: "/creator/essence", label: "Essence", hint: "who you are", icon: I.essence },
   { n: 2, href: "/creator/library", label: "Brand kit", hint: "pictures & marks", icon: I.library, match: ["/creator/library", "/creator/brand"] },
-  { n: 3, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
-  { n: 4, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
-  { n: 5, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
-  { n: 6, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
-  { n: 7, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads, soon: true },
-  { n: 8, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
+  { n: 3, href: "/creator/audience", label: "Audience", hint: "who it's for", icon: I.leads },
+  { n: 4, href: "/creator/blog", label: "Blog", hint: "write", icon: I.blog, match: ["/creator/blog"] },
+  { n: 5, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
+  { n: 6, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
+  { n: 7, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads", "/creator/google-ads"] },
+  { n: 8, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.search, soon: true },
+  { n: 9, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
 ];
 
 // Tools that are "set up" show a check. Kept simple and honest: the ones
 // that have real data behind them today.
-const DONE = new Set([1, 2, 3, 6]);
+const DONE = new Set([1, 2, 3, 4, 7]);
 
 const MORE: Array<{ label: string; href: string; ext?: boolean }> = [
   { label: "Keywords", href: "/creator/keywords" },
@@ -137,14 +139,14 @@ export default function CreatorShell({ children, fontClass, counts }: { children
               )}
             </button>
           </div>
-          <nav className="ts-seq" ref={seqRef} aria-label="The eight tools, in order">
+          <nav className="ts-seq" ref={seqRef} aria-label="The nine tools, in order">
             {TOOLS.map((t) => {
               const on = active?.n === t.n;
-              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 4 && counts.queued ? counts.queued : null;
+              const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 5 && counts.queued ? counts.queued : null;
               return (
                 <Link key={t.n} href={t.href} className={`ts-tool${on ? " is-on" : ""}${t.soon ? " is-soon" : ""}${DONE.has(t.n) ? " is-done" : ""}`} aria-current={on ? "page" : undefined}>
                   <span className="ts-tool__ic" aria-hidden="true">{t.icon}</span>
-                  <span className="ts-tool__n">{t.n}{DONE.has(t.n) && <i aria-label="set up"> ✓</i>}</span>
+                  {DONE.has(t.n) && <span className="ts-tool__n" aria-label="set up">✓ set up</span>}
                   <span className="ts-tool__l">{t.label}{chip != null && <span className="ts-tool__chip">{chip}</span>}</span>
                   <span className="ts-tool__h">{t.hint}</span>
                 </Link>

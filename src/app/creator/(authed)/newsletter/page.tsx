@@ -12,7 +12,7 @@ export default async function EmailPage() {
   const pillars = await loadPillars();
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">5 · Email</div>
+      <div className="tl-eyebrow">Email</div>
       <h1>Newsletter</h1>
       <p>
         A note from the studio built from one to three Musings, with the signed book and the prints as the

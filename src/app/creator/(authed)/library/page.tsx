@@ -15,7 +15,7 @@ export default async function LibraryPage() {
   const [lib, pillars, essence] = await Promise.all([loadLibrary(), loadPillars(), getBrandEssence()]);
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">2 · Brand kit</div>
+      <div className="tl-eyebrow">Brand kit</div>
       <h1>Pictures</h1>
       <p>
         {lib.counts.total} images · {lib.counts.inBook} in the book · {lib.counts.tagged} tagged with a pillar

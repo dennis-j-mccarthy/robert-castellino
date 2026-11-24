@@ -15,7 +15,7 @@ export default async function SocialPage() {
   const [lib, pillars, essence, conn, rows] = await Promise.all([loadLibrary(), loadPillars(), getBrandEssence(), getConnection(), loadPosts()]);
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">4 · Posts</div>
+      <div className="tl-eyebrow">Posts</div>
       <h1>Posts</h1>
       <p>Everything you have posted, scheduled or left unfinished, then the maker. Facebook publishes through Meta; Instagram is copy-only until the account is linked.</p>
       <PostBoard rows={rows} />

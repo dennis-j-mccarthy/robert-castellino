@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export default function LeadsPage() {
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">7 · Leads · coming</div>
+      <div className="tl-eyebrow">Leads · coming</div>
       <h1>Find people worth talking to</h1>
       <p>Describe who, and where. The studio searches, checks the website and the contact, and fills a list. You mark the good ones. They show up in Email as a group.</p>
       <div className="cr-soon">

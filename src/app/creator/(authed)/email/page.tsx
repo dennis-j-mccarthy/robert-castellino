@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default function EmailPage() {
   return (
     <section className="admin-page cr-page">
-      <div className="tl-eyebrow">5 · Email</div>
+      <div className="tl-eyebrow">Email</div>
       <h1>Email</h1>
       <p>Two kinds of email, one place. <b>A note</b> is one person or a short list, in your voice, from one line of yours. <b>Newsletter</b> is the issue that goes to everyone, built by dragging in your Musings.</p>
       <EmailTabs />
