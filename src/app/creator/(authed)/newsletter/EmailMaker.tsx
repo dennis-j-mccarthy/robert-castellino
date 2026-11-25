@@ -121,7 +121,7 @@ export default function EmailMaker({ pillars, ai, db }: Props) {
   return (
     <div className="cr-email">
       {!db && <div className="ads-notice ads-notice--warn">No database connected — drafts can&rsquo;t be saved.</div>}
-      {!ai && <div className="ads-notice ads-notice--warn">AI isn&rsquo;t configured — the newsletter will use the Musings&rsquo; own excerpts.</div>}
+      {!ai && <div className="ads-notice ads-notice--warn">AI isn&rsquo;t configured — the newsletter will use the posts&rsquo; own excerpts.</div>}
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
       <div className="cr-two cr-gap">

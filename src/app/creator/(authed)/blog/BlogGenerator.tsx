@@ -148,7 +148,7 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
 
   return (
     <div className="cr-blog">
-      {!ai && <div className="ads-notice ads-notice--warn">AI isn&rsquo;t configured (no <code>ANTHROPIC_API_KEY</code>). You can still write a Musing by hand below.</div>}
+      {!ai && <div className="ads-notice ads-notice--warn">AI isn&rsquo;t configured (no <code>ANTHROPIC_API_KEY</code>). You can still write a post by hand below.</div>}
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
       {/* ① tone */}
@@ -216,7 +216,7 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
         <label className="ads-label">Bob&rsquo;s rough notes (optional — the piece stays inside them)</label>
         <textarea className="ads-input" rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="what happened, what the light did, what he noticed…" />
         <div className="ads-row" style={{ marginTop: 12 }}>
-          <button className="btn btn--gold ads-btn-sm" disabled={!ai || !!busy || !title.trim()} onClick={() => void write()}>{busy === "write" ? "Writing…" : "Write the Musing"}</button>
+          <button className="btn btn--gold ads-btn-sm" disabled={!ai || !!busy || !title.trim()} onClick={() => void write()}>{busy === "write" ? "Writing…" : "Write the post"}</button>
           <button className="btn btn--ghost ads-btn-sm" disabled={!!busy || !title.trim()} onClick={startBlank}>Start blank</button>
         </div>
       </section>
