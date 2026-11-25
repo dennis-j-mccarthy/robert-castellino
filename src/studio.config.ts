@@ -40,6 +40,7 @@ export const studio: StudioConfig = {
     tagline: "Fifty years of Colorado light, one morning at a time",
     logo: "/assets/logo-script.png",
     accent: "#b9871f",
+    og: { font: "Cormorant Garamond", accent: "#b9871f", accent2: "#c8a96a", ink: "#0f1015", paper: "#f4f0e6" },
     blog: {
       label: "Musings",
       singular: "Musing",
