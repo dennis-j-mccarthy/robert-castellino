@@ -1,13 +1,13 @@
 import { generateJson } from "@/lib/creator/ai";
 import { brandSystemPrompt, loadBrandContext } from "@/lib/creator/brand-context";
 import type { LibraryItem } from "@/lib/creator/library";
-import { BOOK, SITE } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 
 /*
   Landing pages (Search → Landing pages). SERVER ONLY.
   One page per search phrase, at /for/<slug>. Claude writes the draft from
-  Essence and the pillars, in Bob's voice. The hero is one of Bob's real
-  plates, chosen from the library by the model; nothing is generated. The
+  Essence and the pillars, in the owner's voice. The hero is one of the site's real
+  pictures, chosen from the library by the model; nothing is generated. The
   offer on every page is the signed book, with prints as the quiet second.
   Drafts are unpublished and noindex until someone presses Publish.
 */
@@ -15,11 +15,11 @@ import { BOOK, SITE } from "@/lib/creator/pillars";
 export interface LandingSections {
   /** Short line above the headline, e.g. "Colorado gift · signed, from the studio" */
   eyebrow: string;
-  /** One or two sentences: why this book, why Bob, why now */
+  /** One or two sentences: why this offer, why this maker, why now */
   valueProp: string;
-  /** Three things the reader gets (facts about the book, never hype) */
+  /** Three things the reader gets (facts, never hype) */
   benefits: { title: string; text: string }[];
-  /** Three steps: order, signed in the studio, arrives */
+  /** Three steps from here to having it */
   steps: { title: string; text: string }[];
   ctaHeadline: string;
   ctaButton: string;
@@ -64,7 +64,7 @@ function titleCase(s: string): string {
   return s.replace(/\b([a-z])([a-z]*)/g, (_, a: string, b: string) => (["and", "or", "for", "of", "the", "a"].includes(a + b) ? a + b : a.toUpperCase() + b));
 }
 
-const FACTS = `THE OFFER ON EVERY PAGE: "${BOOK.title}" — ${BOOK.facts}. Signed by Robert in the studio, shipped from Boulder, Colorado. Limited prints of the same plates are the second thing, mentioned once, never the headline. Order link is ${SITE.url}${SITE.bookPath}.`;
+const FACTS = `THE OFFER ON EVERY PAGE: "${studio.offer.title}" — ${studio.offer.facts}. ${studio.offer.description}${studio.offer.secondary ? ` ${studio.offer.secondary.note} It is the second thing, mentioned once, never the headline.` : ""} The button goes to ${studio.site.url}${studio.offer.path}.`;
 
 export async function writeLanding(keyword: string, plates: LibraryItem[]): Promise<LandingDraft> {
   const ctx = await loadBrandContext();
@@ -74,16 +74,16 @@ export async function writeLanding(keyword: string, plates: LibraryItem[]): Prom
     .join("\n");
   const out = await generateJson<Record<string, unknown>>({
     system: brandSystemPrompt(ctx, {
-      role: "You write landing pages for Robert Castellino's website, each for one phrase people search on Google.",
+      role: `You write landing pages for ${studio.site.ownerFull}'s website, each for one phrase people search on Google.`,
       includePillars: true,
-      extra: `${FACTS}\n\nRULES: The headline must use the searcher's own words so they know at a glance they are in the right place. Write in Bob's voice: unhurried, first person where he speaks, specific about light, hour and place. Every claim about the book must come from the facts above. Never invent reviews, press, awards or buyers. No exclamation marks. The hero must be one of the plates listed; pick the one that fits the search best and return its exact src.`,
+      extra: `${FACTS}\n\nRULES: The headline must use the searcher's own words so they know at a glance they are in the right place. Write in ${studio.site.owner}'s voice, first person where ${studio.site.pronouns[0]} speaks. Every claim about the offer must come from the facts above. Never invent reviews, press, awards or buyers. No exclamation marks. The hero must be one of the pictures listed; pick the one that fits the search best and return its exact src.`,
     }),
     user: `Write a complete landing page for people who search: "${keyword}".
 
-PLATES YOU MAY USE AS THE HERO (src — title, place):
+PICTURES YOU MAY USE AS THE HERO (src — title, place):
 ${list}
 
-Return JSON: title (page title under 60 characters, includes the phrase and Colorado), metaDescription (under 155 characters), eyebrow (3 to 6 words), h1 (headline using the searcher's words, under 70 characters), valueProp (1 to 2 sentences: what this book is for this person and why it is different), intro (2 to 3 sentences that meet them where they are), benefits (exactly 3: {title 3–6 words, text 1–2 sentences, facts about the book}), steps (exactly 3: order → signed in the studio → arrives, {title, text}), body (markdown, 350 to 550 words, 2 or 3 ## subheads: the places and the light inside, who it is for, what makes a signed first printing different), faq (4 to 6 {q, a} written so an AI search tool could quote the answer), ctaHeadline (under 60 characters), ctaButton (2 to 4 words), heroSrc (exact src from the list), heroAlt (one plain sentence describing that plate).`,
+Return JSON: title (page title under 60 characters, includes the phrase and the place), metaDescription (under 155 characters), eyebrow (3 to 6 words), h1 (headline using the searcher's words, under 70 characters), valueProp (1 to 2 sentences: what this offer is for this person and why it is different), intro (2 to 3 sentences that meet them where they are), benefits (exactly 3: {title 3–6 words, text 1–2 sentences, facts about the offer}), steps (exactly 3: how it goes from here to having it, {title, text}), body (markdown, 350 to 550 words, 2 or 3 ## subheads: what is inside or what happens, who it is for, what makes this one different), faq (4 to 6 {q, a} written so an AI search tool could quote the answer), ctaHeadline (under 60 characters), ctaButton (2 to 4 words), heroSrc (exact src from the list), heroAlt (one plain sentence describing that picture).`,
     schema: {
       type: "object",
       additionalProperties: false,
@@ -122,12 +122,12 @@ Return JSON: title (page title under 60 characters, includes the phrase and Colo
     heroSrc,
     heroAlt: str(out.heroAlt, 300) || (plates.find((p) => p.src === heroSrc)?.title ?? ""),
     sections: {
-      eyebrow: str(out.eyebrow, 80) || "Colorado, signed from the studio",
+      eyebrow: str(out.eyebrow, 80) || studio.site.location,
       valueProp: str(out.valueProp, 400),
       benefits: pairs(out.benefits),
       steps: pairs(out.steps),
-      ctaHeadline: str(out.ctaHeadline, 90) || "Order the signed book",
-      ctaButton: str(out.ctaButton, 40) || "Order the signed book",
+      ctaHeadline: str(out.ctaHeadline, 90) || studio.offer.ctaLabel,
+      ctaButton: str(out.ctaButton, 40) || studio.offer.ctaLabel,
     },
   };
 }

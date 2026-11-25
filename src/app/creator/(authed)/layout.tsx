@@ -7,9 +7,10 @@ import { ensureCreatorSeeded } from "@/lib/creator/seed";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import CreatorShell, { type NavCounts } from "./CreatorShell";
 import "../creator.css";
+import { studio } from "@/studio.config";
 
 export const metadata: Metadata = {
-  title: "Creator — Robert Castellino",
+  title: `Creator — ${studio.site.short}`,
   robots: { index: false, follow: false },
 };
 

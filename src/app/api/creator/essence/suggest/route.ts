@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { AI_NOT_CONFIGURED, aiErrorMessage, generateJson, hasAnthropicKey } from "@/lib/creator/ai";
 import { brandSystemPrompt, loadBrandContext } from "@/lib/creator/brand-context";
 import { creatorGuard, readJson } from "@/lib/creator/guard";
+import { studio } from "@/studio.config";
 
 /*
   POST /api/creator/essence/suggest { kind, ...fields } — the AI assist on
   the Essence page. Nothing is saved here; the client shows the options and
-  Bob clicks the one he wants.
+  The owner clicks the one they want.
 
   kind:
     "line" | "purpose" | "promise" | "cta"  { current, note? } → { options: string[] }   (3)
@@ -35,20 +36,20 @@ export async function POST(req: Request) {
   if (!b?.kind) return NextResponse.json({ error: "kind is required" }, { status: 400 });
   try {
     const ctx = await loadBrandContext({ pillarId: b.pillarId ?? null });
-    const role = "You help Robert Castellino sharpen the brand essence his studio writes from.";
+    const role = `You help ${studio.site.ownerFull} sharpen the brand essence ${studio.site.pronouns[1]} studio writes from.`;
     const strList = { type: "object", additionalProperties: false, required: ["options"], properties: { options: { type: "array", items: { type: "string" } } } };
 
     if (b.kind in FIELD_GUIDE) {
       const out = await generateJson<{ options: string[] }>({
         system: brandSystemPrompt(ctx, { role, includePillars: true, extra: FIELD_GUIDE[b.kind] }),
-        user: `Current ${b.kind}: "${b.current ?? ""}".${b.note ? ` Bob's note: "${b.note}".` : ""}\nGive 3 alternatives. Keep what is true in the current one; vary rhythm and emphasis, not facts. Return JSON { options: [3 strings] }.`,
+        user: `Current ${b.kind}: "${b.current ?? ""}".${b.note ? ` ${studio.site.owner}'s note: "${b.note}".` : ""}\nGive 3 alternatives. Keep what is true in the current one; vary rhythm and emphasis, not facts. Return JSON { options: [3 strings] }.`,
         schema: strList, maxTokens: 800,
       });
       return NextResponse.json({ options: out.options.slice(0, 3) });
     }
     if (b.kind === "preamble") {
       const out = await generateJson<{ options: string[] }>({
-        system: brandSystemPrompt(ctx, { role, includePillars: true, extra: "A newsletter preamble is 2–4 sentences from Bob opening the issue: where he has been, what the light did, why these pieces sit together. First person. No pitch, no exclamation marks." }),
+        system: brandSystemPrompt(ctx, { role, includePillars: true, extra: "A newsletter preamble is 2–4 sentences from ${studio.site.owner} opening the issue: where he has been, what the light did, why these pieces sit together. First person. No pitch, no exclamation marks." }),
         user: `This issue includes: ${JSON.stringify(b.titles ?? [])}.${b.current ? ` His draft so far: "${b.current}".` : ""}${b.note ? ` His note: "${b.note}".` : ""} Give 3 preambles. Return JSON { options: [3 strings] }.`,
         schema: strList, maxTokens: 900,
       });

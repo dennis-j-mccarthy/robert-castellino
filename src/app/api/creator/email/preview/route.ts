@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { creatorDbGuard, readJson } from "@/lib/creator/guard";
 import { fallbackNewsletterCopy, renderNewsletter, stripTags, type NewsletterMusing } from "@/lib/creator/newsletter";
-import { prisma } from "@/lib/prisma";
+import { adapters } from "@/studio.adapters";
+import { studio } from "@/studio.config";
 import { getBrandEssence } from "@/lib/creator/essence-store";
 import { readCtas } from "@/lib/creator/newsletter-ctas";
 
@@ -22,8 +23,8 @@ export async function POST(req: Request) {
   if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   const ids = (Array.isArray(body.musingIds) ? body.musingIds : []).map((v) => String(v).trim()).filter(Boolean).slice(0, 6);
   if (!ids.length) return NextResponse.json({ error: "No pieces." }, { status: 400 });
-  const rows = await prisma.musing.findMany({ where: { id: { in: ids } } });
-  const musings: NewsletterMusing[] = ids.map((id) => rows.find((m) => m.id === id)).filter((m): m is NonNullable<typeof m> => !!m).map((m) => ({ id: m.id, title: m.title, excerpt: m.excerpt, img: m.img, loc: m.loc }));
+  const all = await adapters.content.list();
+  const musings: NewsletterMusing[] = ids.map((id) => all.find((m) => m.id === id)).filter((m): m is NonNullable<typeof m> => !!m).map((m) => ({ id: m.id, title: m.title, excerpt: m.excerpt, img: m.img, loc: m.loc, url: adapters.content.url(m.id) }));
   if (!musings.length) return NextResponse.json({ error: "No pieces." }, { status: 400 });
   const { perMusing, whole } = readCtas(body.ctas, body.cta);
   let copy = fallbackNewsletterCopy(musings);
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
     subject: `Notes from the studio · ${month}`,
     preheader: stripTags(musings[0].excerpt).slice(0, 110),
     tagline: essence?.line ?? null,
-    introPlaceholder: "Bob opens the issue here: where he has been, what the light did, why these pieces sit together. Write it on the left, or leave it and the studio writes it when you save.",
+    introPlaceholder: `${studio.site.owner} opens the issue here: a few lines on what these posts have in common. Write it on the left, or leave it and the studio writes it when you save.`,
   });
   return NextResponse.json({ html });
 }

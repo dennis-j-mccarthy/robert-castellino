@@ -3,18 +3,18 @@ import { AI_NOT_CONFIGURED, aiErrorMessage, generateJson, hasAnthropicKey } from
 import { brandSystemPrompt, loadBrandContext } from "@/lib/creator/brand-context";
 import { creatorGuard, readJson } from "@/lib/creator/guard";
 import { loadLibrary, normalizeSrc } from "@/lib/creator/library";
-import { SITE } from "@/lib/creator/pillars";
 import { CAPTION_LIMITS, PLATFORM_BRIEF, PLATFORM_LABELS, clamp, isSocialPlatform, type SocialPlatform } from "@/lib/creator/social";
-import { isDatabaseConfigured, prisma } from "@/lib/prisma";
+import { adapters } from "@/studio.adapters";
+import { studio } from "@/studio.config";
 
 /*
   POST /api/creator/social/captions — step 4 of the Post maker.
   Body: { pillarId, platform, messageId?, imageSrc?, musingId?, topic? }
   Returns: { captions: string[count], pillarId, platform }   count defaults to 3, max 6
 
-  Three options for ONE platform in Bob's voice. `imageSrc` pulls the
+  Three options for ONE platform in the owner's voice. `imageSrc` pulls the
   library item's title / place / blurb so the copy can name what's in the
-  frame; `musingId` promotes that Musing with its link; `topic` is a nudge.
+  frame; `musingId` promotes that blog post with its link; `topic` is a nudge.
 */
 
 export const runtime = "nodejs";
@@ -66,24 +66,20 @@ export async function POST(req: Request) {
   // Optional Musing to promote.
   let musing: { title: string; excerpt: string; link: string } | null = null;
   const musingId = String(body.musingId ?? "").trim();
-  if (musingId && isDatabaseConfigured()) {
-    try {
-      const m = await prisma.musing.findUnique({ where: { id: musingId } });
-      if (m) musing = { title: m.title, excerpt: m.excerpt.replace(/<[^>]+>/g, ""), link: `${SITE.url}${SITE.musingsPath}/${m.id}` };
-    } catch {
-      /* skip */
-    }
+  if (musingId) {
+    const m = await adapters.content.get(musingId).catch(() => null);
+    if (m) musing = { title: m.title, excerpt: m.excerpt, link: adapters.content.url(m.id) };
   }
 
   try {
     const data = await generateJson<{ captions?: unknown }>({
       system: brandSystemPrompt(ctx, {
-        role: "You write Bob's social posts. Write for ONE platform at a time, in its native shape. Each option must take a different angle — not rewordings of one idea. Vary length too: at least one short (one or two lines), at least one that tells a small story. Describe only what the image notes say is in the frame; never invent a place or a time.",
+        role: `You write ${studio.site.owner}'s social posts. Write for ONE platform at a time, in its native shape. Each option must take a different angle — not rewordings of one idea. Vary length too: at least one short (one or two lines), at least one that tells a small story. Describe only what the image notes say is in the frame; never invent a place or a time.`,
         extra: `PLATFORM:\n${PLATFORM_BRIEF[platform]}`,
       }),
       user: `Write exactly ${COUNT} ${PLATFORM_LABELS[platform]} caption options for the "${ctx.pillar.name}" pillar.
 ${image ? `\nTHE IMAGE: ${image}` : "\nTHE IMAGE: not described — don't describe it; write around light, land and the hour in general terms."}${
-        musing ? `\n\nPROMOTE THIS MUSING:\nTITLE: ${musing.title}\nEXCERPT: ${musing.excerpt}\nLINK: ${musing.link}` : ""
+        musing ? `\n\nPROMOTE THIS BLOG POST:\nTITLE: ${musing.title}\nEXCERPT: ${musing.excerpt}\nLINK: ${musing.link}` : ""
       }${topic ? `\n\nWHAT THIS POST IS ABOUT: ${topic}` : ""}
 
 Return them in the captions array.`,

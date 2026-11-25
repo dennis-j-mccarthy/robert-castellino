@@ -1,11 +1,12 @@
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import { loadLibrary, type LibraryItem } from "@/lib/creator/library";
 import { SITE } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 
 /*
   Creator → Plan (tool 9). SERVER ONLY.
 
-  PlanSettings is the rhythm Bob sets once: how often each thing goes out,
+  PlanSettings is the rhythm the owner sets once: how often each thing goes out,
   which days, how much the studio does on its own, where the weekly plan is
   emailed. buildWeeklyPlan() turns that into PlanItems for one week (Monday
   to Sunday, Mountain time), saves them as a WeeklyPlan row, and the home
@@ -13,7 +14,7 @@ import { SITE } from "@/lib/creator/pillars";
   build the coming week, email the summary.
 
   Nothing here publishes anything. Items are slots with a suggested plate and
-  pillar; the tools (Posts, Newsletter, Email) fill them when Bob opens them,
+  pillar; the tools (Posts, Newsletter, Email) fill them when the owner opens them,
   or on their own once autonomy is raised. v1 only ever drafts.
 */
 
@@ -152,7 +153,7 @@ export async function buildWeeklyPlan(settings: PlanSettings, start: Date): Prom
     items.push({
       id: `post-${day}`, kind: "post", at: at.toISOString(), day, state: "suggested",
       title: plate ? `Post · ${plate.title ?? plate.label}` : "Post",
-      note: plate?.bookPage ? `Plate on page ${plate.bookPage} of the book` : undefined,
+      note: plate?.bookPage ? `Page ${plate.bookPage} of the book` : undefined,
       image: img(plate), pillarId: plate?.pillarId ?? null,
       href: `/creator/social?${new URLSearchParams({ ...(plate ? { imageId: plate.src } : {}), ...(plate?.pillarId ? { pillar: plate.pillarId } : {}), at: localInput(at), platform: "facebook" }).toString()}`,
     });
@@ -169,7 +170,7 @@ export async function buildWeeklyPlan(settings: PlanSettings, start: Date): Prom
   // Email suggestion
   if (settings.email.mode === "suggest-weekly") {
     const at = dayOfWeek(start, 4, "10:00");
-    items.push({ id: "email", kind: "email", at: at.toISOString(), day: 4, state: "suggested", title: "A note to recent buyers", note: "A short thank-you from Bob to anyone who bought this week.", href: "/creator/email" });
+    items.push({ id: "email", kind: "email", at: at.toISOString(), day: 4, state: "suggested", title: studio.planEmailSuggestion.title, note: studio.planEmailSuggestion.note, href: "/creator/email" });
   }
 
   // Blog

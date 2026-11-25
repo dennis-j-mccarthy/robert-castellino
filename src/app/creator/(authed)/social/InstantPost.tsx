@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import { api, copyText, errText } from "@/lib/creator/client";
 import { CAPTION_LIMITS, PLATFORM_LABELS, PUBLISHES, SOCIAL_PLATFORMS, type SocialPlatform } from "@/lib/creator/social";
+import { studio } from "@/studio.config";
 
 /*
   Instant post. A photo from the desktop or the camera roll, up to three
@@ -142,7 +143,7 @@ export default function InstantPost({ config }: { config: { connected: boolean; 
             <header className="fbcard__head">
               <div className="fbcard__avatar">RC</div>
               <div>
-                <div className="fbcard__page">{config.page ?? "Robert Castellino Photography"}</div>
+                <div className="fbcard__page">{config.page ?? studio.site.name}</div>
                 <div className="fbcard__meta">{scheduledAt ? `Scheduled · ${new Date(scheduledAt).toLocaleString()}` : "Just now"} · {PLATFORM_LABELS[platform]}</div>
               </div>
             </header>

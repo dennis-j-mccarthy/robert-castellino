@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { api, download, errText } from "@/lib/creator/client";
 import { openPanel } from "@/components/creator/TwoAccordion";
+import { studio } from "@/studio.config";
 
 export type Card = { id: string; title: string; date: string; img: string | null; excerpt: string; published: boolean; starred: boolean; usedIn: string | null };
 
@@ -58,9 +59,9 @@ export default function MusingCardsClient({ cards: initial, db, ai }: { cards: C
               <span className="mc__date">{c.date}</span>
               <p>{c.excerpt}</p>
               <div className="mc__actions">
-                <Link className="btn ads-btn-xs" href={`/creator/blog/posts#${c.id}`}>Edit</Link>
+                <Link className="btn ads-btn-xs" href={`${studio.brand.blog.managePath ?? "/creator/blog/posts"}#${c.id}`}>Edit</Link>
                 <Link className="btn ads-btn-xs" href={`/creator/social?musingId=${c.id}${c.img ? `&imageId=${encodeURIComponent(c.img)}` : ""}`}>Posts</Link>
-                {c.published && <a className="btn btn--ghost ads-btn-xs" href={`/musings/${c.id}`} target="_blank" rel="noreferrer">View ↗</a>}
+                {c.published && <a className="btn btn--ghost ads-btn-xs" href={`${studio.brand.blog.path}/${c.id}`} target="_blank" rel="noreferrer">View ↗</a>}
               </div>
             </div>
           </article>
@@ -158,7 +159,7 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
             </ul>
           </div>
           <div>
-            <div className="es-field__head"><label className="es-label">Preamble · Bob opens the issue</label>{ai && <button type="button" className="es-suggest" disabled={busy !== null || !items.length} onClick={() => void suggest()}><span aria-hidden="true">✦</span> {busy === "suggest" ? "Thinking…" : "Suggest"}</button>}</div>
+            <div className="es-field__head"><label className="es-label">Preamble · {studio.site.owner} opens the issue</label>{ai && <button type="button" className="es-suggest" disabled={busy !== null || !items.length} onClick={() => void suggest()}><span aria-hidden="true">✦</span> {busy === "suggest" ? "Thinking…" : "Suggest"}</button>}</div>
             <textarea className="ads-input" rows={7} value={preamble} placeholder="Where you've been, what the light did, why these pieces sit together…" onChange={(e) => setPreamble(e.target.value)} />
             {opts.length > 0 && (
               <div className="es-options">

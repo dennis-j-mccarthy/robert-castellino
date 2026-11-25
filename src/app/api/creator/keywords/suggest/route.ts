@@ -3,14 +3,14 @@ import { AI_NOT_CONFIGURED, aiErrorMessage, generateJson, hasAnthropicKey } from
 import { brandSystemPrompt, loadBrandContext } from "@/lib/creator/brand-context";
 import { creatorDbGuard, readJson } from "@/lib/creator/guard";
 import { KEYWORD_KINDS, type KeywordKind } from "@/lib/creator/keywords";
-import { BOOK } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 import { prisma } from "@/lib/prisma";
 
 /*
   POST { focus? } → { suggestions: [{ phrase, kind, priority, why }] }
   New phrases people type when looking for the book, a Colorado gift or
-  Bob's photography, weighted toward gift searches. Not saved; the page adds
-  the ones Bob picks. Priority is Claude's judgement (0–100), never a volume.
+  the owner's work, weighted toward purchase intent. Not saved; the page adds
+  the ones the owner picks. Priority is Claude's judgement (0–100), never a volume.
 */
 
 export const runtime = "nodejs";
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
   const existing = (await prisma.keyword.findMany({ select: { phrase: true } })).map((k) => k.phrase);
   const ctx = await loadBrandContext();
   const user = [
-    `Suggest 20 search phrases people type into Google when they are looking for something Robert Castellino makes: his signed coffee table book "${BOOK.title}" (${BOOK.facts}), a gift for someone who loves Colorado or the mountains, or Colorado landscape photography.`,
+    `Suggest 20 search phrases people type into Google when they are looking for something ${studio.site.ownerFull} makes: ${studio.offer.description} Favour buyers with money in hand (gift and purchase intent) over browsers.`,
     "Mostly GIFT phrases (someone about to buy and not yet decided), then book phrases, a few photography phrases and a few questions. Include holiday-gift wording.",
     "Plain words people actually type. No brand names other than his own. Nothing about therapy, craniosacral work or Fluid Pathways.",
     b.focus ? `Focus on: ${String(b.focus).slice(0, 200)}` : "",

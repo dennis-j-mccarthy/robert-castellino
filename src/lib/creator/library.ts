@@ -1,6 +1,6 @@
-import adImages from "@/data/ad-images.json";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/creator/pillars";
+import { adapters } from "@/studio.adapters";
 
 /*
   The Creator-page library — a VIEW, not a store. SERVER ONLY.
@@ -15,10 +15,10 @@ import { SITE } from "@/lib/creator/pillars";
 */
 
 /** The AI book renders — banned from ads and posts, always. */
-export const MOCKUP_RE = /book-cover|book-table|gift-series|mockup/i;
+export const MOCKUP_RE: RegExp | null = adapters.pictures.mockupPattern ?? null;
 
 export function isMockup(src: string): boolean {
-  return MOCKUP_RE.test(src);
+  return MOCKUP_RE ? MOCKUP_RE.test(src) : false;
 }
 
 export interface LibraryItem {
@@ -51,6 +51,7 @@ export interface LibraryView {
 type ManifestEntry = { src: string; collection: string; label: string; bookPage?: number };
 
 export function absoluteImageUrl(u: string): string {
+  if (adapters.pictures.absolute) return adapters.pictures.absolute(u);
   const s = u.trim();
   if (/^https?:\/\//i.test(s)) return s;
   return `${SITE.url}${s.startsWith("/") ? "" : "/"}${s}`;
@@ -58,8 +59,10 @@ export function absoluteImageUrl(u: string): string {
 
 /** `/assets/…` for anything on this site, so manifest, Photo and tag rows agree. */
 export function normalizeSrc(u: string): string {
+  if (adapters.pictures.normalize) return adapters.pictures.normalize(u);
   const s = u.trim();
-  const m = s.match(/^https?:\/\/(?:www\.)?robertcastellino\.com(\/.*)$/i);
+  const esc = SITE.domain.replace(/\./g, "\\.");
+  const m = s.match(new RegExp("^https?://(?:www\\.)?" + esc + "(/.*)$", "i"));
   if (m) return m[1];
   if (/^https?:\/\//i.test(s)) return s;
   return s.startsWith("/") ? s : `/${s}`;
@@ -70,65 +73,44 @@ const prettyLabel = (src: string) =>
 
 export async function loadLibrary(): Promise<LibraryView> {
   const bySrc = new Map<string, LibraryItem>();
+  const collectionLabels = new Map<string, string>();
 
-  for (const e of adImages as ManifestEntry[]) {
-    const src = normalizeSrc(e.src);
+  // Everything the site owns, through its pictures adapter (manifest, gallery, uploads…).
+  const sitePictures = await adapters.pictures.list().catch((err) => { console.error("[creator/library] pictures adapter failed:", err); return []; });
+  for (const p of sitePictures) {
+    const src = normalizeSrc(p.src);
+    const prev = bySrc.get(src);
+    if (prev) {
+      prev.source = "both";
+      prev.title = prev.title ?? p.title ?? null;
+      prev.loc = prev.loc ?? p.loc ?? null;
+      prev.blurb = prev.blurb ?? p.blurb ?? null;
+      prev.bookPage = prev.bookPage ?? p.bookPage ?? null;
+      prev.inBook = prev.inBook || !!p.bookPage;
+      continue;
+    }
     bySrc.set(src, {
       src,
       url: absoluteImageUrl(src),
-      label: e.label,
-      collection: e.collection,
-      bookPage: e.bookPage ?? null,
-      inBook: !!e.bookPage,
+      label: p.label || prettyLabel(src),
+      collection: p.collection,
+      bookPage: p.bookPage ?? null,
+      inBook: !!p.bookPage,
       mockup: isMockup(src),
       adEligible: !isMockup(src),
-      title: null,
-      loc: null,
-      blurb: null,
+      title: p.title ?? null,
+      loc: p.loc ?? null,
+      blurb: p.blurb ?? null,
       pillarId: null,
       messageId: null,
-      source: "manifest",
+      source: p.bookPage != null ? "manifest" : "photo",
     });
   }
 
-  const collectionLabels = new Map<string, string>();
+  // The studio's own enrichment (pillar, message, title, blurb, place) — a shared table.
   if (isDatabaseConfigured()) {
     try {
-      const [photos, tags] = await Promise.all([
-        prisma.photo.findMany({
-          include: { collection: { select: { slug: true, label: true } } },
-          orderBy: [{ collectionId: "asc" }, { order: "asc" }],
-        }),
-        prisma.libraryTag.findMany(),
-      ]);
-      for (const p of photos) {
-        collectionLabels.set(p.collection.slug, p.collection.label);
-        const src = normalizeSrc(p.img);
-        const prev = bySrc.get(src);
-        if (prev) {
-          prev.source = "both";
-          prev.title = prev.title ?? p.title;
-          prev.loc = prev.loc ?? p.loc;
-          prev.blurb = prev.blurb ?? p.blurb;
-          continue;
-        }
-        bySrc.set(src, {
-          src,
-          url: absoluteImageUrl(src),
-          label: p.title || prettyLabel(src),
-          collection: p.collection.slug,
-          bookPage: null,
-          inBook: false,
-          mockup: isMockup(src),
-          adEligible: !isMockup(src),
-          title: p.title,
-          loc: p.loc,
-          blurb: p.blurb,
-          pillarId: null,
-          messageId: null,
-          source: "photo",
-        });
-      }
+      const tags = await prisma.libraryTag.findMany();
       for (const t of tags) {
         const it = bySrc.get(normalizeSrc(t.src));
         if (!it) continue;
@@ -137,11 +119,9 @@ export async function loadLibrary(): Promise<LibraryView> {
         it.blurb = t.blurb ?? it.blurb;
         it.pillarId = t.pillarId;
         it.messageId = t.messageId;
-        // `inBook` stays what the manifest's verified `bookPage` says; a tag's
-        // flag is informational and never promotes a plate into the book set.
       }
     } catch (err) {
-      console.error("[creator/library] db read failed; manifest only:", err);
+      console.error("[creator/library] tag read failed:", err);
     }
   }
 

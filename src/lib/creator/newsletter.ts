@@ -1,4 +1,5 @@
-import { BOOK, SITE } from "@/lib/creator/pillars";
+import { SITE } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 import { absoluteImageUrl } from "@/lib/creator/library";
 
 /*
@@ -6,7 +7,7 @@ import { absoluteImageUrl } from "@/lib/creator/library";
   COPY (subjects, preheader, intro, a blurb per Musing, outro); this file
   turns it into a simple single-column email (inline styles, one hero image
   from the first Musing, a section per Musing with "Read the musing →",
-  the two CTAs, Bob's footer) and its plain-text twin.
+  the two CTAs, the owner's footer) and its plain-text twin.
 */
 
 export interface NewsletterMusing {
@@ -15,6 +16,8 @@ export interface NewsletterMusing {
   excerpt: string;
   img: string | null;
   loc: string | null;
+  /** Public URL of the post (from the content adapter) */
+  url?: string;
 }
 
 export interface NewsletterCta {
@@ -35,30 +38,30 @@ export interface NewsletterRenderOptions {
   preheader: string;
   /** Under the logo in the masthead. Falls back to the studio line. */
   tagline?: string | null;
-  /** Preview only: when the intro is blank, show a placeholder where Bob's preamble will go. */
+  /** Preview only: when the intro is blank, show a placeholder where the owner's preamble will go. */
   introPlaceholder?: string | null;
 }
 
-export const LOGO_URL = `${SITE.url}/assets/logo-script.png`;
-export const DEFAULT_TAGLINE = "Fifty years of Colorado light, one morning at a time";
+export const LOGO_URL = studio.brand.logo ? (studio.brand.logo.startsWith("http") ? studio.brand.logo : `${SITE.url}${studio.brand.logo}`) : null;
+export const DEFAULT_TAGLINE = studio.brand.tagline;
 
 export interface RenderedNewsletter {
   html: string;
   text: string;
 }
 
-const GOLD = "#b9871f";
+const GOLD = studio.brand.accent;
 const INK = "#15161c";
 const MUTED = "#6b665a";
 const PAPER = "#f4f0e6";
 const RULE = "#e3dccb";
 
 export const FOOTER_LINE = `${SITE.name} · ${SITE.location} · ${SITE.domain}`;
-export const CTA_BOOK = { label: "Order the signed book", url: `${SITE.url}${SITE.bookPath}` };
-export const CTA_PRINTS = { label: "Shop limited prints", url: `${SITE.url}${SITE.galleryPath}` };
+export const CTA_BOOK = { label: studio.offer.ctaLabel, url: `${SITE.url}${studio.offer.path}` };
+export const CTA_PRINTS = studio.offer.secondary ? { label: studio.offer.secondary.label, url: `${SITE.url}${studio.offer.secondary.path}` } : null;
 
 export function musingUrl(id: string): string {
-  return `${SITE.url}${SITE.musingsPath}/${id}`;
+  return `${SITE.url}${SITE.blogPath}/${id}`;
 }
 
 export function escapeHtml(s: string): string {
@@ -124,7 +127,7 @@ export function renderNewsletter(
   const sections = musings
     .map((m, i) => {
       const b = blurbFor(m);
-      const url = musingUrl(m.id);
+      const url = m.url ?? musingUrl(m.id);
       const img = i > 0 && m.img ? absoluteImageUrl(m.img) : null;
       return `
         <tr><td style="padding:${i === 0 ? 0 : 30}px 0 0;">
@@ -132,7 +135,7 @@ export function renderNewsletter(
           <h2 style="margin:0 0 8px;font-size:24px;line-height:1.2;color:${INK};font-weight:400;font-family:Georgia,'Times New Roman',serif;"><a href="${url}" style="color:${INK};text-decoration:none;">${escapeHtml(b.heading || m.title)}</a></h2>
           ${m.loc ? `<p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:${MUTED};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">${escapeHtml(m.loc)}</p>` : ""}
           ${paras(b.blurb || stripTags(m.excerpt), P)}
-          <p style="margin:0;"><a href="${url}" style="color:${GOLD};font-size:15px;text-decoration:none;font-family:Georgia,'Times New Roman',serif;">Read the musing &rarr;</a></p>
+          <p style="margin:0;"><a href="${url}" style="color:${GOLD};font-size:15px;text-decoration:none;font-family:Georgia,'Times New Roman',serif;">Read the post &rarr;</a></p>
           ${b.cta ? ctaBlock(b.cta, false) : ""}
         </td></tr>`;
     })
@@ -152,14 +155,14 @@ export function renderNewsletter(
 <tr><td align="center" style="padding:28px 12px;">
 <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;">
   <tr><td align="center" style="padding:34px 32px 0;">
-    <a href="${SITE.url}" style="display:inline-block;text-decoration:none;"><img src="${LOGO_URL}" alt="${escapeHtml(SITE.name)}" width="300" style="display:block;width:300px;max-width:100%;height:auto;border:0;"></a>
+    <a href="${SITE.url}" style="display:inline-block;text-decoration:none;">${LOGO_URL ? `<img src="${LOGO_URL}" alt="${escapeHtml(SITE.name)}" width="300" style="display:block;width:300px;max-width:100%;height:auto;border:0;">` : `<span style="font-size:22px;letter-spacing:.06em;color:${INK};font-family:Georgia,'Times New Roman',serif;">${escapeHtml(SITE.name)}</span>`}</a>
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:16px auto 0;"><tr>
       <td style="width:36px;border-top:1px solid ${GOLD};font-size:0;line-height:0;">&nbsp;</td>
       <td style="padding:0 12px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:${GOLD};font-family:${SANS};white-space:nowrap;">${escapeHtml(tagline)}</td>
       <td style="width:36px;border-top:1px solid ${GOLD};font-size:0;line-height:0;">&nbsp;</td>
     </tr></table>
   </td></tr>
-  ${hero ? `<tr><td style="padding:18px 32px 0;"><a href="${musingUrl(musings[0].id)}" style="display:block;"><img src="${escapeHtml(hero)}" alt="" width="536" style="display:block;width:100%;height:auto;border:0;"></a></td></tr>` : ""}
+  ${hero ? `<tr><td style="padding:18px 32px 0;"><a href="${musings[0].url ?? musingUrl(musings[0].id)}" style="display:block;"><img src="${escapeHtml(hero)}" alt="" width="536" style="display:block;width:100%;height:auto;border:0;"></a></td></tr>` : ""}
   <tr><td style="padding:24px 32px 0;">
     <h1 style="margin:0 0 16px;font-size:30px;line-height:1.15;color:${INK};font-weight:300;font-family:Georgia,'Times New Roman',serif;">${escapeHtml(opts.subject)}</h1>
     ${introHtml}
@@ -172,14 +175,14 @@ export function renderNewsletter(
   ${copy.cta ? ctaBlock(copy.cta, true) : ""}
   <tr><td style="padding:30px 32px 0;">
     ${paras(copy.outro, P)}
-    <p style="margin:0 0 6px;font-size:15px;line-height:1.6;color:${MUTED};font-family:Georgia,'Times New Roman',serif;">&mdash; Bob</p>
+    <p style="margin:0 0 6px;font-size:15px;line-height:1.6;color:${MUTED};font-family:Georgia,'Times New Roman',serif;">&mdash; ${escapeHtml(studio.site.owner)}</p>
   </td></tr>
   <tr><td style="padding:22px 32px 30px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
       <td style="padding:0 10px 10px 0;">${button(CTA_BOOK.label, CTA_BOOK.url, true)}</td>
-      <td style="padding:0 0 10px;">${button(CTA_PRINTS.label, CTA_PRINTS.url, false)}</td>
+      ${CTA_PRINTS ? `<td style="padding:0 0 10px;">${button(CTA_PRINTS.label, CTA_PRINTS.url, false)}</td>` : ""}
     </tr></table>
-    <p style="margin:6px 0 0;font-size:12px;line-height:1.6;color:${MUTED};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">${escapeHtml(BOOK.title)} &middot; ${escapeHtml(BOOK.facts)}</p>
+    <p style="margin:6px 0 0;font-size:12px;line-height:1.6;color:${MUTED};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">${escapeHtml(studio.offer.title)} &middot; ${escapeHtml(studio.offer.facts)}</p>
   </td></tr>
   <tr><td style="padding:18px 32px 26px;border-top:1px solid ${RULE};">
     <p style="margin:0;font-size:12px;line-height:1.7;color:${MUTED};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">${escapeHtml(FOOTER_LINE)}<br>
@@ -194,7 +197,7 @@ export function renderNewsletter(
   const textSections = musings
     .map((m) => {
       const b = blurbFor(m);
-      return `${(b.heading || m.title).toUpperCase()}${m.loc ? `\n${m.loc}` : ""}\n\n${b.blurb || stripTags(m.excerpt)}\n\nRead the musing: ${musingUrl(m.id)}${b.cta?.label && b.cta.url ? `\n${b.cta.label}: ${b.cta.url}` : ""}`;
+      return `${(b.heading || m.title).toUpperCase()}${m.loc ? `\n${m.loc}` : ""}\n\n${b.blurb || stripTags(m.excerpt)}\n\nRead it: ${m.url ?? musingUrl(m.id)}${b.cta?.label && b.cta.url ? `\n${b.cta.label}: ${b.cta.url}` : ""}`;
     })
     .join("\n\n— — —\n\n");
 
@@ -211,11 +214,11 @@ export function renderNewsletter(
     "",
     copy.cta?.label && copy.cta.url ? `${copy.cta.label}: ${copy.cta.url}` : null,
     copy.outro,
-    "— Bob",
+    `— ${studio.site.owner}`,
     "",
     `${CTA_BOOK.label}: ${CTA_BOOK.url}`,
-    `${CTA_PRINTS.label}: ${CTA_PRINTS.url}`,
-    `${BOOK.title} · ${BOOK.facts}`,
+    CTA_PRINTS ? `${CTA_PRINTS.label}: ${CTA_PRINTS.url}` : null,
+    `${studio.offer.title} · ${studio.offer.facts}`,
     "",
     FOOTER_LINE,
     "Unsubscribe: {{unsubscribe_url}}",
