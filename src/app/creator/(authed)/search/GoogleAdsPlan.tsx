@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { openPanel } from "@/components/creator/TwoAccordion";
-import { RSA_LIMITS, type AdCampaign, type AdGroup, type AdsPlan } from "@/lib/creator/ads-plan-types";
+import { RSA_LIMITS, planIssues, type AdCampaign, type AdGroup, type AdsPlan } from "@/lib/creator/ads-plan-types";
 import { api, errText } from "@/lib/creator/client";
 import { studio } from "@/studio.config";
 
@@ -14,12 +14,12 @@ import { studio } from "@/studio.config";
 */
 
 type Page = { slug: string; keyword: string; title: string; published: boolean };
-type Props = { initial: AdsPlan; pages: Page[]; targets: number; issues: string[]; db: boolean; ai: boolean };
+type Props = { initial: AdsPlan; pages: Page[]; targets: number; issues?: string[]; db: boolean; ai: boolean };
 
 const uid = () => Math.random().toString(36).slice(2, 8);
 const linesOf = (s: string) => s.split(/\n|,/).map((x) => x.trim()).filter(Boolean);
 
-export default function GoogleAdsPlan({ initial, pages, targets, issues: initialIssues, db, ai }: Props) {
+export default function GoogleAdsPlan({ initial, pages, targets, db, ai }: Props) {
   const [plan, setPlan] = useState<AdsPlan>(initial);
   const [budget, setBudget] = useState(20);
   const [note, setNote] = useState("");
@@ -27,7 +27,7 @@ export default function GoogleAdsPlan({ initial, pages, targets, issues: initial
   const [msg, setMsg] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
-  const issues = initialIssues;
+  const issues = useMemo(() => planIssues(plan, new Set(pages.filter((p) => p.published).map((p) => p.slug))), [plan, pages]); // live, not the page-load snapshot
   const pageBySlug = useMemo(() => new Map(pages.map((p) => [p.slug, p])), [pages]);
 
   const update = (fn: (p: AdsPlan) => AdsPlan) => { setPlan((p) => fn(structuredClone(p))); setDirty(true); };

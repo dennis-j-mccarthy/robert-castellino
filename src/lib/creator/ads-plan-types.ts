@@ -1,3 +1,4 @@
+import { studio } from "@/studio.config";
 
 /*
   Google Ads plan (Search → Google Ads) — the TYPES, limits and the cleaner.
@@ -90,3 +91,21 @@ export function cleanPlan(input: unknown): AdsPlan {
   return { campaigns, notes: str(p.notes, 2000), generatedAt: p.generatedAt ? String(p.generatedAt) : null, updatedAt: p.updatedAt ? String(p.updatedAt) : null };
 }
 
+/** Problems that would make Google reject or quietly weaken the plan. */
+export function planIssues(plan: AdsPlan, landingSlugs: Set<string>): string[] {
+  const out: string[] = [];
+  for (const c of plan.campaigns) {
+    if (!c.adGroups.length) out.push(`${c.name}: no ad groups.`);
+    for (const g of c.adGroups) {
+      const where = `${c.name} › ${g.name}`;
+      if (g.keywords.length < 3) out.push(`${where}: fewer than 3 keywords.`);
+      if (g.rsa.headlines.length < 8) out.push(`${where}: ${g.rsa.headlines.length} headlines (Google wants at least 8, up to 15).`);
+      if (g.rsa.descriptions.length < 2) out.push(`${where}: ${g.rsa.descriptions.length} descriptions (at least 2, up to 4).`);
+      if (g.rsa.headlines.some((h) => h.length > RSA_LIMITS.headline)) out.push(`${where}: a headline is over 30 characters.`);
+      if (g.rsa.descriptions.some((d) => d.length > RSA_LIMITS.description)) out.push(`${where}: a description is over 90 characters.`);
+      if (!g.landingSlug) out.push(`${where}: no landing page yet (ads will send people to ${studio.offer.path}).`);
+      else if (!landingSlugs.has(g.landingSlug)) out.push(`${where}: landing page "${g.landingSlug}" is not published.`);
+    }
+  }
+  return out;
+}

@@ -1,4 +1,4 @@
-import { loadAdsPlan, planIssues } from "@/lib/creator/ads-plan";
+import { loadAdsPlan } from "@/lib/creator/ads-plan";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import { hasAnthropicKey } from "@/lib/creator/ai";
 import GoogleAdsPlan from "./GoogleAdsPlan";
@@ -15,6 +15,5 @@ export default async function GoogleAdsPlanSection() {
     db ? prisma.landingPage.findMany({ select: { slug: true, keyword: true, title: true, published: true }, orderBy: { updatedAt: "desc" } }).catch(() => []) : Promise.resolve([]),
     db ? prisma.keyword.count({ where: { status: "target" } }).catch(() => 0) : Promise.resolve(0),
   ]);
-  const issues = planIssues(plan, new Set(pages.filter((p) => p.published).map((p) => p.slug)));
-  return <GoogleAdsPlan initial={plan} pages={pages} targets={targets} issues={issues} db={db} ai={hasAnthropicKey()} />;
+  return <GoogleAdsPlan initial={plan} pages={pages} targets={targets} db={db} ai={hasAnthropicKey()} />;
 }
