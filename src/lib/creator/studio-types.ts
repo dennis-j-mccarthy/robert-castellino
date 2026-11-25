@@ -63,7 +63,7 @@ export interface BrandFacts {
    * Google Font family for the on-image typography. Omitted values fall back
    * to accent / near-black ink / warm paper / Bricolage Grotesque.
    */
-  og?: { font?: string; accent?: string; accent2?: string; ink?: string; paper?: string; domain?: string };
+  og?: { font?: string; accent?: string; accent2?: string; ink?: string; paper?: string; domain?: string; /** "text" prints the site name instead of the logo (for logos that do not survive being turned white) */ wordmark?: "logo" | "text" };
   /** The blog's public name and path: Musings at /musings, Blog at /blog, Journal at /journal */
   blog: { label: string; singular: string; path: string; writerRole: string; categories?: Array<{ id: string; label: string }>; /** Studio page that manages every post (site-specific) */ managePath?: string;
     /**

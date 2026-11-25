@@ -75,7 +75,7 @@ export async function GET(req: Request) {
   const tall = h / w;
   const base = { width: "100%", height: "100%", display: "flex", flexDirection: "column" as const, padding: pad, fontFamily: family, backgroundColor: bg, color: fg, justifyContent: "space-between" as const };
 
-  const logo = studio.brand.logo ? (/^https?:\/\//i.test(studio.brand.logo) ? studio.brand.logo : `${url.origin}${studio.brand.logo}`) : null;
+  const logo = studio.brand.og?.wordmark !== "text" && studio.brand.logo ? (/^https?:\/\//i.test(studio.brand.logo) ? studio.brand.logo : `${url.origin}${studio.brand.logo}`) : null;
   const Wordmark = () => (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
       <div style={{ display: "flex", alignItems: "center" }}>
