@@ -19,7 +19,7 @@ export default async function KeywordsSection() {
           coffee table book, landscape photography. Gift searches come first, because that person is ready to buy and has
           not picked anything yet. Bigger words in the cloud matter more. Click &ldquo;Suggest phrases&rdquo; for new
           ideas, add the ones that fit, and mark the best ones &ldquo;Target this&rdquo;. Those are the words to use in
-          Musings, captions and ads. The sizes are our judgement, not Google&rsquo;s search counts.
+          blog posts, captions and ads. The sizes are our judgement, not Google&rsquo;s search counts.
         </p>
       </div>
       {!db && <p className="ads-notice ads-notice--warn">The database isn&rsquo;t connected, so nothing can be saved here yet.</p>}

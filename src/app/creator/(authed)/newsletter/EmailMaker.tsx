@@ -126,7 +126,7 @@ export default function EmailMaker({ pillars, ai, db }: Props) {
 
       <div className="cr-two cr-gap">
         <section className="ads-step">
-          <header className="ads-step__title"><span>①</span> Pick 1–3 published Musings</header>
+          <header className="ads-step__title"><span>①</span> Pick 1–3 published blog posts</header>
           <div className="ads-checklist" style={{ maxHeight: 360 }}>
             {musings.map((m) => (
               <label key={m.id} className="ads-check">
@@ -135,7 +135,7 @@ export default function EmailMaker({ pillars, ai, db }: Props) {
                 <small>{m.num} · {m.date}</small>
               </label>
             ))}
-            {!musings.length && <div className="ads-hint">No published Musings found.</div>}
+            {!musings.length && <div className="ads-hint">No published blog posts found.</div>}
           </div>
           <div className="ads-row--2" style={{ marginTop: 10 }}>
             <div>

@@ -33,15 +33,15 @@ export default function MusingCardsClient({ cards: initial, db, ai }: { cards: C
   return (
     <section className="mc" aria-labelledby="mc-title">
       <div className="mc__head">
-        <h2 id="mc-title">Your Musings <span className="cr-h2sub">· {live} live{cards.length - live ? ` · ${cards.length - live} draft${cards.length - live === 1 ? "" : "s"}` : ""}{starred.length ? ` · ${starred.length} starred for the newsletter` : ""}</span></h2>
+        <h2 id="mc-title">Your blog posts <span className="cr-h2sub">· {live} live{cards.length - live ? ` · ${cards.length - live} draft${cards.length - live === 1 ? "" : "s"}` : ""}{starred.length ? ` · ${starred.length} starred for the newsletter` : ""}</span></h2>
         <div className="ads-row">
-          <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || !starred.length} onClick={() => setOpen(true)} title={starred.length ? "" : "Star a Musing first"}>Make newsletter{starred.length ? ` (${starred.length})` : ""}</button>
+          <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || !starred.length} onClick={() => setOpen(true)} title={starred.length ? "" : "Star a post first"}>Make newsletter{starred.length ? ` (${starred.length})` : ""}</button>
           <Link className="btn btn--ghost ads-btn-xs" href="/creator/blog/posts">Manage all →</Link>
         </div>
       </div>
       {err && <p className="au-err">{err}</p>}
       <div className="mc__grid">
-        <button type="button" className="mc__card mc__card--new" onClick={() => openPanel("write")}><span className="mc__plus">+</span><b>New Musing</b><span>Open the writer, from a note or from nothing.</span></button>
+        <button type="button" className="mc__card mc__card--new" onClick={() => openPanel("write")}><span className="mc__plus">+</span><b>New blog post</b><span>Open the writer, from a note or from nothing.</span></button>
         {cards.map((c) => (
           <article key={c.id} className={`mc__card${c.starred ? " is-starred" : ""}`}>
             <div className="mc__img">
@@ -154,7 +154,7 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
                   )}
                 </li>
               ))}
-              {!items.length && <li className="au-muted">Nothing left in this issue. Close and star a Musing.</li>}
+              {!items.length && <li className="au-muted">Nothing left in this issue. Close and star a post.</li>}
             </ul>
           </div>
           <div>

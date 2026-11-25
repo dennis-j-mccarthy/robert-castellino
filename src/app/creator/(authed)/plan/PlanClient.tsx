@@ -87,7 +87,7 @@ export default function PlanClient({ initial, nextPlan }: { initial: PlanSetting
         <Dial label="Leads" sub="find new people · not switched on yet">
           <Seg options={LEADS_OPTIONS} value={s.leads.cadence} onChange={(v) => up("leads", { cadence: v })} />
         </Dial>
-        <Dial label="Blog" sub="a new Musing">
+        <Dial label="Blog" sub="a new blog post">
           <Seg options={BLOG_OPTIONS} value={s.blog.cadence} onChange={(v) => up("blog", { cadence: v })} />
         </Dial>
         <Dial label="The plan arrives" sub="by email and on the home screen">

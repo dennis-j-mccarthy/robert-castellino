@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
   If no plan exists yet the page says so and points at Plan.
 */
 
-const KIND_LABEL: Record<PlanItem["kind"], string> = { post: "Post", newsletter: "Newsletter", email: "Email", blog: "Musing", leads: "Leads", plan: "Plan" };
+const KIND_LABEL: Record<PlanItem["kind"], string> = { post: "Post", newsletter: "Newsletter", email: "Email", blog: "Blog post", leads: "Leads", plan: "Plan" };
 
 export default async function ThisWeek() {
   const start = weekStart();

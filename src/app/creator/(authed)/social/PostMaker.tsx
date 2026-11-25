@@ -211,7 +211,7 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
               </select>
               <label className="ads-label">What this post is about</label>
               <input className="ads-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="first light on the Bells, late September" />
-              <label className="ads-label">Promote a Musing (id)</label>
+              <label className="ads-label">Promote a blog post (id)</label>
               <input className="ads-input" placeholder="m07" value={musingId} onChange={(e) => setMusingId(e.target.value.trim())} />
               <div className="ads-hint">Changes here apply the next time you press Write 5 more.</div>
             </details>

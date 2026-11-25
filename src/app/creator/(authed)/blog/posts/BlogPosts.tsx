@@ -123,7 +123,7 @@ export default function BlogPosts({ pillars, library, musingPillars }: Props) {
       <div className="ads-tablewrap">
         <table className="ads-table">
           <thead>
-            <tr><th></th><th>Musing</th><th>Pillar</th><th>Category</th><th>Status</th><th></th></tr>
+            <tr><th></th><th>Blog post</th><th>Pillar</th><th>Category</th><th>Status</th><th></th></tr>
           </thead>
           <tbody>
             {shown.map((m) => {

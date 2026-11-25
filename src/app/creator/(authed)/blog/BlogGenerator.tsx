@@ -279,7 +279,7 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
                 Saved as <code>{saved.id}</code> ·{" "}
                 {saved.published && <a href={`/musings/${saved.id}`} target="_blank" rel="noreferrer">view ↗</a>}{" "}
                 · <Link href={`/creator/social?musingId=${saved.id}${draft.img ? `&imageId=${encodeURIComponent(draft.img)}` : ""}&pillar=${pillarId}`}>make a post</Link>
-                {" "}· <Link href="/creator/blog/posts">all Musings</Link>
+                {" "}· <Link href="/creator/blog/posts">all blog posts</Link>
               </span>
             )}
           </div>

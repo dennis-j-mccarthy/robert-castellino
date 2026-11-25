@@ -32,7 +32,7 @@ export default function ReaderCard({ initial, db, ai }: { initial: string; db: b
   return (
     <section className="tl-card au-card">
       <div className="es-field__head"><h4>The reader</h4>{ai && db && <button type="button" className="es-suggest" disabled={busy} onClick={() => void suggest()}><span aria-hidden="true">✦</span> {busy ? "Thinking…" : "Suggest"}</button>}</div>
-      <p className="au-exp">One or two sentences. Every Musing, caption and newsletter is written to this person.</p>
+      <p className="au-exp">One or two sentences. Every blog post, caption and newsletter is written to this person.</p>
       <textarea className="ads-input" rows={3} value={v} disabled={!db || busy} onChange={(e) => setV(e.target.value)} />
       {opts.length > 0 && (
         <div className="es-options">
