@@ -1,3 +1,4 @@
+import { studio } from "@/studio.config";
 import { hasAnthropicKey } from "@/lib/creator/ai";
 import type { LandingSections } from "@/lib/creator/landing";
 import { loadLibrary } from "@/lib/creator/library";
@@ -18,7 +19,7 @@ export default async function LandingSection({ preselect }: { preselect?: string
     <div className="sr-sec">
       <div className="kw-explain">
         <div className="tl-eyebrow">What this does</div>
-        <p>A landing page is a page built for one search, like &ldquo;Colorado coffee table book.&rdquo; Someone who searches that, or clicks an ad for it, lands on a page about exactly what they wanted, in your voice, with one of your plates at the top and the signed book to order. The studio writes the first draft from Essence and the pillars. You read it, change anything that does not sound like you, and press Publish. Drafts are private until then.</p>
+        <p>A landing page is a page built for one search, like &ldquo;{studio.seedKeywords[0]?.phrase ?? studio.offer.title}.&rdquo; Someone who searches that, or clicks an ad for it, lands on a page about exactly what they wanted, in your voice, with one of your pictures at the top and a button to {studio.offer.ctaLabel.toLowerCase()}. The studio writes the first draft from Essence and the pillars. You read it, change anything that does not sound like you, and press Publish. Drafts are private until then.</p>
       </div>
       {!db && <p className="ui-notice ui-notice--warn">The database isn&rsquo;t connected, so pages can&rsquo;t be saved here.</p>}
       <LandingClient

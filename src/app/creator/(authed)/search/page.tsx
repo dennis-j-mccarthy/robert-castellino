@@ -1,3 +1,4 @@
+import { studio } from "@/studio.config";
 import { Accordion } from "@/components/creator/TwoAccordion";
 import KeywordsSection from "../keywords/KeywordsSection";
 import LandingSection from "./LandingSection";
@@ -33,7 +34,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         </div>
         <div className="sr-head__bar" aria-hidden="true">
           <span className="sr-head__g">G</span>
-          <span className="sr-head__q">colorado coffee table book<span className="sr-head__caret" /></span>
+          <span className="sr-head__q">{(studio.seedKeywords[0]?.phrase ?? studio.offer.title).toLowerCase()}<span className="sr-head__caret" /></span>
           <span className="sr-head__btn">Search</span>
         </div>
       </div>
@@ -41,7 +42,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         initial={initial}
         panels={[
           { id: "keywords", n: 1, title: "Keywords", sub: "the phrases to own · gifts first", body: <KeywordsSection /> },
-          { id: "landing", n: 2, title: "Landing pages", sub: "one page per phrase · your plate on top · the signed book to order", body: <LandingSection preselect={sp.keyword} /> },
+          { id: "landing", n: 2, title: "Landing pages", sub: `one page per phrase · your picture on top · ${studio.offer.ctaLabel.toLowerCase()}`, body: <LandingSection preselect={sp.keyword} /> },
           { id: "technical-seo", n: 3, title: "Technical SEO", sub: "live checks against the site · what to fix first", body: <TechnicalSeo /> },
           ...EXTRA.map((p, i) => ({ id: p.id, n: 4 + i, title: p.title, sub: p.sub, body: p.body })),
         ]}
