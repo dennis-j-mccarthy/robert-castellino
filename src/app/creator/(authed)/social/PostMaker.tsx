@@ -131,7 +131,7 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
     setNotice(null);
     setResult(null);
     try {
-      const r = await api<{ ok: true; id: string; scheduled: boolean; scheduledAt: string | null; page: string }>("/api/admin/facebook/post", {
+      const r = await api<{ ok: true; id: string; scheduled: boolean; scheduledAt: string | null; page: string }>("/api/creator/social/publish", {
         method: "POST",
         json: {
           caption,

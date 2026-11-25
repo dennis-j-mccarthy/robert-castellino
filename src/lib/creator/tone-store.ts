@@ -1,7 +1,7 @@
 import { prisma, isDatabaseConfigured } from "@/lib/prisma";
-import type { Prisma } from "@/generated/prisma/client";
 import { cleanTone, type BlogTone } from "@/lib/creator/blog-tone";
-import { DEFAULT_TONE } from "@/lib/creator/seed-data";
+import { studio } from "@/studio.config";
+const DEFAULT_TONE = studio.defaults.tone;
 
 /*
   BlogSettings singleton (id "default") — the tone brief. SERVER ONLY.
@@ -24,7 +24,7 @@ export async function getTone(): Promise<{ tone: BlogTone; fromDb: boolean }> {
 
 export async function saveTone(input: unknown): Promise<BlogTone> {
   const tone = cleanTone(input);
-  const json = tone as unknown as Prisma.InputJsonValue;
+  const json = tone as unknown as object;
   await prisma.blogSettings.upsert({ where: { id: ID }, create: { id: ID, tone: json }, update: { tone: json } });
   return tone;
 }

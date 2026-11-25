@@ -1,5 +1,5 @@
-import { graphGet } from "@/lib/meta/graph";
-import { adAccountId, adsManagerUrl, isAdsConfigured, listAds, listCampaigns, type LiveAd } from "@/lib/meta/ads";
+import { graphGet } from "@/lib/studio-meta/graph";
+import { adAccountId, adsManagerUrl, isAdsConfigured, listAds, listCampaigns, type LiveAd } from "@/lib/studio-meta/ads";
 
 /*
   "Running now" — every ad in the account that is live or in review, across

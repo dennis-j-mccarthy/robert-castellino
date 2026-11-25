@@ -6,7 +6,8 @@ import {
   slugifyPillarId,
   type Pillar,
 } from "@/lib/creator/pillars";
-import { DEFAULT_PILLARS } from "@/lib/creator/seed-data";
+import { studio } from "@/studio.config";
+const DEFAULT_PILLARS = studio.defaults.pillars;
 
 /*
   Pillar rows — SERVER ONLY. The loader every generator reads through, and

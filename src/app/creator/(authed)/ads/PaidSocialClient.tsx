@@ -6,7 +6,7 @@ import Thumb from "@/components/creator/Thumb";
 import { api, errText } from "@/lib/creator/client";
 import { conceptAdName, conceptNumberFromAdName, type Concept, type ConceptSet } from "@/lib/creator/concepts";
 import type { AdState, InMarket, InMarketAd } from "@/lib/creator/in-market";
-import type { PreviewFormat } from "@/lib/meta/ads";
+import type { PreviewFormat } from "@/lib/studio-meta/ads";
 
 /*
   Paid social — the control room for Bob's book campaign, Throughline edition.

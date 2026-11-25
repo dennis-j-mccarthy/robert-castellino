@@ -8,6 +8,8 @@ import { rowToMusing } from "@/lib/data-source";
 import { onMusingPublished, revalidateMusings } from "@/lib/publish-hooks";
 import type { StudioAdapters, ContentPost, SitePicture } from "@/lib/creator/studio-adapters";
 import { studio } from "@/studio.config";
+import { ensureCreatorSeeded } from "@/studio-site/seed";
+import { storeImage } from "@/lib/image-store";
 
 /*
   Robert Castellino — how the shared studio reaches this site's own data.
@@ -25,6 +27,7 @@ function toPost(m: { id: string; title: string; date: string; img?: string | nul
 }
 
 export const adapters: StudioAdapters = {
+  seed: ensureCreatorSeeded,
   content: {
     async list() {
       if (!isDatabaseConfigured()) return STATIC_MUSINGS.map((m) => toPost({ ...m, published: true, starred: false }));
@@ -67,6 +70,14 @@ export const adapters: StudioAdapters = {
       if (/^https?:\/\//i.test(s)) return s;
       return s.startsWith("/") ? s : `/${s}`;
     },
+    async add(input) {
+      const SLUG = "studio-uploads";
+      const collection = await prisma.collection.upsert({ where: { slug: SLUG }, create: { slug: SLUG, label: "Studio uploads", intro: "Pictures added from the creator studio.", published: false, order: 999 }, update: {} });
+      const count = await prisma.photo.count({ where: { collectionId: collection.id } });
+      const title = (input.title || `Upload ${count + 1}`).slice(0, 120);
+      const photo = await prisma.photo.create({ data: { collectionId: collection.id, img: input.url, title, loc: "", blurb: input.generated ? "Generated image — not a plate." : "", order: count } });
+      return { src: photo.img, title: photo.title };
+    },
     async list() {
       const out: SitePicture[] = (adImages as ManifestEntry[]).map((e) => ({ src: e.src, label: e.label, collection: e.collection, bookPage: e.bookPage ?? null }));
       if (isDatabaseConfigured()) {
@@ -77,7 +88,7 @@ export const adapters: StudioAdapters = {
     },
   },
   uploads: {
-    async upload() { throw new Error("Uploads go through /api/admin/upload on this site."); },
+    async upload(file) { return storeImage(file); },
   },
   subscribers: {
     async count() {

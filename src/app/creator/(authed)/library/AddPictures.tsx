@@ -34,7 +34,7 @@ export default function AddPictures({ imageAi, onAdded }: { imageAi: boolean; on
       try {
         const fd = new FormData();
         fd.append("file", f, name);
-        const up = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        const up = await fetch("/api/creator/upload", { method: "POST", body: fd });
         const uj = (await up.json()) as { url?: string; error?: string };
         if (!up.ok || !uj.url) throw new Error(uj.error || "Upload failed");
         const added = await api<{ src: string }>("/api/creator/library/add", { method: "POST", json: { url: uj.url, title: name.replace(/\.[a-z0-9]+$/i, "").replace(/[-_]+/g, " ") } });

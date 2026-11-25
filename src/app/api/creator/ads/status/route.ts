@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { creatorGuard } from "@/lib/creator/guard";
 import { BOOK_CAMPAIGN_ID, getInMarket, invalidateInMarket } from "@/lib/creator/in-market";
-import { ADS_NOT_CONFIGURED, errorMessage, isAdsConfigured, setStatus } from "@/lib/meta/ads";
+import { ADS_NOT_CONFIGURED, errorMessage, isAdsConfigured, setStatus } from "@/lib/studio-meta/ads";
 
 /*
   POST /api/creator/ads/status — switch an ad, an ad set (audience) or the

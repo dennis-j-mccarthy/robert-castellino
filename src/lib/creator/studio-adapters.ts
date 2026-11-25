@@ -61,6 +61,8 @@ export interface SitePicture {
 }
 
 export interface PicturesAdapter {
+  /** Register an uploaded (or generated) picture so list() returns it; returns its src */
+  add(input: { url: string; title?: string; generated?: boolean }): Promise<{ src: string; title: string }>;
   /** Every picture the site owns that the studio may use (gallery, manifest…). Studio uploads are added by the shared code. */
   list(): Promise<SitePicture[]>;
   /** Patterns that mark a picture as never usable in ads/posts (mockups) */
@@ -88,6 +90,8 @@ export interface AuthAdapter {
 }
 
 export interface StudioAdapters {
+  /** Optional first-visit seeding (tables empty → defaults) */
+  seed?: () => Promise<unknown>;
   content: ContentAdapter;
   pictures: PicturesAdapter;
   uploads: UploadsAdapter;

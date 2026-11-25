@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import type { SocialPlatform } from "@/lib/creator/social";
+import type { BrandEssenceRecord, Pillar, VoiceSliders } from "@/lib/creator/pillars";
+import type { BlogTone } from "@/lib/creator/blog-tone";
 
 /*
   The studio's one seam between shared code and a site. Everything the
@@ -97,7 +99,11 @@ export interface StudioConfig {
   platformBrief?: Partial<Record<SocialPlatform, string>>;
   /** Seed search phrases offered on first run */
   seedKeywords: Array<{ phrase: string; kind: string; priority: number; note?: string }>;
+  /** What Essence, pillars and tone start as before anyone edits them (and the no-database fallback) */
+  defaults: { voice: VoiceSliders; essence: BrandEssenceRecord; pillars: Pillar[]; tone: BlogTone };
   nav: {
+    /** Where an unauthenticated visit is sent (default /admin/login) */
+    loginPath?: string;
     /** Tools this site does not show */
     hide?: ToolId[];
     /** Tools labelled "soon" */

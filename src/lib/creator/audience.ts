@@ -1,5 +1,5 @@
-import { graphGet } from "@/lib/meta/graph";
-import { adAccountId, isAdsConfigured, listCampaigns } from "@/lib/meta/ads";
+import { graphGet } from "@/lib/studio-meta/graph";
+import { adAccountId, isAdsConfigured, listCampaigns } from "@/lib/studio-meta/ads";
 import { getBrandEssence } from "@/lib/creator/essence-store";
 import { getTone } from "@/lib/creator/tone-store";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { adapters } from "@/studio.adapters";
 import { isDatabaseConfigured } from "@/lib/prisma";
 
 /*
@@ -11,7 +11,7 @@ export const DB_MISSING_MESSAGE = "Database not configured. Provision Postgres o
 
 /** 401 when there is no admin session; null when the caller may proceed. */
 export async function creatorGuard(): Promise<NextResponse | null> {
-  const session = await getSession();
+  const session = await adapters.auth.getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   return null;
 }

@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@/generated/prisma/client";
 
 /*
   EmailDraft persistence (/creator/email). Callers check isDatabaseConfigured()
@@ -97,7 +96,7 @@ export interface EmailDraftPatch {
 }
 
 export async function updateEmailDraft(id: string, patch: EmailDraftPatch): Promise<EmailDraftRecord | null> {
-  const data: Prisma.EmailDraftUpdateInput = {};
+  const data: Record<string, unknown> = {};
   if (typeof patch.name === "string") data.name = patch.name.trim().slice(0, 200);
   if (typeof patch.subject === "string") data.subject = patch.subject.trim().slice(0, 300);
   if (typeof patch.preheader === "string") data.preheader = patch.preheader.trim().slice(0, 300);

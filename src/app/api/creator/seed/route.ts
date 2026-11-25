@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { creatorDbGuard, errorResponse, readJson } from "@/lib/creator/guard";
-import { seedCreator } from "@/lib/creator/seed";
+import { seedCreator } from "@/studio-site/seed";
 
 /*
   POST /api/creator/seed { force?: boolean } → { counts }

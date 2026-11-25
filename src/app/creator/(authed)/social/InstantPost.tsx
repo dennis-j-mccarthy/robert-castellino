@@ -39,7 +39,7 @@ export default function InstantPost({ config }: { config: { connected: boolean; 
     try {
       const fd = new FormData();
       fd.append("file", f);
-      const up = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const up = await fetch("/api/creator/upload", { method: "POST", body: fd });
       const uj = (await up.json()) as { url?: string; error?: string };
       if (!up.ok || !uj.url) throw new Error(uj.error ?? "Upload failed");
       const added = await api<{ src: string }>("/api/creator/library/add", { method: "POST", json: { url: uj.url, title: f.name.replace(/\.[a-z0-9]+$/i, "").replace(/[-_]+/g, " ") } }).catch(() => ({ src: uj.url! }));
@@ -72,7 +72,7 @@ export default function InstantPost({ config }: { config: { connected: boolean; 
     if (!image || !caption.trim()) return;
     setBusy(schedule ? "schedule" : "publish"); setNotice(null);
     try {
-      const r = await api<{ id: string; scheduled: boolean; page: string }>("/api/admin/facebook/post", {
+      const r = await api<{ id: string; scheduled: boolean; page: string }>("/api/creator/social/publish", {
         method: "POST",
         json: { caption, imageUrl: new URL(image.url, window.location.origin).toString(), scheduledAt: schedule && scheduledAt ? new Date(scheduledAt).toISOString() : undefined, pillarId: built?.pillarId || undefined },
       });

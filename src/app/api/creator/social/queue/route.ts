@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { creatorDbGuard, creatorGuard, errorResponse, readJson } from "@/lib/creator/guard";
 import { cancelScheduled, listQueue } from "@/lib/creator/social-queue";
-import { getConnection, isConnected } from "@/lib/meta/store";
+import { getConnection, isConnected } from "@/lib/studio-meta/store";
 
 /*
   /api/creator/social/queue — what's scheduled and what went out.

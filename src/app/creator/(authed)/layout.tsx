@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
 import { loadLibrary } from "@/lib/creator/library";
-import { ensureCreatorSeeded } from "@/lib/creator/seed";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import CreatorShell, { type NavCounts } from "./CreatorShell";
 import "../creator.css";
 import { studio } from "@/studio.config";
+import { adapters } from "@/studio.adapters";
 
 export const metadata: Metadata = {
   title: `Creator — ${studio.site.short}`,
@@ -37,9 +36,9 @@ async function navCounts(): Promise<NavCounts> {
 // is the server-side belt to that suspender). First visit seeds the brand
 // essence, pillars, tone and library tags if the tables are still empty.
 export default async function CreatorLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
-  if (!session) redirect("/admin/login?next=/creator");
-  await ensureCreatorSeeded();
+  const session = await adapters.auth.getSession();
+  if (!session) redirect(`${studio.nav.loginPath ?? "/admin/login"}?next=/creator`);
+  if (adapters.seed) await adapters.seed().catch(() => undefined);
   const counts = await navCounts();
 
   return (

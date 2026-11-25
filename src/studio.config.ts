@@ -1,5 +1,6 @@
 import type { StudioConfig } from "@/lib/creator/studio-types";
 import { SEED_KEYWORDS } from "@/studio-site/seed-keywords";
+import { DEFAULT_PILLARS, DEFAULT_TONE, DEFAULT_VOICE, defaultEssence } from "@/studio-site/seed-data";
 
 /*
   Robert Castellino — the site's studio config. The one file that knows who
@@ -57,7 +58,9 @@ export const studio: StudioConfig = {
   },
   seo: { auditPages: ["/", "/book", "/musings", "/gallery"] },
   seedKeywords: SEED_KEYWORDS,
+  defaults: { voice: DEFAULT_VOICE, essence: defaultEssence(), pillars: DEFAULT_PILLARS, tone: DEFAULT_TONE },
   nav: {
+    loginPath: "/admin/login",
     soon: ["leads"],
     more: [
       { label: "Comments & DMs (Meta)", href: "https://business.facebook.com/latest/inbox/all?asset_id=134235743309639", ext: true },

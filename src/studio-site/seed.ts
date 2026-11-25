@@ -8,7 +8,7 @@ import {
   DEFAULT_TONE,
   DEFAULT_VOICE,
   defaultEssence,
-} from "@/lib/creator/seed-data";
+} from "@/studio-site/seed-data";
 import { normalizeSrc } from "@/lib/creator/library";
 import adImages from "@/data/ad-images.json";
 
