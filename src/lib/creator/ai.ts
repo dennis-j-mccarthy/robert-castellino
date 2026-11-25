@@ -63,7 +63,7 @@ export async function generateJson<T>(opts: GenerateJsonOptions): Promise<T> {
 export function aiErrorMessage(e: unknown, fallback = "Generation failed. Try again."): string {
   if (e instanceof Anthropic.AuthenticationError) return "The Anthropic API key was rejected.";
   if (e instanceof Anthropic.RateLimitError) return "Rate limited by the model — wait a moment and try again.";
-  if (e instanceof Anthropic.APIError) return `Model error (${e.status ?? "?"}) — try again.`;
+  if (e instanceof Anthropic.APIError) return `Model error (${e.status ?? "?"})${e.message ? `: ${e.message.slice(0, 160)}` : ""} — try again.`;
   if (e instanceof Error && e.message) return e.message;
   return fallback;
 }

@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         type: "object",
         additionalProperties: false,
         required: ["title", "excerpt", "paragraphs"],
-        properties: { title: { type: "string" }, excerpt: { type: "string" }, paragraphs: { type: "array", items: { type: "string" }, minItems: 3, maxItems: 80 } },
+        properties: { title: { type: "string" }, excerpt: { type: "string" }, paragraphs: { type: "array", items: { type: "string" } } },
       },
       imageUrl: absoluteImageUrl(body.src),
       maxTokens: 3000,
