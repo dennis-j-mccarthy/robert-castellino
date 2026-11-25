@@ -80,9 +80,9 @@ export default function AddPictures({ imageAi, onAdded }: { imageAi: boolean; on
           <span>From your camera roll or computer. Drop files here or paste one. They land in &ldquo;Studio uploads&rdquo;, ready for posts.</span>
         </label>
         <div className="ap__actions">
-          <button type="button" className="btn btn--gold ads-btn-sm ap__big" onClick={() => inputRef.current?.click()}>Choose photos</button>
-          <button type="button" className="btn ads-btn-sm ap__big" onClick={() => camRef.current?.click()}>Take a photo</button>
-          <button type="button" className="btn btn--ghost ads-btn-sm ap__big" onClick={() => setShowAi((v) => !v)}>Create with AI</button>
+          <button type="button" className="btn btn--gold ui-btn-sm ap__big" onClick={() => inputRef.current?.click()}>Choose photos</button>
+          <button type="button" className="btn ui-btn-sm ap__big" onClick={() => camRef.current?.click()}>Take a photo</button>
+          <button type="button" className="btn btn--ghost ui-btn-sm ap__big" onClick={() => setShowAi((v) => !v)}>Create with AI</button>
           <input ref={camRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { void uploadFiles(Array.from(e.target.files ?? [])); e.target.value = ""; }} />
         </div>
       </div>

@@ -28,10 +28,10 @@ export default async function CompetitorsSection() {
       </div>
 
       {!run ? (
-        <p className="ads-notice ads-notice--warn">No search check has been run yet.</p>
+        <p className="ui-notice ui-notice--warn">No search check has been run yet.</p>
       ) : (
         <>
-          <p className="ads-hint cm-meta">
+          <p className="ui-hint cm-meta">
             Checked {run.date}: {total} gift, book and photography searches. Amazon, Etsy, Goodreads and other giant
             marketplaces are left out of this list; the to-do list covers getting the book onto them. {run.note}
           </p>
@@ -46,7 +46,7 @@ export default async function CompetitorsSection() {
                     <span className="cm-rank">{i + 1}</span>
                     <div className="cm-id">
                       <b>{note?.name ?? w.domain}</b>
-                      <a href={`https://${w.domain}`} target="_blank" rel="noreferrer" className="ads-hint">
+                      <a href={`https://${w.domain}`} target="_blank" rel="noreferrer" className="ui-hint">
                         {w.domain} ↗
                       </a>
                     </div>
@@ -95,10 +95,10 @@ export default async function CompetitorsSection() {
                   <li key={r.query}>
                     <span className="cm-pill is-top">#{r.robertCastellino}</span> {r.query}
                     {r.organic[0] && !isBobsSite(r.organic[0].domain) && (
-                      <span className="ads-hint"> · #1 is {r.organic[0].domain}</span>
+                      <span className="ui-hint"> · #1 is {r.organic[0].domain}</span>
                     )}
                     {r.organic[0] && r.organic[0].domain !== "robertcastellino.com" && isBobsSite(r.organic[0].domain) && (
-                      <span className="ads-hint"> · #1 is your print store ({r.organic[0].domain}), not robertcastellino.com</span>
+                      <span className="ui-hint"> · #1 is your print store ({r.organic[0].domain}), not robertcastellino.com</span>
                     )}
                   </li>
                 ))}
@@ -118,7 +118,7 @@ export default async function CompetitorsSection() {
           <details className="kw-card cm-detail">
             <summary>
               <h2>Search by search</h2>
-              <span className="ads-hint">The top results Google showed for each search</span>
+              <span className="ui-hint">The top results Google showed for each search</span>
             </summary>
             <div className="cm-searches">
               {run.results.map((r) => (
@@ -128,7 +128,7 @@ export default async function CompetitorsSection() {
                     {r.organic.slice(0, 8).map((o) => (
                       <li key={`${o.position}-${o.domain}`} className={isBobsSite(o.domain) ? "is-you" : undefined}>
                         <span className={`cm-pill ${posClass(o.position)}`}>{o.position}</span> <b>{o.domain}</b>{" "}
-                        <span className="ads-hint">{o.title}</span>
+                        <span className="ui-hint">{o.title}</span>
                       </li>
                     ))}
                   </ol>

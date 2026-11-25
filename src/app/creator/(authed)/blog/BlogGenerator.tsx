@@ -143,14 +143,14 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
 
   return (
     <div className="cr-blog">
-      {!ai && <div className="ads-notice ads-notice--warn">AI isn&rsquo;t configured (no <code>ANTHROPIC_API_KEY</code>). You can still write a post by hand below.</div>}
+      {!ai && <div className="ui-notice ui-notice--warn">AI isn&rsquo;t configured (no <code>ANTHROPIC_API_KEY</code>). You can still write a post by hand below.</div>}
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
       {/* ① tone */}
-      <section className="ads-step cr-block">
-        <header className="ads-step__title ads-row--between">
+      <section className="ui-step cr-block">
+        <header className="ui-step__title ui-row--between">
           <span><span>①</span> Tone brief</span>
-          <button type="button" className="ads-linkbtn" onClick={() => setToneOpen((o) => !o)}>{toneOpen ? "Hide" : "Edit"}</button>
+          <button type="button" className="ui-linkbtn" onClick={() => setToneOpen((o) => !o)}>{toneOpen ? "Hide" : "Edit"}</button>
         </header>
         {!toneOpen ? (
           <p className="cr-muted cr-small" style={{ margin: 0 }}>{t.voice || "No voice note."} {t.style ? ` · ${t.style}` : ""}</p>
@@ -158,34 +158,34 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
           <>
             {(["voice", "audience", "style", "dos", "donts"] as const).map((k) => (
               <div key={k}>
-                <label className="ads-label">{k === "dos" ? "Do" : k === "donts" ? "Don't" : k}</label>
-                <textarea className="ads-input" rows={2} value={t[k]} onChange={(e) => setT({ ...t, [k]: e.target.value })} />
+                <label className="ui-label">{k === "dos" ? "Do" : k === "donts" ? "Don't" : k}</label>
+                <textarea className="ui-input" rows={2} value={t[k]} onChange={(e) => setT({ ...t, [k]: e.target.value })} />
               </div>
             ))}
-            <div className="ads-row" style={{ marginTop: 10 }}>
-              <button className="btn btn--gold ads-btn-sm" disabled={!!busy} onClick={() => void saveTone()}>{busy === "tone" ? "Saving…" : "Save tone"}</button>
+            <div className="ui-row" style={{ marginTop: 10 }}>
+              <button className="btn btn--gold ui-btn-sm" disabled={!!busy} onClick={() => void saveTone()}>{busy === "tone" ? "Saving…" : "Save tone"}</button>
             </div>
           </>
         )}
       </section>
 
       {/* ② titles */}
-      <section className="ads-step cr-block">
-        <header className="ads-step__title"><span>②</span> Pillar &amp; title</header>
-        <div className="ads-row--2">
+      <section className="ui-step cr-block">
+        <header className="ui-step__title"><span>②</span> Pillar &amp; title</header>
+        <div className="ui-row--2">
           <div>
-            <label className="ads-label">Pillar</label>
-            <select className="ads-input" value={pillarId} onChange={(e) => setPillarId(e.target.value)}>
+            <label className="ui-label">Pillar</label>
+            <select className="ui-input" value={pillarId} onChange={(e) => setPillarId(e.target.value)}>
               {pillars.map((p) => <option key={p.id} value={p.id}>{p.name} — {p.message}</option>)}
             </select>
           </div>
           <div>
-            <label className="ads-label">Topic (optional)</label>
-            <input className="ads-input" placeholder="e.g. the first snow on the Flatirons" value={topic} onChange={(e) => setTopic(e.target.value)} />
+            <label className="ui-label">Topic (optional)</label>
+            <input className="ui-input" placeholder="e.g. the first snow on the Flatirons" value={topic} onChange={(e) => setTopic(e.target.value)} />
           </div>
         </div>
-        <div className="ads-row" style={{ marginTop: 12 }}>
-          <button className="btn btn--gold ads-btn-sm" disabled={!ai || !!busy} onClick={() => void suggestTitles()}>{busy === "titles" ? "Thinking…" : "Suggest 6 titles"}</button>
+        <div className="ui-row" style={{ marginTop: 12 }}>
+          <button className="btn btn--gold ui-btn-sm" disabled={!ai || !!busy} onClick={() => void suggestTitles()}>{busy === "titles" ? "Thinking…" : "Suggest 6 titles"}</button>
         </div>
         {titles.length > 0 && (
           <div className="cr-options">
@@ -194,71 +194,71 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
             ))}
           </div>
         )}
-        <label className="ads-label">Title (pick one above or type your own)</label>
-        <input className="ads-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Red Mountain Pass, in February" />
+        <label className="ui-label">Title (pick one above or type your own)</label>
+        <input className="ui-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Red Mountain Pass, in February" />
       </section>
 
       {/* ③ write */}
-      <section className="ads-step cr-block">
-        <header className="ads-step__title"><span>③</span> Write</header>
-        <div className="ads-row--2">
+      <section className="ui-step cr-block">
+        <header className="ui-step__title"><span>③</span> Write</header>
+        <div className="ui-row--2">
           <div>
-            <label className="ads-label">Place (optional)</label>
-            <input className="ads-input" value={loc} onChange={(e) => setLoc(e.target.value)} placeholder="Maroon Lake" />
+            <label className="ui-label">Place (optional)</label>
+            <input className="ui-input" value={loc} onChange={(e) => setLoc(e.target.value)} placeholder="Maroon Lake" />
           </div>
           <div />
         </div>
-        <label className="ads-label">{studio.site.owner}&rsquo;s rough notes (optional — the piece stays inside them)</label>
-        <textarea className="ads-input" rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="what happened, what the light did, what he noticed…" />
-        <div className="ads-row" style={{ marginTop: 12 }}>
-          <button className="btn btn--gold ads-btn-sm" disabled={!ai || !!busy || !title.trim()} onClick={() => void write()}>{busy === "write" ? "Writing…" : "Write the post"}</button>
-          <button className="btn btn--ghost ads-btn-sm" disabled={!!busy || !title.trim()} onClick={startBlank}>Start blank</button>
+        <label className="ui-label">{studio.site.owner}&rsquo;s rough notes (optional — the piece stays inside them)</label>
+        <textarea className="ui-input" rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="what happened, what the light did, what he noticed…" />
+        <div className="ui-row" style={{ marginTop: 12 }}>
+          <button className="btn btn--gold ui-btn-sm" disabled={!ai || !!busy || !title.trim()} onClick={() => void write()}>{busy === "write" ? "Writing…" : "Write the post"}</button>
+          <button className="btn btn--ghost ui-btn-sm" disabled={!!busy || !title.trim()} onClick={startBlank}>Start blank</button>
         </div>
       </section>
 
       {/* ④ edit & publish */}
       {draft && (
-        <section className="ads-step cr-block">
-          <header className="ads-step__title"><span>④</span> Edit &amp; publish</header>
-          <label className="ads-label">Title</label>
-          <input className="ads-input" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
-          <div className="ads-row--2">
+        <section className="ui-step cr-block">
+          <header className="ui-step__title"><span>④</span> Edit &amp; publish</header>
+          <label className="ui-label">Title</label>
+          <input className="ui-input" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+          <div className="ui-row--2">
             <div>
-              <label className="ads-label">Category</label>
-              <select className="ads-input" value={draft.cat} onChange={(e) => setDraft({ ...draft, cat: e.target.value })}>
+              <label className="ui-label">Category</label>
+              <select className="ui-input" value={draft.cat} onChange={(e) => setDraft({ ...draft, cat: e.target.value })}>
                 {CATS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="ads-label">Date label</label>
-              <input className="ads-input" value={draft.date} onChange={(e) => setDraft({ ...draft, date: e.target.value })} />
+              <label className="ui-label">Date label</label>
+              <input className="ui-input" value={draft.date} onChange={(e) => setDraft({ ...draft, date: e.target.value })} />
             </div>
           </div>
-          <div className="ads-row--2">
+          <div className="ui-row--2">
             <div>
-              <label className="ads-label">Place</label>
-              <input className="ads-input" value={draft.loc} onChange={(e) => setDraft({ ...draft, loc: e.target.value })} />
+              <label className="ui-label">Place</label>
+              <input className="ui-input" value={draft.loc} onChange={(e) => setDraft({ ...draft, loc: e.target.value })} />
             </div>
             <div>
-              <label className="ads-label">Card size</label>
-              <select className="ads-input" value={draft.size} onChange={(e) => setDraft({ ...draft, size: e.target.value })}>
+              <label className="ui-label">Card size</label>
+              <select className="ui-input" value={draft.size} onChange={(e) => setDraft({ ...draft, size: e.target.value })}>
                 <option value="">auto</option><option value="sm">sm</option><option value="md">md</option><option value="lg">lg</option>
               </select>
             </div>
           </div>
-          <label className="ads-label">Excerpt</label>
-          <textarea className="ads-input" rows={2} value={draft.excerpt} onChange={(e) => setDraft({ ...draft, excerpt: e.target.value })} />
-          <label className="ads-label">Body (blank line between paragraphs)</label>
-          <textarea className="ads-input" rows={14} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
+          <label className="ui-label">Excerpt</label>
+          <textarea className="ui-input" rows={2} value={draft.excerpt} onChange={(e) => setDraft({ ...draft, excerpt: e.target.value })} />
+          <label className="ui-label">Body (blank line between paragraphs)</label>
+          <textarea className="ui-input" rows={14} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
 
-          <label className="ads-label">Image</label>
-          <div className="ads-row">
+          <label className="ui-label">Image</label>
+          <div className="ui-row">
             {selectedImg ? (
               /* eslint-disable-next-line @next/next/no-img-element -- library thumb */
-              <img className="ads-table__thumb" src={selectedImg.src} alt="" />
+              <img className="ui-table__thumb" src={selectedImg.src} alt="" />
             ) : null}
-            <input className="ads-input" style={{ flex: 1 }} value={draft.img} onChange={(e) => setDraft({ ...draft, img: e.target.value })} placeholder="/assets/collections/…jpg" />
-            <button type="button" className="btn btn--ghost ads-btn-xs" onClick={() => setPicker((p) => !p)}>{picker ? "Close library" : "Pick from library"}</button>
+            <input className="ui-input" style={{ flex: 1 }} value={draft.img} onChange={(e) => setDraft({ ...draft, img: e.target.value })} placeholder="/assets/collections/…jpg" />
+            <button type="button" className="btn btn--ghost ui-btn-xs" onClick={() => setPicker((p) => !p)}>{picker ? "Close library" : "Pick from library"}</button>
           </div>
           {picker && (
             <div style={{ marginTop: 10 }}>
@@ -266,11 +266,11 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
             </div>
           )}
 
-          <div className="ads-row" style={{ marginTop: 16 }}>
+          <div className="ui-row" style={{ marginTop: 16 }}>
             <button className="btn btn--gold" disabled={!!busy} onClick={() => void save(true)}>{busy === "publish" ? "Publishing…" : saved?.published ? "Update (live)" : "Publish"}</button>
             <button className="btn btn--ghost" disabled={!!busy} onClick={() => void save(false)}>{busy === "save" ? "Saving…" : saved && !saved.published ? "Update draft" : "Save as draft"}</button>
             {saved && (
-              <span className="ads-hint" style={{ margin: 0 }}>
+              <span className="ui-hint" style={{ margin: 0 }}>
                 Saved as <code>{saved.id}</code> ·{" "}
                 {saved.published && <a href={`/musings/${saved.id}`} target="_blank" rel="noreferrer">view ↗</a>}{" "}
                 · <Link href={`/creator/social?musingId=${saved.id}${draft.img ? `&imageId=${encodeURIComponent(draft.img)}` : ""}&pillar=${pillarId}`}>make a post</Link>

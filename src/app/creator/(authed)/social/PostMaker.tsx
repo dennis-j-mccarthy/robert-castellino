@@ -158,7 +158,7 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
   return (
     <div className="pm">
       {!config.connected && (
-        <div className="ads-notice ads-notice--warn">
+        <div className="ui-notice ui-notice--warn">
           <strong>Facebook isn&rsquo;t connected.</strong> Set <code>META_PAGE_ID</code> + <code>META_PAGE_TOKEN</code> (or connect on <Link href="/admin/social">/admin/social</Link>). Captions still work; publishing is disabled.
         </div>
       )}
@@ -167,8 +167,8 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
       <div className="pm__grid">
         <div className="pm__steps">
           {/* ① Platform */}
-          <section className="ads-step is-done pm__step">
-            <header className="ads-step__title"><span>①</span> Where <i className="cr-done">✓</i></header>
+          <section className="ui-step is-done pm__step">
+            <header className="ui-step__title"><span>①</span> Where <i className="cr-done">✓</i></header>
             <div className="pm__chips" role="radiogroup" aria-label="Platform">
               {SOCIAL_PLATFORMS.map((p) => (
                 <button key={p} type="button" role="radio" aria-checked={platform === p} className={`pm__chip${platform === p ? " is-on" : ""}`} onClick={() => setPlatform(p)}>
@@ -180,21 +180,21 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
           </section>
 
           {/* ② Picture */}
-          <section className={`ads-step pm__step${done.image ? " is-done" : ""}`}>
-            <header className="ads-step__title"><span>②</span> Picture {done.image && <i className="cr-done">✓</i>}</header>
+          <section className={`ui-step pm__step${done.image ? " is-done" : ""}`}>
+            <header className="ui-step__title"><span>②</span> Picture {done.image && <i className="cr-done">✓</i>}</header>
             <ImageGrid items={library} pillars={pillars} selected={image} initialPillar={pillarId} onSelect={(it) => { setImage(it.src); setCustomUrl(""); }} maxHeight={300} compact />
             {selected && (
-              <div className="ads-hint">{selected.title ?? selected.label}{selected.loc ? ` · ${selected.loc}` : ""}{selected.bookPage ? ` · in the book, p.${selected.bookPage}` : ""}</div>
+              <div className="ui-hint">{selected.title ?? selected.label}{selected.loc ? ` · ${selected.loc}` : ""}{selected.bookPage ? ` · in the book, p.${selected.bookPage}` : ""}</div>
             )}
             <details className="pm__more">
               <summary>Or paste a picture link</summary>
-              <input className="ads-input" placeholder="https://…/photo.jpg" value={customUrl} onChange={(e) => { setCustomUrl(e.target.value); if (e.target.value.trim()) setImage(e.target.value.trim()); }} />
+              <input className="ui-input" placeholder="https://…/photo.jpg" value={customUrl} onChange={(e) => { setCustomUrl(e.target.value); if (e.target.value.trim()) setImage(e.target.value.trim()); }} />
             </details>
           </section>
 
           {/* ③ Pillar → tiles */}
-          <section className={`ads-step pm__step${done.pillar ? " is-done" : ""}`}>
-            <header className="ads-step__title"><span>③</span> What it&rsquo;s about {done.pillar && <i className="cr-done">✓</i>}</header>
+          <section className={`ui-step pm__step${done.pillar ? " is-done" : ""}`}>
+            <header className="ui-step__title"><span>③</span> What it&rsquo;s about {done.pillar && <i className="cr-done">✓</i>}</header>
             <div className="pm__pillars" role="radiogroup" aria-label="Pillar">
               {pillars.map((p) => (
                 <button key={p.id} type="button" role="radio" aria-checked={pillarId === p.id} className={`pm__pillar${pillarId === p.id ? " is-on" : ""}`} onClick={() => { setPillarId(p.id); setMessageId(""); }}>
@@ -205,25 +205,25 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
             </div>
             <details className="pm__more">
               <summary>Steer the writing (optional)</summary>
-              <label className="ads-label">Core message</label>
-              <select className="ads-input" value={messageId} onChange={(e) => setMessageId(e.target.value)}>
+              <label className="ui-label">Core message</label>
+              <select className="ui-input" value={messageId} onChange={(e) => setMessageId(e.target.value)}>
                 <option value="">— let the writer choose —</option>
                 {pillarMessages.map((m) => <option key={m.id} value={m.id}>{m.text}</option>)}
               </select>
-              <label className="ads-label">What this post is about</label>
-              <input className="ads-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="first light on the Bells, late September" />
-              <label className="ads-label">Promote a blog post (id)</label>
-              <input className="ads-input" placeholder="m07" value={musingId} onChange={(e) => setMusingId(e.target.value.trim())} />
-              <div className="ads-hint">Changes here apply the next time you press Write 5 more.</div>
+              <label className="ui-label">What this post is about</label>
+              <input className="ui-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="first light on the Bells, late September" />
+              <label className="ui-label">Promote a blog post (id)</label>
+              <input className="ui-input" placeholder="m07" value={musingId} onChange={(e) => setMusingId(e.target.value.trim())} />
+              <div className="ui-hint">Changes here apply the next time you press Write 5 more.</div>
             </details>
 
             {pillarId && (
               <div className="pm__tiles">
                 <div className="pm__tiles-head">
                   <b>{busy === "captions" ? "Writing five ways to say it…" : tiles.length ? `Five ways to say it · ${pillar?.name ?? ""}` : "Nothing written yet"}</b>
-                  <button type="button" className="btn btn--ghost ads-btn-xs" disabled={!config.ai || !!busy} onClick={() => void writeCaptions("more")}>{busy === "captions" ? "…" : "Write 5 more"}</button>
+                  <button type="button" className="btn btn--ghost ui-btn-xs" disabled={!config.ai || !!busy} onClick={() => void writeCaptions("more")}>{busy === "captions" ? "…" : "Write 5 more"}</button>
                 </div>
-                {!config.ai && <div className="ads-hint">AI is not configured, so write the words on the post itself, right.</div>}
+                {!config.ai && <div className="ui-hint">AI is not configured, so write the words on the post itself, right.</div>}
                 {busy === "captions" && !tiles.length && (
                   <div className="pm__tilegrid" aria-hidden>{Array.from({ length: TILES }).map((_, i) => <div key={i} className="pm__tile is-ghost" />)}</div>
                 )}
@@ -233,8 +233,8 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
                       <div key={i} className={`pm__tile${used === i ? " is-used" : ""}`}>
                         <textarea value={t} onChange={(e) => editTile(i, e.target.value)} rows={5} aria-label={`Caption option ${i + 1}`} />
                         <div className="pm__tile-foot">
-                          <span className={t.length > limit ? "ads-hint--err" : ""}>{t.length} / {limit}</span>
-                          <button type="button" className={`btn ads-btn-xs${used === i ? " btn--gold" : ""}`} onClick={() => pickTile(i)}>{used === i ? "On the post" : "Use this"}</button>
+                          <span className={t.length > limit ? "ui-hint--err" : ""}>{t.length} / {limit}</span>
+                          <button type="button" className={`btn ui-btn-xs${used === i ? " btn--gold" : ""}`} onClick={() => pickTile(i)}>{used === i ? "On the post" : "Use this"}</button>
                         </div>
                       </div>
                     ))}
@@ -266,27 +266,27 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
               <textarea className="fbcard__msg pm__msg" value={caption} onChange={(e) => { setCaption(e.target.value); setUsed(null); }} placeholder="Pick a pillar and the words write themselves. Or type here." rows={4} aria-label="Caption" />
             )}
           </article>
-          <div className={`ads-hint pm__count${caption.length > limit ? " ads-hint--err" : ""}`}>{caption.length} / {limit}{used != null ? ` · tile ${used + 1}` : caption ? " · your own words" : ""}</div>
+          <div className={`ui-hint pm__count${caption.length > limit ? " ui-hint--err" : ""}`}>{caption.length} / {limit}{used != null ? ` · tile ${used + 1}` : caption ? " · your own words" : ""}</div>
 
           <div className="pm__send">
-            <label className="ads-label">When</label>
+            <label className="ui-label">When</label>
             <div className="pm__when">
               <button type="button" className={`pm__chip pm__chip--sm${!scheduledAt ? " is-on" : ""}`} onClick={() => setScheduledAt("")}>Now</button>
-              <input className="ads-input" type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} aria-label="Schedule for" />
+              <input className="ui-input" type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} aria-label="Schedule for" />
             </div>
-            <div className="ads-row" style={{ marginTop: 12 }}>
+            <div className="ui-row" style={{ marginTop: 12 }}>
               {!scheduledAt ? (
                 <button className="btn btn--gold" disabled={!canSend} onClick={() => void submit(false)}>{busy === "publish" ? "Publishing…" : `Publish to ${PLATFORM_LABELS[platform]}`}</button>
               ) : (
                 <button className="btn btn--gold" disabled={!canSend} onClick={() => void submit(true)}>{busy === "schedule" ? "Scheduling…" : "Schedule it"}</button>
               )}
-              <button type="button" className="btn btn--ghost ads-btn-sm" disabled={!caption.trim()} onClick={() => void copyText(caption).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "Words copied." : "Couldn't copy." }))}>Copy the words</button>
+              <button type="button" className="btn btn--ghost ui-btn-sm" disabled={!caption.trim()} onClick={() => void copyText(caption).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "Words copied." : "Couldn't copy." }))}>Copy the words</button>
             </div>
-            {!publishes && <div className="ads-hint">Instagram is not linked yet, so copy the words and post the picture from the app.</div>}
-            {scheduledAt && <div className="ads-hint">Meta needs 15 minutes to 6 months of lead time.</div>}
-            {draftId && <div className="ads-hint">Working from a saved draft. <button type="button" className="ads-linkbtn" onClick={() => setDraftId(null)}>Start fresh instead</button></div>}
+            {!publishes && <div className="ui-hint">Instagram is not linked yet, so copy the words and post the picture from the app.</div>}
+            {scheduledAt && <div className="ui-hint">Meta needs 15 minutes to 6 months of lead time.</div>}
+            {draftId && <div className="ui-hint">Working from a saved draft. <button type="button" className="ui-linkbtn" onClick={() => setDraftId(null)}>Start fresh instead</button></div>}
             {result && (
-              <div className="ads-notice ads-notice--ok" style={{ marginTop: 12 }}>
+              <div className="ui-notice ui-notice--ok" style={{ marginTop: 12 }}>
                 {result.scheduled ? "Scheduled" : "Published"}{result.scheduledAt ? ` for ${new Date(result.scheduledAt).toLocaleString()}` : ""}.
                 {!result.scheduled && <> <a href={`https://www.facebook.com/${result.id}`} target="_blank" rel="noreferrer">See it on Facebook ↗</a></>}
                 {" "}<a href="/creator/social">Back to all posts</a>

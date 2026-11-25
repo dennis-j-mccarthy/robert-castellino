@@ -86,8 +86,8 @@ export default async function AudiencePage() {
               )}
               {vb.caution && <p className="au-seg__caution">{vb.caution}</p>}
               <div className="au-seg__foot">
-                <a className="btn btn--ghost ads-btn-xs" href={s.metaUrl} target="_blank" rel="noreferrer">Open in Meta ↗</a>
-                {active.length > 0 && <Link className="btn ads-btn-xs" href="/creator/ads">See the ads →</Link>}
+                <a className="btn btn--ghost ui-btn-xs" href={s.metaUrl} target="_blank" rel="noreferrer">Open in Meta ↗</a>
+                {active.length > 0 && <Link className="btn ui-btn-xs" href="/creator/ads">See the ads →</Link>}
               </div>
             </article>
           );

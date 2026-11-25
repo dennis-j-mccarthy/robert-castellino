@@ -20,7 +20,7 @@ export default async function LandingSection({ preselect }: { preselect?: string
         <div className="tl-eyebrow">What this does</div>
         <p>A landing page is a page built for one search, like &ldquo;Colorado coffee table book.&rdquo; Someone who searches that, or clicks an ad for it, lands on a page about exactly what they wanted, in your voice, with one of your plates at the top and the signed book to order. The studio writes the first draft from Essence and the pillars. You read it, change anything that does not sound like you, and press Publish. Drafts are private until then.</p>
       </div>
-      {!db && <p className="ads-notice ads-notice--warn">The database isn&rsquo;t connected, so pages can&rsquo;t be saved here.</p>}
+      {!db && <p className="ui-notice ui-notice--warn">The database isn&rsquo;t connected, so pages can&rsquo;t be saved here.</p>}
       <LandingClient
         ai={hasAnthropicKey()}
         db={db}

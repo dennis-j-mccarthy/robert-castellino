@@ -21,8 +21,8 @@ export default function WeekClient({ item }: { item: PlanItem }) {
   if (state === "done" || state === "scheduled") return <span className="wk-state is-done">{state === "done" ? "Done" : "Scheduled"}</span>;
   return (
     <span className="wk-actions">
-      <a className="btn btn--gold ads-btn-xs" href={item.href} onClick={() => { if (state === "suggested") void set("approved"); }}>{state === "approved" ? "Open" : "Open & draft"}</a>
-      <button type="button" className="btn ads-btn-xs" disabled={busy} onClick={() => set("skipped")}>Skip</button>
+      <a className="btn btn--gold ui-btn-xs" href={item.href} onClick={() => { if (state === "suggested") void set("approved"); }}>{state === "approved" ? "Open" : "Open & draft"}</a>
+      <button type="button" className="btn ui-btn-xs" disabled={busy} onClick={() => set("skipped")}>Skip</button>
     </span>
   );
 }

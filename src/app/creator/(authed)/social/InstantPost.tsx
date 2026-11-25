@@ -99,28 +99,28 @@ export default function InstantPost({ config }: { config: { connected: boolean; 
       <div className="ip__grid">
         <div className="ip__left">
           {/* 1 · Photo */}
-          <section className="ads-step pm__step">
-            <header className="ads-step__title"><span>①</span> Photo {image && <i className="cr-done">✓</i>}</header>
+          <section className="ui-step pm__step">
+            <header className="ui-step__title"><span>①</span> Photo {image && <i className="cr-done">✓</i>}</header>
             <div className={`ip__drop${preview ? " has-img" : ""}`} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); void takeFile(e.dataTransfer.files?.[0]); }}>
               {preview ? <img src={preview} alt="" /> : <p>Drop a photo here, or</p>}
               <div className="ip__drop-btns">
-                <button type="button" className="btn ads-btn-sm" disabled={busy === "upload"} onClick={() => fileRef.current?.click()}>{busy === "upload" ? "Uploading…" : preview ? "Different photo" : "Choose from this device"}</button>
-                <button type="button" className="btn btn--ghost ads-btn-sm" disabled={busy === "upload"} onClick={() => camRef.current?.click()}>Take a photo</button>
+                <button type="button" className="btn ui-btn-sm" disabled={busy === "upload"} onClick={() => fileRef.current?.click()}>{busy === "upload" ? "Uploading…" : preview ? "Different photo" : "Choose from this device"}</button>
+                <button type="button" className="btn btn--ghost ui-btn-sm" disabled={busy === "upload"} onClick={() => camRef.current?.click()}>Take a photo</button>
               </div>
               <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => { void takeFile(e.target.files?.[0]); e.target.value = ""; }} />
               <input ref={camRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { void takeFile(e.target.files?.[0]); e.target.value = ""; }} />
             </div>
-            <div className="ads-hint">On a phone, &ldquo;Choose from this device&rdquo; opens the camera roll. The photo is also saved to Brand kit → Pictures.</div>
+            <div className="ui-hint">On a phone, &ldquo;Choose from this device&rdquo; opens the camera roll. The photo is also saved to Brand kit → Pictures.</div>
           </section>
 
           {/* 2 · Three bullets */}
-          <section className="ads-step pm__step">
-            <header className="ads-step__title"><span>②</span> Three things about it {bullets.some((b) => b.trim()) && <i className="cr-done">✓</i>}</header>
+          <section className="ui-step pm__step">
+            <header className="ui-step__title"><span>②</span> Three things about it {bullets.some((b) => b.trim()) && <i className="cr-done">✓</i>}</header>
             <div className="ip__bullets">
               {bullets.map((b, i) => (
                 <label key={i} className="ip__bullet">
                   <span>•</span>
-                  <input className="ads-input" value={b} placeholder={["Where and when (Maroon Bells, last Tuesday, before sunrise)", "What happened or what you noticed", "Why it matters, or what you want people to do"][i]} onChange={(e) => setBullets((l) => l.map((x, j) => (j === i ? e.target.value : x)))} />
+                  <input className="ui-input" value={b} placeholder={["Where and when (Maroon Bells, last Tuesday, before sunrise)", "What happened or what you noticed", "Why it matters, or what you want people to do"][i]} onChange={(e) => setBullets((l) => l.map((x, j) => (j === i ? e.target.value : x)))} />
                 </label>
               ))}
             </div>
@@ -129,9 +129,9 @@ export default function InstantPost({ config }: { config: { connected: boolean; 
                 <button key={p} type="button" role="radio" aria-checked={platform === p} className={`pm__chip pm__chip--sm${platform === p ? " is-on" : ""}`} onClick={() => setPlatform(p)}><b>{PLATFORM_LABELS[p]}</b></button>
               ))}
             </div>
-            <div className="ads-row" style={{ marginTop: 14 }}>
+            <div className="ui-row" style={{ marginTop: 14 }}>
               <button type="button" className="btn btn--gold" disabled={!config.ai || !image || !!busy} onClick={() => void build()}>{busy === "build" ? "Building the post…" : built ? "Build it again" : "Build the post"}</button>
-              {!config.ai && <span className="ads-hint" style={{ margin: 0 }}>AI is not configured.</span>}
+              {!config.ai && <span className="ui-hint" style={{ margin: 0 }}>AI is not configured.</span>}
             </div>
           </section>
         </div>
@@ -152,28 +152,28 @@ export default function InstantPost({ config }: { config: { connected: boolean; 
               {preview ? <img src={preview} alt={built?.alt ?? ""} /> : <div className="fbcard__img-empty">Your photo</div>}
             </div>
           </article>
-          <div className={`ads-hint pm__count${caption.length > limit ? " ads-hint--err" : ""}`}>{caption.length} / {limit}{built?.place ? ` · ${built.place}` : ""}</div>
+          <div className={`ui-hint pm__count${caption.length > limit ? " ui-hint--err" : ""}`}>{caption.length} / {limit}{built?.place ? ` · ${built.place}` : ""}</div>
 
           <div className="pm__send">
-            <label className="ads-label">When</label>
+            <label className="ui-label">When</label>
             <div className="pm__when">
               <button type="button" className={`pm__chip pm__chip--sm${!scheduledAt ? " is-on" : ""}`} onClick={() => setScheduledAt("")}>Now</button>
-              <input className="ads-input" type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} aria-label="Schedule for" />
+              <input className="ui-input" type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} aria-label="Schedule for" />
             </div>
-            <div className="ads-row" style={{ marginTop: 12 }}>
+            <div className="ui-row" style={{ marginTop: 12 }}>
               {!scheduledAt ? (
                 <button className="btn btn--gold" disabled={!canSend} onClick={() => void send(false)}>{busy === "publish" ? "Publishing…" : `Publish to ${PLATFORM_LABELS[platform]}`}</button>
               ) : (
                 <button className="btn btn--gold" disabled={!canSend} onClick={() => void send(true)}>{busy === "schedule" ? "Scheduling…" : "Schedule it"}</button>
               )}
-              <button type="button" className="btn btn--ghost ads-btn-sm" disabled={!caption.trim()} onClick={() => void copyText(caption).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "Words copied." : "Couldn't copy." }))}>Copy the words</button>
-              {built && <a className="btn btn--ghost ads-btn-sm" href={makerHref}>Fine-tune in the maker</a>}
+              <button type="button" className="btn btn--ghost ui-btn-sm" disabled={!caption.trim()} onClick={() => void copyText(caption).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "Words copied." : "Couldn't copy." }))}>Copy the words</button>
+              {built && <a className="btn btn--ghost ui-btn-sm" href={makerHref}>Fine-tune in the maker</a>}
             </div>
-            {!PUBLISHES[platform] && <div className="ads-hint">Instagram is not linked yet, so copy the words and post the picture from the app.</div>}
+            {!PUBLISHES[platform] && <div className="ui-hint">Instagram is not linked yet, so copy the words and post the picture from the app.</div>}
             {done && (
-              <div className="ads-notice ads-notice--ok" style={{ marginTop: 12 }}>
+              <div className="ui-notice ui-notice--ok" style={{ marginTop: 12 }}>
                 {done.scheduled ? "Scheduled." : "Published."} {!done.scheduled && <a href={`https://www.facebook.com/${done.id}`} target="_blank" rel="noreferrer">See it on Facebook ↗</a>}{" "}
-                <button type="button" className="ads-linkbtn" onClick={reset}>Start another</button>
+                <button type="button" className="ui-linkbtn" onClick={reset}>Start another</button>
               </div>
             )}
           </div>

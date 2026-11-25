@@ -56,45 +56,45 @@ export default function LandingClient({ initialPages, keywords, plates, preselec
     <div className="ld">
       <section className="kw-card ld-new">
         <h2>Write a new landing page</h2>
-        <p className="ads-hint">Pick a phrase from Keywords, or type one. Gift phrases first. About a minute.</p>
+        <p className="ui-hint">Pick a phrase from Keywords, or type one. Gift phrases first. About a minute.</p>
         <div className="ld-new__row">
-          <select className="ads-input" value={keyword} onChange={(e) => { setKeyword(e.target.value); setCustom(""); }}>
+          <select className="ui-input" value={keyword} onChange={(e) => { setKeyword(e.target.value); setCustom(""); }}>
             {keyword && !without.some((k) => k.phrase === keyword) && <option value={keyword}>{keyword}</option>}
             {without.map((k) => <option key={k.phrase} value={k.phrase}>{k.phrase} · {k.kind}</option>)}
           </select>
           <span className="ld-new__or">or</span>
-          <input className="ads-input" placeholder="type a phrase people search" value={custom} onChange={(e) => setCustom(e.target.value)} />
+          <input className="ui-input" placeholder="type a phrase people search" value={custom} onChange={(e) => setCustom(e.target.value)} />
           <button type="button" className="btn btn--gold" disabled={!phrase || !!busy || !ai || !db} onClick={() => void generate()}>{busy === "make" ? "Writing the page…" : "✦ Make the page"}</button>
         </div>
-        <p className="ads-hint">The page gets a headline in the searcher&rsquo;s words, one of your pictures at the top, why this is for them, what they get, how it works, the story, questions and answers, and a button that leads to {studio.offer.path}.</p>
+        <p className="ui-hint">The page gets a headline in the searcher&rsquo;s words, one of your pictures at the top, why this is for them, what they get, how it works, the story, questions and answers, and a button that leads to {studio.offer.path}.</p>
         {msg && <p className="ld-msg">{msg}</p>}
       </section>
 
       <ul className="ld-list">
-        {pages.length === 0 && <li className="ads-hint">No landing pages yet.</li>}
+        {pages.length === 0 && <li className="ui-hint">No landing pages yet.</li>}
         {pages.map((p) => (
           <li key={p.slug} className="kw-card ld-item">
             <button type="button" className="ld-item__head" onClick={() => setOpen(open === p.slug ? null : p.slug)} aria-expanded={open === p.slug}>
               <span className={`seo-pill ${p.published ? "is-pass" : "is-warn"}`}>{p.published ? "LIVE" : "DRAFT"}</span>
               <b>{p.h1}</b>
-              <span className="ads-hint">/for/{p.slug} · for &ldquo;{p.keyword}&rdquo;</span>
+              <span className="ui-hint">/for/{p.slug} · for &ldquo;{p.keyword}&rdquo;</span>
             </button>
             {open === p.slug && (
               <div className="ld-edit">
                 <div className="ld-edit__grid">
                   <div className="ld-fields">
-                    <label className="ads-label">Page title (shown in Google)</label><input className="ads-input" value={p.title} onChange={(e) => local(p.slug, { title: e.target.value })} />
-                    <label className="ads-label">Description (under the title in Google)</label><textarea className="ads-input" rows={2} value={p.metaDescription} onChange={(e) => local(p.slug, { metaDescription: e.target.value })} />
-                    <label className="ads-label">Headline</label><input className="ads-input" value={p.h1} onChange={(e) => local(p.slug, { h1: e.target.value })} />
-                    <label className="ads-label">Opening</label><textarea className="ads-input" rows={3} value={p.intro} onChange={(e) => local(p.slug, { intro: e.target.value })} />
+                    <label className="ui-label">Page title (shown in Google)</label><input className="ui-input" value={p.title} onChange={(e) => local(p.slug, { title: e.target.value })} />
+                    <label className="ui-label">Description (under the title in Google)</label><textarea className="ui-input" rows={2} value={p.metaDescription} onChange={(e) => local(p.slug, { metaDescription: e.target.value })} />
+                    <label className="ui-label">Headline</label><input className="ui-input" value={p.h1} onChange={(e) => local(p.slug, { h1: e.target.value })} />
+                    <label className="ui-label">Opening</label><textarea className="ui-input" rows={3} value={p.intro} onChange={(e) => local(p.slug, { intro: e.target.value })} />
                     {p.sections && <SectionsEditor s={p.sections} onChange={(sections) => local(p.slug, { sections })} />}
-                    <label className="ads-label">Body (## makes a subheading)</label><textarea className="ads-input ld-body" rows={14} value={p.body} onChange={(e) => local(p.slug, { body: e.target.value })} />
-                    <label className="ads-label">Questions and answers</label>
+                    <label className="ui-label">Body (## makes a subheading)</label><textarea className="ui-input ld-body" rows={14} value={p.body} onChange={(e) => local(p.slug, { body: e.target.value })} />
+                    <label className="ui-label">Questions and answers</label>
                     <div className="ld-faq">
                       {p.faq.map((f, i) => (
                         <div key={i} className="ld-faq__item">
-                          <input className="ads-input" value={f.q} onChange={(e) => local(p.slug, { faq: p.faq.map((x, j) => (j === i ? { ...x, q: e.target.value } : x)) })} />
-                          <textarea className="ads-input" rows={2} value={f.a} onChange={(e) => local(p.slug, { faq: p.faq.map((x, j) => (j === i ? { ...x, a: e.target.value } : x)) })} />
+                          <input className="ui-input" value={f.q} onChange={(e) => local(p.slug, { faq: p.faq.map((x, j) => (j === i ? { ...x, q: e.target.value } : x)) })} />
+                          <textarea className="ui-input" rows={2} value={f.a} onChange={(e) => local(p.slug, { faq: p.faq.map((x, j) => (j === i ? { ...x, a: e.target.value } : x)) })} />
                         </div>
                       ))}
                     </div>
@@ -104,23 +104,23 @@ export default function LandingClient({ initialPages, keywords, plates, preselec
                       {p.heroImage ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={p.heroImage} alt={p.heroAlt ?? ""} />
-                      ) : <div className="ads-hint">No plate chosen</div>}
+                      ) : <div className="ui-hint">No plate chosen</div>}
                     </div>
-                    <label className="ads-label">Hero plate</label>
-                    <select className="ads-input" value={p.heroImage ?? ""} onChange={(e) => { const pl = plates.find((x) => x.src === e.target.value); local(p.slug, { heroImage: e.target.value || null, heroAlt: pl ? `${pl.title}${pl.loc ? `, ${pl.loc}` : ""}` : p.heroAlt }); }}>
+                    <label className="ui-label">Hero plate</label>
+                    <select className="ui-input" value={p.heroImage ?? ""} onChange={(e) => { const pl = plates.find((x) => x.src === e.target.value); local(p.slug, { heroImage: e.target.value || null, heroAlt: pl ? `${pl.title}${pl.loc ? `, ${pl.loc}` : ""}` : p.heroAlt }); }}>
                       <option value="">— none —</option>
                       {plates.map((pl) => <option key={pl.src} value={pl.src}>{pl.title}{pl.loc ? ` · ${pl.loc}` : ""}</option>)}
                     </select>
-                    <label className="ads-label">Picture description (alt text)</label>
-                    <textarea className="ads-input" rows={2} value={p.heroAlt ?? ""} onChange={(e) => local(p.slug, { heroAlt: e.target.value })} />
-                    <p className="ads-hint">Always one of your real plates. Nothing is generated.</p>
+                    <label className="ui-label">Picture description (alt text)</label>
+                    <textarea className="ui-input" rows={2} value={p.heroAlt ?? ""} onChange={(e) => local(p.slug, { heroAlt: e.target.value })} />
+                    <p className="ui-hint">Always one of your real plates. Nothing is generated.</p>
                   </div>
                 </div>
-                <div className="ads-row ld-actions">
-                  <button type="button" className="btn btn--gold ads-btn-sm" disabled={!!busy} onClick={() => void save(p.slug, { title: p.title, metaDescription: p.metaDescription, h1: p.h1, intro: p.intro, body: p.body, faq: p.faq, heroImage: p.heroImage, heroAlt: p.heroAlt, ...(p.sections ? { sections: p.sections } : {}) })}>{busy === `save:${p.slug}` ? "Saving…" : "Save changes"}</button>
-                  <a className="btn ads-btn-sm" href={`/for/${p.slug}`} target="_blank" rel="noreferrer">{p.published ? "View page ↗" : "Preview ↗"}</a>
-                  <button type="button" className={`btn ads-btn-sm${p.published ? "" : " btn--gold"}`} disabled={!!busy} onClick={() => void save(p.slug, { published: !p.published })}>{p.published ? "Unpublish" : "Publish"}</button>
-                  <button type="button" className="btn btn--ghost ads-btn-xs ld-del" disabled={!!busy} onClick={() => void remove(p.slug)}>Delete</button>
+                <div className="ui-row ld-actions">
+                  <button type="button" className="btn btn--gold ui-btn-sm" disabled={!!busy} onClick={() => void save(p.slug, { title: p.title, metaDescription: p.metaDescription, h1: p.h1, intro: p.intro, body: p.body, faq: p.faq, heroImage: p.heroImage, heroAlt: p.heroAlt, ...(p.sections ? { sections: p.sections } : {}) })}>{busy === `save:${p.slug}` ? "Saving…" : "Save changes"}</button>
+                  <a className="btn ui-btn-sm" href={`/for/${p.slug}`} target="_blank" rel="noreferrer">{p.published ? "View page ↗" : "Preview ↗"}</a>
+                  <button type="button" className={`btn ui-btn-sm${p.published ? "" : " btn--gold"}`} disabled={!!busy} onClick={() => void save(p.slug, { published: !p.published })}>{p.published ? "Unpublish" : "Publish"}</button>
+                  <button type="button" className="btn btn--ghost ui-btn-xs ld-del" disabled={!!busy} onClick={() => void remove(p.slug)}>Delete</button>
                 </div>
               </div>
             )}
@@ -135,12 +135,12 @@ function SectionsEditor({ s, onChange }: { s: LandingSections; onChange: (s: Lan
   const set = (p: Partial<LandingSections>) => onChange({ ...s, ...p });
   const pairs = (key: "benefits" | "steps", label: string) => (
     <div>
-      <label className="ads-label">{label}</label>
+      <label className="ui-label">{label}</label>
       <div className="ld-pairs">
         {s[key].map((b, i) => (
           <div key={i} className="ld-pair">
-            <input className="ads-input" value={b.title} onChange={(e) => set({ [key]: s[key].map((x, j) => (j === i ? { ...x, title: e.target.value } : x)) })} />
-            <textarea className="ads-input" rows={3} value={b.text} onChange={(e) => set({ [key]: s[key].map((x, j) => (j === i ? { ...x, text: e.target.value } : x)) })} />
+            <input className="ui-input" value={b.title} onChange={(e) => set({ [key]: s[key].map((x, j) => (j === i ? { ...x, title: e.target.value } : x)) })} />
+            <textarea className="ui-input" rows={3} value={b.text} onChange={(e) => set({ [key]: s[key].map((x, j) => (j === i ? { ...x, text: e.target.value } : x)) })} />
           </div>
         ))}
       </div>
@@ -148,13 +148,13 @@ function SectionsEditor({ s, onChange }: { s: LandingSections; onChange: (s: Lan
   );
   return (
     <div className="ld-sections">
-      <label className="ads-label">Small line above the headline</label><input className="ads-input" value={s.eyebrow} onChange={(e) => set({ eyebrow: e.target.value })} />
-      <label className="ads-label">Why this is for them (under the headline)</label><textarea className="ads-input" rows={2} value={s.valueProp} onChange={(e) => set({ valueProp: e.target.value })} />
+      <label className="ui-label">Small line above the headline</label><input className="ui-input" value={s.eyebrow} onChange={(e) => set({ eyebrow: e.target.value })} />
+      <label className="ui-label">Why this is for them (under the headline)</label><textarea className="ui-input" rows={2} value={s.valueProp} onChange={(e) => set({ valueProp: e.target.value })} />
       {pairs("benefits", "What you get")}
       {pairs("steps", "How it works")}
-      <div className="ads-row--2">
-        <div><label className="ads-label">Invitation</label><input className="ads-input" value={s.ctaHeadline} onChange={(e) => set({ ctaHeadline: e.target.value })} /></div>
-        <div><label className="ads-label">Button text</label><input className="ads-input" value={s.ctaButton} onChange={(e) => set({ ctaButton: e.target.value })} /></div>
+      <div className="ui-row--2">
+        <div><label className="ui-label">Invitation</label><input className="ui-input" value={s.ctaHeadline} onChange={(e) => set({ ctaHeadline: e.target.value })} /></div>
+        <div><label className="ui-label">Button text</label><input className="ui-input" value={s.ctaButton} onChange={(e) => set({ ctaButton: e.target.value })} /></div>
       </div>
     </div>
   );

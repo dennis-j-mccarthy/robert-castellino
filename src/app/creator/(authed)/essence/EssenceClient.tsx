@@ -234,9 +234,9 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
     <div className={`es-field${key === "line" ? " es-field--line" : ""}`}>
       <div className={`es-field__head${key === "line" ? " es-field__head--bare" : ""}`}>{key !== "line" && <label className="es-label">{label}</label>}{ai && <Suggest busy={thinking === key} disabled={ro} onClick={() => void suggest(key, { current: d[key] })} />}</div>
       {rows ? (
-        <textarea className="ads-input" rows={rows} value={d[key]} disabled={ro} onChange={(e) => patch({ [key]: e.target.value } as Partial<Draft>)} />
+        <textarea className="ui-input" rows={rows} value={d[key]} disabled={ro} onChange={(e) => patch({ [key]: e.target.value } as Partial<Draft>)} />
       ) : (
-        <input className={`ads-input${key === "line" ? " cr-line" : ""}`} value={d[key]} disabled={ro} onChange={(e) => patch({ [key]: e.target.value } as Partial<Draft>)} />
+        <input className={`ui-input${key === "line" ? " cr-line" : ""}`} value={d[key]} disabled={ro} onChange={(e) => patch({ [key]: e.target.value } as Partial<Draft>)} />
       )}
       <Hint>{hint}</Hint>
       <Options options={opts[key] ?? []} onPick={(s) => { patch({ [key]: s } as Partial<Draft>); clear(key); }} onClose={() => clear(key)} />
@@ -245,7 +245,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
 
   return (
     <div className="cr-essence es">
-      {ro && <div className="ads-notice ads-notice--warn">No database connected — showing the seed defaults read-only.</div>}
+      {ro && <div className="ui-notice ui-notice--warn">No database connected — showing the seed defaults read-only.</div>}
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
       <div className="es-guide">
@@ -335,7 +335,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                                   <div>
                                     <label className="es-label">Hashtags</label>
                                     <div className="es-muted">{p.hashtags.join(" ") || "none"}</div>
-                                    {!ro && <div style={{ marginTop: 10 }}><button type="button" className="btn ads-btn-xs" onClick={() => setEditing({ ...p })}>Edit pillar</button></div>}
+                                    {!ro && <div style={{ marginTop: 10 }}><button type="button" className="btn ui-btn-xs" onClick={() => setEditing({ ...p })}>Edit pillar</button></div>}
                                   </div>
                                 </div>
                                 <div className="es-field__head" style={{ marginTop: 14 }}>
@@ -357,7 +357,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                                     <div key={m.text} className="es-msg es-msg--new">
                                       <b>{m.text}</b>
                                       <small>{m.headlines.join(" · ")}</small>
-                                      <div className="ads-row" style={{ marginTop: 6 }}><button type="button" className="btn btn--gold ads-btn-xs" onClick={() => void addMessage(p.id, m)}>Add it</button></div>
+                                      <div className="ui-row" style={{ marginTop: 6 }}><button type="button" className="btn btn--gold ui-btn-xs" onClick={() => void addMessage(p.id, m)}>Add it</button></div>
                                     </div>
                                   ))}
                                 </div>
@@ -366,7 +366,7 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                           </div>
                         );
                       })}
-                      {!ro && <div style={{ marginTop: 10 }}><button type="button" className="btn btn--ghost ads-btn-sm" onClick={() => setEditing({ id: "", name: "", message: "", angles: [], hashtags: [], target: null, sortOrder: pillars.length, active: true })}>+ Add a pillar</button></div>}
+                      {!ro && <div style={{ marginTop: 10 }}><button type="button" className="btn btn--ghost ui-btn-sm" onClick={() => setEditing({ id: "", name: "", message: "", angles: [], hashtags: [], target: null, sortOrder: pillars.length, active: true })}>+ Add a pillar</button></div>}
                     </div>
                   )}
 
@@ -374,17 +374,17 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
                     <div className="es-tone">
                       <div className="es-field__head">
                         <label className="es-label">What the writers are told</label>
-                        <div className="ads-row">
+                        <div className="ui-row">
                           {ai && !ro && <Suggest label="Rewrite from the sections above" busy={thinking === "tone"} onClick={() => void rewriteTone()} />}
-                          {!ro && <button type="button" className="btn ads-btn-xs" onClick={() => setToneEdit((v) => !v)}>{toneEdit ? "Done" : "Edit by hand"}</button>}
+                          {!ro && <button type="button" className="btn ui-btn-xs" onClick={() => setToneEdit((v) => !v)}>{toneEdit ? "Done" : "Edit by hand"}</button>}
                         </div>
                       </div>
                       {toneEdit ? (
                         <>
                           {(["voice", "audience", "style", "dos", "donts"] as const).map((k) => (
-                            <div key={k}><label className="ads-label">{k === "dos" ? "Do" : k === "donts" ? "Don't" : k}</label><textarea className="ads-input" rows={2} value={t[k]} onChange={(e) => setT({ ...t, [k]: e.target.value })} /></div>
+                            <div key={k}><label className="ui-label">{k === "dos" ? "Do" : k === "donts" ? "Don't" : k}</label><textarea className="ui-input" rows={2} value={t[k]} onChange={(e) => setT({ ...t, [k]: e.target.value })} /></div>
                           ))}
-                          <div className="ads-row" style={{ marginTop: 10 }}><button type="button" className="btn btn--gold ads-btn-sm" disabled={toneBusy} onClick={() => void saveTone(t)}>{toneBusy ? "Saving…" : "Save tone"}</button></div>
+                          <div className="ui-row" style={{ marginTop: 10 }}><button type="button" className="btn btn--gold ui-btn-sm" disabled={toneBusy} onClick={() => void saveTone(t)}>{toneBusy ? "Saving…" : "Save tone"}</button></div>
                         </>
                       ) : (
                         <dl className="es-tone__dl">
@@ -409,25 +409,25 @@ export default function EssenceClient({ essence, pillars: initialPillars, tone, 
 
       {/* Pillar editor */}
       {editing && (
-        <div className="ads-modal" role="dialog" aria-modal="true">
-          <div className="ads-modal__card cr-modal">
+        <div className="ui-modal" role="dialog" aria-modal="true">
+          <div className="ui-modal__card cr-modal">
             <h3>{editing.id ? `Edit “${editing.name}”` : "New pillar"}</h3>
-            <label className="ads-label">Name</label>
-            <input className="ads-input" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
-            <label className="ads-label">The message it carries</label>
-            <textarea className="ads-input" rows={2} value={editing.message} onChange={(e) => setEditing({ ...editing, message: e.target.value })} />
-            <label className="ads-label">Angles (one per line)</label>
-            <textarea className="ads-input" rows={5} value={editing.angles.join("\n")} onChange={(e) => setEditing({ ...editing, angles: e.target.value.split("\n") })} />
-            <label className="ads-label">Hashtags (space or line separated)</label>
-            <input className="ads-input" value={editing.hashtags.join(" ")} onChange={(e) => setEditing({ ...editing, hashtags: e.target.value.split(/\s+/) })} />
-            <div className="ads-row--2">
-              <div><label className="ads-label">Target % of the mix</label><input className="ads-input" type="number" min={0} max={100} value={editing.target ?? ""} onChange={(e) => setEditing({ ...editing, target: e.target.value === "" ? null : Number(e.target.value) })} /></div>
-              <div><label className="ads-label">Active</label><label className="ads-check"><input type="checkbox" checked={editing.active} onChange={(e) => setEditing({ ...editing, active: e.target.checked })} /><span>Offer in pickers and prompts</span></label></div>
+            <label className="ui-label">Name</label>
+            <input className="ui-input" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
+            <label className="ui-label">The message it carries</label>
+            <textarea className="ui-input" rows={2} value={editing.message} onChange={(e) => setEditing({ ...editing, message: e.target.value })} />
+            <label className="ui-label">Angles (one per line)</label>
+            <textarea className="ui-input" rows={5} value={editing.angles.join("\n")} onChange={(e) => setEditing({ ...editing, angles: e.target.value.split("\n") })} />
+            <label className="ui-label">Hashtags (space or line separated)</label>
+            <input className="ui-input" value={editing.hashtags.join(" ")} onChange={(e) => setEditing({ ...editing, hashtags: e.target.value.split(/\s+/) })} />
+            <div className="ui-row--2">
+              <div><label className="ui-label">Target % of the mix</label><input className="ui-input" type="number" min={0} max={100} value={editing.target ?? ""} onChange={(e) => setEditing({ ...editing, target: e.target.value === "" ? null : Number(e.target.value) })} /></div>
+              <div><label className="ui-label">Active</label><label className="ui-check"><input type="checkbox" checked={editing.active} onChange={(e) => setEditing({ ...editing, active: e.target.checked })} /><span>Offer in pickers and prompts</span></label></div>
             </div>
-            <div className="ads-row" style={{ marginTop: 16 }}>
+            <div className="ui-row" style={{ marginTop: 16 }}>
               <button className="btn btn--gold" disabled={busy || !editing.name.trim()} onClick={() => void savePillar({ ...editing, angles: editing.angles.map((a) => a.trim()).filter(Boolean), hashtags: editing.hashtags.filter(Boolean) }, !editing.id)}>{busy ? "Saving…" : "Save"}</button>
               <button className="btn btn--ghost" disabled={busy} onClick={() => setEditing(null)}>Cancel</button>
-              {editing.id && <button className="btn btn--ghost ads-btn-sm" style={{ marginLeft: "auto", color: "#e07070" }} disabled={busy} onClick={() => void deletePillar(editing)}>Delete</button>}
+              {editing.id && <button className="btn btn--ghost ui-btn-sm" style={{ marginLeft: "auto", color: "#e07070" }} disabled={busy} onClick={() => void deletePillar(editing)}>Delete</button>}
             </div>
           </div>
         </div>

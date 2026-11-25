@@ -43,7 +43,7 @@ export default function GoogleAdsSection() {
           <li><b>Spend $3,000</b> in 60 days → about <b>$1,500 to $4,500</b>, depending on the day.</li>
           <li>Through a Google Partner agency: larger tiers, reported up to $6,000 on $12,000. Only if an agency opens the account.</li>
         </ul>
-        <p className="ads-hint">Every tier has the same rules: one offer per advertiser, new advertisers only, US billing address, spend inside 60 days, credit lands within 35 days, usable on future ads only. The &ldquo;is he new&rdquo; question below applies at every tier. If the 2021 account shows $0 spent, the $1,500 tier is a fair stretch: it roughly doubles a campaign we want to run anyway.</p>
+        <p className="ui-hint">Every tier has the same rules: one offer per advertiser, new advertisers only, US billing address, spend inside 60 days, credit lands within 35 days, usable on future ads only. The &ldquo;is he new&rdquo; question below applies at every tier. If the 2021 account shows $0 spent, the $1,500 tier is a fair stretch: it roughly doubles a campaign we want to run anyway.</p>
         <div className="gads-box gads-box--warn">
           <p>
             <b>The risk:</b> Bob is probably not a new advertiser. On December 22, 2021 he linked a Google Ads account,{" "}
@@ -62,7 +62,7 @@ export default function GoogleAdsSection() {
             offer is attached to the account. Only spend money Bob is happy to spend even if the credit never comes.
           </p>
         </div>
-        <p className="ads-hint">
+        <p className="ui-hint">
           Google&rsquo;s terms: only spend after the offer is applied counts, it has to be spent within the offer window
           (usually 60 days), and the credit can take up to 35 days to show up.
         </p>
@@ -79,7 +79,7 @@ export default function GoogleAdsSection() {
             <li>Enter Dennis&rsquo;s Google email, set Access level to <b>Admin</b>, click <b>Send invitation</b>.</li>
             <li>Send Dennis the 10-digit account number from the top right (123-456-7890) so he knows it is the right account.</li>
           </ol>
-          <p className="ads-hint">If the 2021 account still exists, do this in whichever account will run ads going forward, and say which. One account can carry both the book and Fluid Pathways as separate campaigns.</p>
+          <p className="ui-hint">If the 2021 account still exists, do this in whichever account will run ads going forward, and say which. One account can carry both the book and Fluid Pathways as separate campaigns.</p>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export default function GoogleAdsSection() {
           {AD_GROUPS.map((g) => (
             <div key={g.name} className="gads-card">
               <h3>{g.name}</h3>
-              <div className="ads-hint">Lands on {g.landsOn}</div>
+              <div className="ui-hint">Lands on {g.landsOn}</div>
               <p className="gads-why">{g.why}</p>
               <ul className="gads-kw">
                 {g.keywords.map((k) => (
@@ -115,17 +115,17 @@ export default function GoogleAdsSection() {
         <ul className="gads-list">
           {LEFT_OUT.map(([k, why]) => (
             <li key={k}>
-              {k} <span className="ads-hint">({why})</span>
+              {k} <span className="ui-hint">({why})</span>
             </li>
           ))}
         </ul>
         <h3 className="gads-h3">Negative keywords (whole campaign)</h3>
-        <p className="ads-hint">{NEGATIVES.join(", ")}</p>
+        <p className="ui-hint">{NEGATIVES.join(", ")}</p>
       </div>
 
       <div className="gads-sec">
         <h2 className="kw-h2">The ad</h2>
-        <p className="ads-hint">
+        <p className="ui-hint">
           One responsive search ad per group. Every line is a fact from the book page. The numbers show length against
           Google&rsquo;s limit. For the His name group, change headline 1 to &ldquo;{NAME_GROUP_HEADLINE}&rdquo;.
         </p>
@@ -135,7 +135,7 @@ export default function GoogleAdsSection() {
             <ol className="gads-list">
               {HEADLINES.map((h) => (
                 <li key={h}>
-                  {h} <span className={h.length > HEADLINE_MAX ? "gads-over" : "ads-hint"}>{h.length}/{HEADLINE_MAX}</span>
+                  {h} <span className={h.length > HEADLINE_MAX ? "gads-over" : "ui-hint"}>{h.length}/{HEADLINE_MAX}</span>
                 </li>
               ))}
             </ol>
@@ -145,7 +145,7 @@ export default function GoogleAdsSection() {
             <ol className="gads-list">
               {DESCRIPTIONS.map((d) => (
                 <li key={d}>
-                  {d} <span className={d.length > DESCRIPTION_MAX ? "gads-over" : "ads-hint"}>{d.length}/{DESCRIPTION_MAX}</span>
+                  {d} <span className={d.length > DESCRIPTION_MAX ? "gads-over" : "ui-hint"}>{d.length}/{DESCRIPTION_MAX}</span>
                 </li>
               ))}
             </ol>

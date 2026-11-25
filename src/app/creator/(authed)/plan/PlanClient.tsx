@@ -127,8 +127,8 @@ export default function PlanClient({ initial, nextPlan }: { initial: PlanSetting
             <p className="pl-exp">No plan has been built yet. Build one now to see what Monday will bring from the dials on the left.</p>
           )}
           <div className="pl-actions">
-            <button type="button" className="btn btn--gold ads-btn-sm" disabled={running} onClick={() => buildNow(false)}>{running ? "Building…" : nextPlan ? "Email it to me" : "Build this week now"}</button>
-            {nextPlan && <button type="button" className="btn ads-btn-sm" disabled={running} onClick={() => buildNow(true)}>Rebuild from the dials</button>}
+            <button type="button" className="btn btn--gold ui-btn-sm" disabled={running} onClick={() => buildNow(false)}>{running ? "Building…" : nextPlan ? "Email it to me" : "Build this week now"}</button>
+            {nextPlan && <button type="button" className="btn ui-btn-sm" disabled={running} onClick={() => buildNow(true)}>Rebuild from the dials</button>}
           </div>
           {run && (
             <p className="pl-hint">

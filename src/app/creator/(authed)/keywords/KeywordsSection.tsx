@@ -22,7 +22,7 @@ export default async function KeywordsSection() {
           blog posts, captions and ads. The sizes are our judgement, not Google&rsquo;s search counts.
         </p>
       </div>
-      {!db && <p className="ads-notice ads-notice--warn">The database isn&rsquo;t connected, so nothing can be saved here yet.</p>}
+      {!db && <p className="ui-notice ui-notice--warn">The database isn&rsquo;t connected, so nothing can be saved here yet.</p>}
       <KeywordsClient initial={rows} />
     </div>
   );

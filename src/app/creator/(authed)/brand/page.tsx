@@ -40,7 +40,7 @@ export default async function BrandKitPage() {
           <figure key={l.src} className={`tl-card bk-logo${l.dark ? " is-dark" : ""}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={l.src} alt={l.name} />
-            <figcaption><b>{l.name}</b><span>{l.note}</span><a className="btn ads-btn-xs" href={l.src} download>Download</a></figcaption>
+            <figcaption><b>{l.name}</b><span>{l.note}</span><a className="btn ui-btn-xs" href={l.src} download>Download</a></figcaption>
           </figure>
         ))}
       </div>

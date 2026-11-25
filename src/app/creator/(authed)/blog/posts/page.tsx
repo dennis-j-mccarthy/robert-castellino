@@ -17,7 +17,7 @@ export default async function BlogPostsPage() {
           <div className="tl-eyebrow">Channels · Blog</div>
           <h1>Blog posts</h1>
         </div>
-        <Link className="btn btn--gold ads-btn-sm" href="/creator/blog">+ New blog post</Link>
+        <Link className="btn btn--gold ui-btn-sm" href="/creator/blog">+ New blog post</Link>
       </div>
       <p>The same rows /admin/musings manages, seen from the Creator page.</p>
       <BlogPosts pillars={pillars} library={library.items.filter((i) => !i.mockup)} musingPillars={MUSING_PILLARS} />

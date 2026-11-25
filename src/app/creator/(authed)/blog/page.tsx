@@ -21,7 +21,7 @@ export default async function BlogPage() {
           <div className="tl-eyebrow">Blog</div>
           <h1>Blog</h1>
         </div>
-        <Link className="btn btn--ghost ads-btn-sm" href="/creator/blog/posts">All blog posts →</Link>
+        <Link className="btn btn--ghost ui-btn-sm" href="/creator/blog/posts">All blog posts →</Link>
       </div>
       <p>Write a new post, then see it with everything already published. Star posts to put them in the next newsletter. On the public site they appear as Musings.</p>
       <BlogAccordion

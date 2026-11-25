@@ -100,21 +100,21 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
       <AddPictures imageAi={imageAi} />
 
       <div className="lb__bar">
-        <select className="ads-input ads-input--sm" value={collection} onChange={(e) => setCollection(e.target.value)}>
+        <select className="ui-input ui-input--sm" value={collection} onChange={(e) => setCollection(e.target.value)}>
           {bookCount > 0 && <option value={IN_BOOK}>In the book ({bookCount})</option>}
           <option value="">All collections ({items.length})</option>
           {collections.map((c) => <option key={c} value={c}>{c.replace(/-/g, " ")}</option>)}
         </select>
-        <select className="ads-input ads-input--sm" value={pillar} onChange={(e) => setPillar(e.target.value)}>
+        <select className="ui-input ui-input--sm" value={pillar} onChange={(e) => setPillar(e.target.value)}>
           <option value="">Any pillar</option>
           {pillars.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
-        <input className="ads-input ads-input--sm cr-search" placeholder="Search…" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <input className="ui-input ui-input--sm cr-search" placeholder="Search…" value={query} onChange={(e) => setQuery(e.target.value)} />
         <label className="lb__check"><input type="checkbox" checked={blankOnly} onChange={(e) => setBlankOnly(e.target.checked)} /> Blank captions only <span className="lb__count">{blank.length}</span></label>
         <label className="lb__check"><input type="checkbox" checked={showMockups} onChange={(e) => setShowMockups(e.target.checked)} /> Show mockups</label>
         <span className="lb__sp" />
         {ai && db && (
-          <button type="button" className="btn btn--gold ads-btn-sm" disabled={!blank.length || batch?.running} onClick={() => void captionBlanks()}>
+          <button type="button" className="btn btn--gold ui-btn-sm" disabled={!blank.length || batch?.running} onClick={() => void captionBlanks()}>
             {batch?.running ? `Captioning ${batch.done} of ${batch.total}…` : blank.length ? `✦ Caption the blank ones (${Math.min(BATCH, blank.length)})` : "✦ All captioned"}
           </button>
         )}
@@ -142,7 +142,7 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
             </span>
           </div>
         ))}
-        {!shown.length && <div className="ads-hint">Nothing matches.</div>}
+        {!shown.length && <div className="ui-hint">Nothing matches.</div>}
       </div>
 
       {sel && (

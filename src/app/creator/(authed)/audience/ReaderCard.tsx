@@ -33,7 +33,7 @@ export default function ReaderCard({ initial, db, ai }: { initial: string; db: b
     <section className="tl-card au-card">
       <div className="es-field__head"><h4>The reader</h4>{ai && db && <button type="button" className="es-suggest" disabled={busy} onClick={() => void suggest()}><span aria-hidden="true">✦</span> {busy ? "Thinking…" : "Suggest"}</button>}</div>
       <p className="au-exp">One or two sentences. Every blog post, caption and newsletter is written to this person.</p>
-      <textarea className="ads-input" rows={3} value={v} disabled={!db || busy} onChange={(e) => setV(e.target.value)} />
+      <textarea className="ui-input" rows={3} value={v} disabled={!db || busy} onChange={(e) => setV(e.target.value)} />
       {opts.length > 0 && (
         <div className="es-options">
           {opts.map((o) => <button key={o} type="button" className="es-option" onClick={() => { setV(o); setOpts([]); }}>{o}</button>)}
@@ -41,7 +41,7 @@ export default function ReaderCard({ initial, db, ai }: { initial: string; db: b
         </div>
       )}
       <div className={`lb__savebar${dirty ? " is-dirty" : ""}`}>
-        {dirty ? (<><span className="lb__savebar__msg">Unsaved changes</span><button type="button" className="btn btn--gold ads-btn-sm" disabled={busy} onClick={() => void save()}>{busy ? "Saving…" : "Save"}</button><button type="button" className="btn ads-btn-sm" onClick={() => setV(saved)}>Discard</button></>) : <span className="lb__savebar__msg is-ok">Saved</span>}
+        {dirty ? (<><span className="lb__savebar__msg">Unsaved changes</span><button type="button" className="btn btn--gold ui-btn-sm" disabled={busy} onClick={() => void save()}>{busy ? "Saving…" : "Save"}</button><button type="button" className="btn ui-btn-sm" onClick={() => setV(saved)}>Discard</button></>) : <span className="lb__savebar__msg is-ok">Saved</span>}
       </div>
       {err && <p className="au-err">{err}</p>}
     </section>

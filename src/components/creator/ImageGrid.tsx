@@ -69,28 +69,28 @@ export default function ImageGrid(props: Props) {
 
   return (
     <div className="cr-imagegrid">
-      <div className="ads-row">
-        <select className="ads-input ads-input--sm" value={collection} onChange={(e) => setCollection(e.target.value)}>
+      <div className="ui-row">
+        <select className="ui-input ui-input--sm" value={collection} onChange={(e) => setCollection(e.target.value)}>
           {bookCount > 0 && <option value={IN_BOOK}>In the book ({bookCount})</option>}
           <option value="">All collections ({base.length})</option>
           {collections.map((c) => (
             <option key={c} value={c}>{c.replace(/-/g, " ")}</option>
           ))}
         </select>
-        <select className="ads-input ads-input--sm" value={pillar} onChange={(e) => setPillar(e.target.value)}>
+        <select className="ui-input ui-input--sm" value={pillar} onChange={(e) => setPillar(e.target.value)}>
           <option value="">Any pillar</option>
           {pillars.map((p) => (
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
-        <input className="ads-input ads-input--sm cr-search" placeholder="Search…" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <input className="ui-input ui-input--sm cr-search" placeholder="Search…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
-      <div className={`ads-grid${compact ? " ads-grid--compact" : ""}${scroll ? "" : " ads-grid--open"}`} style={scroll ? { maxHeight } : undefined}>
+      <div className={`ui-grid${compact ? " ui-grid--compact" : ""}${scroll ? "" : " ui-grid--open"}`} style={scroll ? { maxHeight } : undefined}>
         {shown.map((img) => (
           <button
             key={img.src}
             type="button"
-            className={`ads-thumb${selected === img.src ? " is-selected" : ""}${img.mockup ? " is-mockup" : ""}`}
+            className={`ui-thumb${selected === img.src ? " is-selected" : ""}${img.mockup ? " is-mockup" : ""}`}
             title={[img.title ?? img.label, img.loc, img.bookPage ? `book p.${img.bookPage}` : null].filter(Boolean).join(" · ")}
             onClick={() => onSelect(img)}
           >
@@ -101,7 +101,7 @@ export default function ImageGrid(props: Props) {
             </span>
           </button>
         ))}
-        {!shown.length && <div className="ads-hint">Nothing matches.</div>}
+        {!shown.length && <div className="ui-hint">Nothing matches.</div>}
       </div>
     </div>
   );

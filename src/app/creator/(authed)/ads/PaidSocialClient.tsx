@@ -208,7 +208,7 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
           <i aria-hidden="true" />
           {loading ? "Meta · loading…" : asOf ? `Meta · as of ${asOf}` : "Meta · not connected"}
         </span>
-        <button type="button" className="btn ads-btn-sm" disabled={loading} onClick={() => { setLoading(true); void load(true); }}>
+        <button type="button" className="btn ui-btn-sm" disabled={loading} onClick={() => { setLoading(true); void load(true); }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6" /></svg>
           {loading ? "Refreshing…" : "Refresh view"}
         </button>
@@ -236,7 +236,7 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
               ) : (
                 <button type="button" className="btn btn--gold" disabled={busy === camp.id} onClick={() => askOn("campaign", camp.id, "the campaign")}>Turn campaign on</button>
               )}
-              <a className="btn btn--ghost ads-btn-sm" href={amUrl.campaign(act, camp.id)} target="_blank" rel="noreferrer">View campaign in Meta ↗</a>
+              <a className="btn btn--ghost ui-btn-sm" href={amUrl.campaign(act, camp.id)} target="_blank" rel="noreferrer">View campaign in Meta ↗</a>
             </div>
           )}
         </div>
@@ -256,30 +256,30 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
             <b>Plain English:</b> nothing is running and nothing is spending. To start Phase 1, turn on the 8 chosen ads below, then turn the campaign on. Ads that stay &ldquo;switched off&rdquo; will not run even when the campaign is on.
           </div>
         )}
-        {data?.error && <div className="ads-notice ads-notice--warn" style={{ marginTop: 14, marginBottom: 0 }}>{data.error}</div>}
+        {data?.error && <div className="ui-notice ui-notice--warn" style={{ marginTop: 14, marginBottom: 0 }}>{data.error}</div>}
       </section>
 
       {/* ───── Ad sets ───── */}
       {data && data.adsets.length > 0 && camp && (
-        <section className="ads-list">
+        <section className="ui-list">
           <div className="tl-subrule">Ad sets · Meta&rsquo;s word for an audience · {data.adsets.length}</div>
-          <div className="ads-tablewrap">
-            <table className="ads-table cr-table">
+          <div className="ui-tablewrap">
+            <table className="ui-table cr-table">
               <thead><tr><th>Ad set (exact Meta name)</th><th>Meta status</th><th>Ads</th><th>Running</th><th></th></tr></thead>
               <tbody>
                 {data.adsets.map((s) => {
                   const on = s.status === "ACTIVE";
                   return (
                     <tr key={s.id}>
-                      <td><div className="ads-table__name">{s.name}</div><div className="ads-table__sub">{s.id}</div></td>
-                      <td><span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{s.status}</span></td>
+                      <td><div className="ui-table__name">{s.name}</div><div className="ui-table__sub">{s.id}</div></td>
+                      <td><span className={`ui-pill ui-pill--${on ? "active" : "paused"}`}>{s.status}</span></td>
                       <td>{s.adCount}</td>
                       <td>{s.runningCount}</td>
-                      <td className="ads-table__actions">
+                      <td className="ui-table__actions">
                         {on
-                          ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === s.id} onClick={() => void setStatus("adset", s.id, "PAUSED", `ad set “${s.name}”`)}>Turn off</button>
-                          : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === s.id} onClick={() => askOn("adset", s.id, `ad set “${s.name}”`)}>Turn on</button>}
-                        <a className="btn btn--ghost ads-btn-xs" href={amUrl.adset(act, camp.id, s.id)} target="_blank" rel="noreferrer">View in Meta ↗</a>
+                          ? <button type="button" className="btn btn--ghost ui-btn-xs" disabled={busy === s.id} onClick={() => void setStatus("adset", s.id, "PAUSED", `ad set “${s.name}”`)}>Turn off</button>
+                          : <button type="button" className="btn btn--gold ui-btn-xs" disabled={busy === s.id} onClick={() => askOn("adset", s.id, `ad set “${s.name}”`)}>Turn on</button>}
+                        <a className="btn btn--ghost ui-btn-xs" href={amUrl.adset(act, camp.id, s.id)} target="_blank" rel="noreferrer">View in Meta ↗</a>
                       </td>
                     </tr>
                   );
@@ -317,10 +317,10 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
           </section>
         );
       })}
-      {!loading && data && ads.length === 0 && !data.error && <div className="ads-hint">No ads in this campaign yet.</div>}
+      {!loading && data && ads.length === 0 && !data.error && <div className="ui-hint">No ads in this campaign yet.</div>}
 
       {/* ───── Concepts: the 37 book ads, mirrored from the review page; each can go into Meta (paused) or come back out ───── */}
-      <section className="ads-list" id="concepts">
+      <section className="ui-list" id="concepts">
         <div className="tl-subrule">
           <span>Concepts · <b>{sets.reduce((k, x) => k + x.ads.length, 0)}</b> book ads</span>
           <span>· <b>{liveByConcept.size}</b> in Meta</span>
@@ -330,7 +330,7 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
           {sets.map((s) => {
             const inMeta = s.ads.filter((c) => liveByConcept.has(c.n)).length;
             return (
-              <button key={s.set} type="button" className={`btn btn--ghost ads-btn-xs${open === s.set ? " is-on" : ""}`} onClick={() => setOpen(s.set)}>
+              <button key={s.set} type="button" className={`btn btn--ghost ui-btn-xs${open === s.set ? " is-on" : ""}`} onClick={() => setOpen(s.set)}>
                 {s.title} · {s.ads.length}{inMeta ? ` · ${inMeta} in Meta` : ""}
               </button>
             );
@@ -355,18 +355,18 @@ export default function PaidSocialClient({ sets, plates, bookPages }: Props) {
             </div>
           </div>
         ))}
-        <div className="ads-hint" style={{ marginTop: 12 }}>
+        <div className="ui-hint" style={{ marginTop: 12 }}>
           <b>Put in Meta</b> creates the ad in the campaign, <b>switched off</b>, under the same name you see here. It then also appears in the campaign list above. <b>Pull out</b> deletes it in Meta; the concept stays on the bench.
         </div>
       </section>
 
       {/* ───── Modals ───── */}
       {confirm && (
-        <div className="ads-modal" role="dialog" aria-modal="true" onClick={() => setConfirm(null)}>
-          <div className="ads-modal__card" onClick={(e) => e.stopPropagation()}>
+        <div className="ui-modal" role="dialog" aria-modal="true" onClick={() => setConfirm(null)}>
+          <div className="ui-modal__card" onClick={(e) => e.stopPropagation()}>
             <h3>{confirm.title}</h3>
             <p className="cr-modal__p">{confirm.body}</p>
-            <div className="ads-row" style={{ marginTop: 14 }}>
+            <div className="ui-row" style={{ marginTop: 14 }}>
               <button type="button" className="btn btn--gold" onClick={() => { const r = confirm.run; setConfirm(null); void r(); }}>{confirm.cta}</button>
               <button type="button" className="btn btn--ghost" onClick={() => setConfirm(null)}>Cancel</button>
             </div>
@@ -429,7 +429,7 @@ function AdCard({ n, group, bookPage, previews, busy, onNeedPreview, onOn, onOff
       <div className="tl-ad__top">
         <span className="tl-ad__n" title={lead.name}>{String(n).padStart(2, "0")} · {lead.name}</span>
         {bookPage != null && <span className="tl-ad__pg">book p.{bookPage}</span>}
-        <span className={`ads-pill ads-pill--${STATE_PILL[lead.state]}`}>{STATE_LABEL[lead.state]} · {lead.effectiveStatus}</span>
+        <span className={`ui-pill ui-pill--${STATE_PILL[lead.state]}`}>{STATE_LABEL[lead.state]} · {lead.effectiveStatus}</span>
       </div>
 
       {creativeId && (
@@ -462,19 +462,19 @@ function AdCard({ n, group, bookPage, previews, busy, onNeedPreview, onOn, onOff
 
       <div className="tl-ad__b">
         <div className="tl-ad__hl">{lead.headline || "—"}</div>
-        {lead.description && <div className="ads-table__sub">{lead.description}</div>}
+        {lead.description && <div className="ui-table__sub">{lead.description}</div>}
         {whys.length === 1 && <div className="tl-ad__why">{whys[0]}</div>}
         <div className="tl-ad__rows">
           {group.ads.map((a) => {
             const on = a.status === "ACTIVE";
             return (
               <div key={a.id} className="tl-ad__row" title={a.name}>
-                <span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{a.status}</span>
+                <span className={`ui-pill ui-pill--${on ? "active" : "paused"}`}>{a.status}</span>
                 <span className="tl-ad__aud">{a.adsetName}</span>
                 <span className="tl-ad__act">
                   {on
-                    ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => onOff(a)}>Turn off</button>
-                    : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === a.id} onClick={() => onOn(a)}>Turn on</button>}
+                    ? <button type="button" className="btn btn--ghost ui-btn-xs" disabled={busy === a.id} onClick={() => onOff(a)}>Turn off</button>
+                    : <button type="button" className="btn btn--gold ui-btn-xs" disabled={busy === a.id} onClick={() => onOn(a)}>Turn on</button>}
                   <a className="tl-link" href={a.adsManagerUrl} target="_blank" rel="noreferrer">View ad in Meta ↗</a>
                 </span>
                 <span className="tl-ad__meta">
@@ -525,34 +525,34 @@ function StageModal({ concept, set, plates, adsets, onClose, onDone, onError }: 
   }
 
   return (
-    <div className="ads-modal" role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="ads-modal__card cr-modal cr-modal--wide" onClick={(e) => e.stopPropagation()}>
+    <div className="ui-modal" role="dialog" aria-modal="true" onClick={onClose}>
+      <div className="ui-modal__card cr-modal cr-modal--wide" onClick={(e) => e.stopPropagation()}>
         <div className="tl-eyebrow">Concept → Meta</div>
         <h3>Put in Meta, switched off</h3>
         <p className="cr-modal__p">Concept #{String(concept.n).padStart(2, "0")} · {set.title}. Goes into the book campaign <b>switched off</b>, with the plate the review used ({concept.plate.label} · p.{concept.plate.page}). Same name here and in Ads Manager.</p>
-        <label className="ads-label">Ad name (what you will see in Meta)</label>
-        <input className="ads-input" value={name} onChange={(e) => setName(e.target.value)} />
+        <label className="ui-label">Ad name (what you will see in Meta)</label>
+        <input className="ui-input" value={name} onChange={(e) => setName(e.target.value)} />
         <div className="cr-form2">
           <div>
-            <label className="ads-label">Plate (in the book only)</label>
-            <select className="ads-input" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)}>
+            <label className="ui-label">Plate (in the book only)</label>
+            <select className="ui-input" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)}>
               {plates.map((p) => <option key={p.src} value={p.src}>{p.label}{p.page ? ` · p.${p.page}` : ""}</option>)}
             </select>
           </div>
           <div>
-            <label className="ads-label">Ad set (audience)</label>
-            <select className="ads-input" value={adsetId} onChange={(e) => setAdsetId(e.target.value)}>
+            <label className="ui-label">Ad set (audience)</label>
+            <select className="ui-input" value={adsetId} onChange={(e) => setAdsetId(e.target.value)}>
               {adsets.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
         </div>
-        <label className="ads-label">Headline</label>
-        <input className="ads-input" value={headline} onChange={(e) => setHeadline(e.target.value)} />
-        <label className="ads-label">Primary text</label>
-        <textarea className="ads-input" rows={4} value={message} onChange={(e) => setMessage(e.target.value)} />
-        <label className="ads-label">Description</label>
-        <input className="ads-input" value={description} onChange={(e) => setDescription(e.target.value)} />
-        <div className="ads-row" style={{ marginTop: 14 }}>
+        <label className="ui-label">Headline</label>
+        <input className="ui-input" value={headline} onChange={(e) => setHeadline(e.target.value)} />
+        <label className="ui-label">Primary text</label>
+        <textarea className="ui-input" rows={4} value={message} onChange={(e) => setMessage(e.target.value)} />
+        <label className="ui-label">Description</label>
+        <input className="ui-input" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <div className="ui-row" style={{ marginTop: 14 }}>
           <button type="button" className="btn btn--gold" disabled={saving || !imageUrl || !adsetId} onClick={() => void submit()}>{saving ? "Putting in Meta…" : "Put in Meta, switched off"}</button>
           <button type="button" className="btn btn--ghost" onClick={onClose}>Cancel</button>
         </div>
@@ -578,8 +578,8 @@ function ConceptCard({ concept: c, live, busy, onPutIn, onOn, onOff, onPullOut }
       <div className="tl-concept__bar">
         <span className="tl-concept__n">#{String(c.n).padStart(2, "0")}</span>
         {inMeta
-          ? <span className={`ads-pill ads-pill--${running ? "active" : "paused"}`}>{running ? `In Meta · ${running} running` : `In Meta · ${live.length} switched off`}</span>
-          : <span className="ads-pill ads-pill--bench">Not in Meta</span>}
+          ? <span className={`ui-pill ui-pill--${running ? "active" : "paused"}`}>{running ? `In Meta · ${running} running` : `In Meta · ${live.length} switched off`}</span>
+          : <span className="ui-pill ui-pill--bench">Not in Meta</span>}
         <span className="tl-concept__plate">{c.plate.label} · p.{c.plate.page}</span>
       </div>
 
@@ -600,25 +600,25 @@ function ConceptCard({ concept: c, live, busy, onPutIn, onOn, onOff, onPullOut }
       </div>
 
       <div className="tl-concept__acts">
-        {!inMeta && <button type="button" className="btn btn--gold ads-btn-xs" onClick={onPutIn}>Put in Meta (switched off)</button>}
+        {!inMeta && <button type="button" className="btn btn--gold ui-btn-xs" onClick={onPutIn}>Put in Meta (switched off)</button>}
         {live.map((a) => {
           const on = a.status === "ACTIVE";
           return (
             <div key={a.id} className="tl-ad__row" title={a.name}>
-              <span className={`ads-pill ads-pill--${on ? "active" : "paused"}`}>{a.status}</span>
+              <span className={`ui-pill ui-pill--${on ? "active" : "paused"}`}>{a.status}</span>
               <span className="tl-ad__aud">{a.adsetName}</span>
               <span className="tl-ad__act">
                 {on
-                  ? <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => onOff(a)}>Turn off</button>
-                  : <button type="button" className="btn btn--gold ads-btn-xs" disabled={busy === a.id} onClick={() => onOn(a)}>Turn on</button>}
-                <button type="button" className="btn btn--ghost ads-btn-xs" disabled={busy === a.id} onClick={() => onPullOut(a)}>Pull out of Meta</button>
+                  ? <button type="button" className="btn btn--ghost ui-btn-xs" disabled={busy === a.id} onClick={() => onOff(a)}>Turn off</button>
+                  : <button type="button" className="btn btn--gold ui-btn-xs" disabled={busy === a.id} onClick={() => onOn(a)}>Turn on</button>}
+                <button type="button" className="btn btn--ghost ui-btn-xs" disabled={busy === a.id} onClick={() => onPullOut(a)}>Pull out of Meta</button>
                 <a className="tl-link" href={a.adsManagerUrl} target="_blank" rel="noreferrer">View in Meta ↗</a>
               </span>
               <span className="tl-ad__meta"><span className="tl-ad__aid">{a.id}</span><span className="tl-ad__nums">{a.why}</span></span>
             </div>
           );
         })}
-        {inMeta && <button type="button" className="btn btn--ghost ads-btn-xs" onClick={onPutIn}>Put in another audience</button>}
+        {inMeta && <button type="button" className="btn btn--ghost ui-btn-xs" onClick={onPutIn}>Put in another audience</button>}
       </div>
     </article>
   );

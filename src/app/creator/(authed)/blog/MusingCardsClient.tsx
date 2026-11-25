@@ -35,9 +35,9 @@ export default function MusingCardsClient({ cards: initial, db, ai }: { cards: C
     <section className="mc" aria-labelledby="mc-title">
       <div className="mc__head">
         <h2 id="mc-title">Your blog posts <span className="cr-h2sub">· {live} live{cards.length - live ? ` · ${cards.length - live} draft${cards.length - live === 1 ? "" : "s"}` : ""}{starred.length ? ` · ${starred.length} starred for the newsletter` : ""}</span></h2>
-        <div className="ads-row">
-          <button type="button" className="btn btn--gold ads-btn-xs" disabled={!db || !starred.length} onClick={() => setOpen(true)} title={starred.length ? "" : "Star a post first"}>Make newsletter{starred.length ? ` (${starred.length})` : ""}</button>
-          <Link className="btn btn--ghost ads-btn-xs" href="/creator/blog/posts">Manage all →</Link>
+        <div className="ui-row">
+          <button type="button" className="btn btn--gold ui-btn-xs" disabled={!db || !starred.length} onClick={() => setOpen(true)} title={starred.length ? "" : "Star a post first"}>Make newsletter{starred.length ? ` (${starred.length})` : ""}</button>
+          <Link className="btn btn--ghost ui-btn-xs" href="/creator/blog/posts">Manage all →</Link>
         </div>
       </div>
       {err && <p className="au-err">{err}</p>}
@@ -59,9 +59,9 @@ export default function MusingCardsClient({ cards: initial, db, ai }: { cards: C
               <span className="mc__date">{c.date}</span>
               <p>{c.excerpt}</p>
               <div className="mc__actions">
-                <Link className="btn ads-btn-xs" href={`${studio.brand.blog.managePath ?? "/creator/blog/posts"}#${c.id}`}>Edit</Link>
-                <Link className="btn ads-btn-xs" href={`/creator/social?musingId=${c.id}${c.img ? `&imageId=${encodeURIComponent(c.img)}` : ""}`}>Posts</Link>
-                {c.published && <a className="btn btn--ghost ads-btn-xs" href={`${studio.brand.blog.path}/${c.id}`} target="_blank" rel="noreferrer">View ↗</a>}
+                <Link className="btn ui-btn-xs" href={`${studio.brand.blog.managePath ?? "/creator/blog/posts"}#${c.id}`}>Edit</Link>
+                <Link className="btn ui-btn-xs" href={`/creator/social?musingId=${c.id}${c.img ? `&imageId=${encodeURIComponent(c.img)}` : ""}`}>Posts</Link>
+                {c.published && <a className="btn btn--ghost ui-btn-xs" href={`${studio.brand.blog.path}/${c.id}`} target="_blank" rel="noreferrer">View ↗</a>}
               </div>
             </div>
           </article>
@@ -125,8 +125,8 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
   }
 
   return (
-    <div className="ads-modal lb__modal" role="dialog" aria-modal="true" aria-label="Make newsletter" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="ads-modal__card lb__card-modal nl">
+    <div className="ui-modal lb__modal" role="dialog" aria-modal="true" aria-label="Make newsletter" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="ui-modal__card lb__card-modal nl">
         <button type="button" className="lb__close" aria-label="Close" onClick={onClose}>×</button>
         <h3 className="nl__h">Make newsletter</h3>
         <p className="au-exp">Drag the pieces into the order you want and open the issue in a few lines. The issue on the right redraws as you go. Save as HTML writes the subject lines and blurbs, keeps a copy, and downloads the file.</p>
@@ -149,8 +149,8 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
                   </span>
                   {ctaOpen[it.id] && (
                     <span className="nl__cta" onPointerDown={(e) => e.stopPropagation()}>
-                      <input className="ads-input" placeholder="Button says… (e.g. See the print)" value={ctas[it.id]?.label ?? ""} onChange={(e) => setCtas((c) => ({ ...c, [it.id]: { label: e.target.value, url: c[it.id]?.url ?? "" } }))} />
-                      <input className="ads-input" placeholder="and goes to… (link)" value={ctas[it.id]?.url ?? ""} onChange={(e) => setCtas((c) => ({ ...c, [it.id]: { label: c[it.id]?.label ?? "", url: e.target.value } }))} />
+                      <input className="ui-input" placeholder="Button says… (e.g. See the print)" value={ctas[it.id]?.label ?? ""} onChange={(e) => setCtas((c) => ({ ...c, [it.id]: { label: e.target.value, url: c[it.id]?.url ?? "" } }))} />
+                      <input className="ui-input" placeholder="and goes to… (link)" value={ctas[it.id]?.url ?? ""} onChange={(e) => setCtas((c) => ({ ...c, [it.id]: { label: c[it.id]?.label ?? "", url: e.target.value } }))} />
                     </span>
                   )}
                 </li>
@@ -160,7 +160,7 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
           </div>
           <div>
             <div className="es-field__head"><label className="es-label">Preamble · {studio.site.owner} opens the issue</label>{ai && <button type="button" className="es-suggest" disabled={busy !== null || !items.length} onClick={() => void suggest()}><span aria-hidden="true">✦</span> {busy === "suggest" ? "Thinking…" : "Suggest"}</button>}</div>
-            <textarea className="ads-input" rows={7} value={preamble} placeholder="Where you've been, what the light did, why these pieces sit together…" onChange={(e) => setPreamble(e.target.value)} />
+            <textarea className="ui-input" rows={7} value={preamble} placeholder="Where you've been, what the light did, why these pieces sit together…" onChange={(e) => setPreamble(e.target.value)} />
             {opts.length > 0 && (
               <div className="es-options">
                 {opts.map((o) => <button key={o} type="button" className="es-option" onClick={() => { setPreamble(o); setOpts([]); }}>{o}</button>)}
@@ -169,8 +169,8 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
             )}
             <div className="es-field__head" style={{ marginTop: 14 }}><label className="es-label">One button for the whole issue · optional</label></div>
             <div className="nl__cta nl__cta--whole">
-              <input className="ads-input" placeholder="Button says… (e.g. Order the signed book)" value={cta.label} onChange={(e) => setCta((c) => ({ ...c, label: e.target.value }))} />
-              <input className="ads-input" placeholder="and goes to… (link)" value={cta.url} onChange={(e) => setCta((c) => ({ ...c, url: e.target.value }))} />
+              <input className="ui-input" placeholder="Button says… (e.g. Order the signed book)" value={cta.label} onChange={(e) => setCta((c) => ({ ...c, label: e.target.value }))} />
+              <input className="ui-input" placeholder="and goes to… (link)" value={cta.url} onChange={(e) => setCta((c) => ({ ...c, url: e.target.value }))} />
             </div>
             <p className="es-hint">Leave the preamble blank and the studio writes the opening. Subject lines, blurbs and the sign-off are written when you save; the preview shows each piece&rsquo;s own excerpt until then.</p>
           </div>
@@ -186,9 +186,9 @@ function NewsletterModal({ items: initial, ai, onClose }: { items: Card[]; ai: b
         {done ? (
           <div className="ap__caption"><b>Saved and downloaded.</b><p>&ldquo;{done.subject}&rdquo; is now a draft. <Link href="/creator/newsletter">Open the saved copy →</Link></p></div>
         ) : (
-          <div className="ads-row" style={{ marginTop: 14 }}>
-            <button type="button" className="btn btn--gold ads-btn-sm" disabled={busy !== null || !items.length} onClick={() => void save()}>{busy === "save" ? "Building…" : "Save as HTML"}</button>
-            <button type="button" className="btn ads-btn-sm" onClick={onClose}>Cancel</button>
+          <div className="ui-row" style={{ marginTop: 14 }}>
+            <button type="button" className="btn btn--gold ui-btn-sm" disabled={busy !== null || !items.length} onClick={() => void save()}>{busy === "save" ? "Building…" : "Save as HTML"}</button>
+            <button type="button" className="btn ui-btn-sm" onClick={onClose}>Cancel</button>
           </div>
         )}
       </div>

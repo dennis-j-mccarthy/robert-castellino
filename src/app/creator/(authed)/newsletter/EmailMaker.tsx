@@ -120,52 +120,52 @@ export default function EmailMaker({ pillars, ai, db }: Props) {
 
   return (
     <div className="cr-email">
-      {!db && <div className="ads-notice ads-notice--warn">No database connected — drafts can&rsquo;t be saved.</div>}
-      {!ai && <div className="ads-notice ads-notice--warn">AI isn&rsquo;t configured — the newsletter will use the posts&rsquo; own excerpts.</div>}
+      {!db && <div className="ui-notice ui-notice--warn">No database connected — drafts can&rsquo;t be saved.</div>}
+      {!ai && <div className="ui-notice ui-notice--warn">AI isn&rsquo;t configured — the newsletter will use the posts&rsquo; own excerpts.</div>}
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
       <div className="cr-two cr-gap">
-        <section className="ads-step">
-          <header className="ads-step__title"><span>①</span> Pick 1–3 published blog posts</header>
-          <div className="ads-checklist" style={{ maxHeight: 360 }}>
+        <section className="ui-step">
+          <header className="ui-step__title"><span>①</span> Pick 1–3 published blog posts</header>
+          <div className="ui-checklist" style={{ maxHeight: 360 }}>
             {musings.map((m) => (
-              <label key={m.id} className="ads-check">
+              <label key={m.id} className="ui-check">
                 <input type="checkbox" checked={picked.includes(m.id)} onChange={() => toggle(m.id)} disabled={!picked.includes(m.id) && picked.length >= 3} />
                 <span>{m.title}</span>
                 <small>{m.num} · {m.date}</small>
               </label>
             ))}
-            {!musings.length && <div className="ads-hint">No published blog posts found.</div>}
+            {!musings.length && <div className="ui-hint">No published blog posts found.</div>}
           </div>
-          <div className="ads-row--2" style={{ marginTop: 10 }}>
+          <div className="ui-row--2" style={{ marginTop: 10 }}>
             <div>
-              <label className="ads-label">Pillar (optional)</label>
-              <select className="ads-input" value={pillarId} onChange={(e) => setPillarId(e.target.value)}>
+              <label className="ui-label">Pillar (optional)</label>
+              <select className="ui-input" value={pillarId} onChange={(e) => setPillarId(e.target.value)}>
                 <option value="">— any —</option>
                 {pillars.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="ads-label">Theme for this issue (optional)</label>
-              <input className="ads-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="the first snow" />
+              <label className="ui-label">Theme for this issue (optional)</label>
+              <input className="ui-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="the first snow" />
             </div>
           </div>
-          <div className="ads-row" style={{ marginTop: 12 }}>
+          <div className="ui-row" style={{ marginTop: 12 }}>
             <button className="btn btn--gold" disabled={!db || !!busy || !picked.length} onClick={() => void generate()}>{busy === "generate" ? "Writing…" : "Write the newsletter"}</button>
           </div>
         </section>
 
-        <section className="ads-step">
-          <header className="ads-step__title"><span>②</span> Drafts</header>
+        <section className="ui-step">
+          <header className="ui-step__title"><span>②</span> Drafts</header>
           {!drafts.length ? (
-            <div className="ads-hint">None yet.</div>
+            <div className="ui-hint">None yet.</div>
           ) : (
-            <div className="ads-checklist" style={{ maxHeight: 460 }}>
+            <div className="ui-checklist" style={{ maxHeight: 460 }}>
               {drafts.map((d) => (
-                <div key={d.id} className={`ads-check cr-draftrow${current?.id === d.id ? " is-on" : ""}`}>
-                  <span className={`ads-pill ads-pill--${d.status === "sent" ? "active" : d.status === "ready" ? "submitted" : "paused"}`}>{d.status}</span>
+                <div key={d.id} className={`ui-check cr-draftrow${current?.id === d.id ? " is-on" : ""}`}>
+                  <span className={`ui-pill ui-pill--${d.status === "sent" ? "active" : d.status === "ready" ? "submitted" : "paused"}`}>{d.status}</span>
                   <span>
-                    <button type="button" className="ads-linkbtn" onClick={() => void openDraft(d.id)}>{d.subject}</button>
+                    <button type="button" className="ui-linkbtn" onClick={() => void openDraft(d.id)}>{d.subject}</button>
                     <small style={{ display: "block" }}>{new Date(d.createdAt).toLocaleDateString()} · {d.musingIds.join(", ")}</small>
                   </span>
                 </div>
@@ -176,31 +176,31 @@ export default function EmailMaker({ pillars, ai, db }: Props) {
       </div>
 
       {current && (
-        <section className="ads-list">
-          <header className="ads-list__head">
+        <section className="ui-list">
+          <header className="ui-list__head">
             <h2>{current.subject}</h2>
-            <div className="ads-row">
-              <select className="ads-input ads-input--sm" value={current.status} onChange={(e) => void patch({ status: e.target.value as EmailStatus })}>
+            <div className="ui-row">
+              <select className="ui-input ui-input--sm" value={current.status} onChange={(e) => void patch({ status: e.target.value as EmailStatus })}>
                 <option value="proposed">proposed</option><option value="ready">ready</option><option value="sent">sent</option>
               </select>
-              <button className="btn btn--ghost ads-btn-sm" onClick={() => void copyText(current.html).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "HTML copied." : "Couldn't copy." }))}>Copy HTML</button>
-              <button className="btn btn--ghost ads-btn-sm" onClick={() => void copyText(current.text).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "Text copied." : "Couldn't copy." }))}>Copy text</button>
-              <button className="btn btn--ghost ads-btn-sm" onClick={() => download(`${current.subject.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.html`, current.html, "text/html")}>Download .html</button>
-              <button className="btn btn--ghost ads-btn-sm" style={{ color: "#e07070" }} onClick={() => void remove(current.id)}>Delete</button>
+              <button className="btn btn--ghost ui-btn-sm" onClick={() => void copyText(current.html).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "HTML copied." : "Couldn't copy." }))}>Copy HTML</button>
+              <button className="btn btn--ghost ui-btn-sm" onClick={() => void copyText(current.text).then((ok) => setNotice({ kind: ok ? "ok" : "err", text: ok ? "Text copied." : "Couldn't copy." }))}>Copy text</button>
+              <button className="btn btn--ghost ui-btn-sm" onClick={() => download(`${current.subject.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.html`, current.html, "text/html")}>Download .html</button>
+              <button className="btn btn--ghost ui-btn-sm" style={{ color: "#e07070" }} onClick={() => void remove(current.id)}>Delete</button>
             </div>
           </header>
           {subjects.length > 1 && (
-            <div className="ads-row" style={{ marginBottom: 10 }}>
-              <span className="ads-label" style={{ margin: 0 }}>Subject options</span>
+            <div className="ui-row" style={{ marginBottom: 10 }}>
+              <span className="ui-label" style={{ margin: 0 }}>Subject options</span>
               {subjects.map((s) => (
                 <button key={s} type="button" className={`cr-option cr-option--inline${current.subject === s ? " is-selected" : ""}`} onClick={() => void applySubject(s)}>{s}</button>
               ))}
             </div>
           )}
-          <div className="ads-hint" style={{ marginBottom: 8 }}>Preheader: {current.preheader || "—"}</div>
-          <div className="ads-row" style={{ marginBottom: 8 }}>
-            <button type="button" className={`btn btn--ghost ads-btn-xs${tab === "html" ? " is-on" : ""}`} onClick={() => setTab("html")}>HTML preview</button>
-            <button type="button" className={`btn btn--ghost ads-btn-xs${tab === "text" ? " is-on" : ""}`} onClick={() => setTab("text")}>Plain text</button>
+          <div className="ui-hint" style={{ marginBottom: 8 }}>Preheader: {current.preheader || "—"}</div>
+          <div className="ui-row" style={{ marginBottom: 8 }}>
+            <button type="button" className={`btn btn--ghost ui-btn-xs${tab === "html" ? " is-on" : ""}`} onClick={() => setTab("html")}>HTML preview</button>
+            <button type="button" className={`btn btn--ghost ui-btn-xs${tab === "text" ? " is-on" : ""}`} onClick={() => setTab("text")}>Plain text</button>
           </div>
           {tab === "html" ? (
             <iframe title="Newsletter preview" className="cr-iframe" srcDoc={current.html} sandbox="" />

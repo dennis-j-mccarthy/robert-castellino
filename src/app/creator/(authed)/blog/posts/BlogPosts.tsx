@@ -112,16 +112,16 @@ export default function BlogPosts({ pillars, library, musingPillars }: Props) {
   return (
     <div className="cr-posts">
       <Notice notice={notice} onClose={() => setNotice(null)} />
-      <div className="ads-row" style={{ marginBottom: 12 }}>
+      <div className="ui-row" style={{ marginBottom: 12 }}>
         {(["all", "draft", "live"] as const).map((f) => (
-          <button key={f} type="button" className={`btn btn--ghost ads-btn-xs${filter === f ? " is-on" : ""}`} onClick={() => setFilter(f)}>
+          <button key={f} type="button" className={`btn btn--ghost ui-btn-xs${filter === f ? " is-on" : ""}`} onClick={() => setFilter(f)}>
             {f === "all" ? `All (${items.length})` : f === "draft" ? `Drafts (${items.filter((m) => !m.published).length})` : `Live (${items.filter((m) => m.published).length})`}
           </button>
         ))}
       </div>
 
-      <div className="ads-tablewrap">
-        <table className="ads-table">
+      <div className="ui-tablewrap">
+        <table className="ui-table">
           <thead>
             <tr><th></th><th>Blog post</th><th>Pillar</th><th>Category</th><th>Status</th><th></th></tr>
           </thead>
@@ -132,68 +132,68 @@ export default function BlogPosts({ pillars, library, musingPillars }: Props) {
                 <tr key={m.id}>
                   <td><Thumb src={m.img} /></td>
                   <td>
-                    <div className="ads-table__name">{m.title}</div>
-                    <div className="ads-table__sub">{m.num} · {m.date}{m.loc ? ` · ${m.loc}` : ""}</div>
+                    <div className="ui-table__name">{m.title}</div>
+                    <div className="ui-table__sub">{m.num} · {m.date}{m.loc ? ` · ${m.loc}` : ""}</div>
                   </td>
                   <td>{pid ? <span className={pillarTagClsFor(pillars, pid)}>{pillars.find((p) => p.id === pid)?.name ?? pid}</span> : <span className="cr-muted">—</span>}</td>
-                  <td className="ads-table__sub">{m.cat}</td>
-                  <td><span className={`ads-pill ${m.published ? "ads-pill--active" : "ads-pill--paused"}`}>{m.published ? "live" : "draft"}</span></td>
-                  <td className="ads-table__actions">
-                    <button type="button" className="btn btn--ghost ads-btn-xs" disabled={!!busy} onClick={() => { setEdit({ ...m, body: m.body.join("\n\n") }); setPicker(false); }}>Edit</button>
+                  <td className="ui-table__sub">{m.cat}</td>
+                  <td><span className={`ui-pill ${m.published ? "ui-pill--active" : "ui-pill--paused"}`}>{m.published ? "live" : "draft"}</span></td>
+                  <td className="ui-table__actions">
+                    <button type="button" className="btn btn--ghost ui-btn-xs" disabled={!!busy} onClick={() => { setEdit({ ...m, body: m.body.join("\n\n") }); setPicker(false); }}>Edit</button>
                     {m.published ? (
-                      <button type="button" className="btn btn--ghost ads-btn-xs" disabled={!!busy} onClick={() => void setPublished(m, false)}>Unpublish</button>
+                      <button type="button" className="btn btn--ghost ui-btn-xs" disabled={!!busy} onClick={() => void setPublished(m, false)}>Unpublish</button>
                     ) : (
-                      <button type="button" className="btn btn--gold ads-btn-xs" disabled={!!busy} onClick={() => void setPublished(m, true)}>Publish</button>
+                      <button type="button" className="btn btn--gold ui-btn-xs" disabled={!!busy} onClick={() => void setPublished(m, true)}>Publish</button>
                     )}
-                    <Link className="btn btn--ghost ads-btn-xs" href={`/creator/social?musingId=${m.id}${m.img ? `&imageId=${encodeURIComponent(m.img)}` : ""}${pid ? `&pillar=${pid}` : ""}`}>Post</Link>
-                    <Link className="btn btn--ghost ads-btn-xs" href={`/creator/newsletter?musingIds=${m.id}`}>Email</Link>
-                    {m.published && <a className="btn btn--ghost ads-btn-xs" href={`/musings/${m.id}`} target="_blank" rel="noreferrer">View ↗</a>}
-                    <button type="button" className="btn btn--ghost ads-btn-xs" disabled={!!busy} onClick={() => void remove(m)}>Delete</button>
+                    <Link className="btn btn--ghost ui-btn-xs" href={`/creator/social?musingId=${m.id}${m.img ? `&imageId=${encodeURIComponent(m.img)}` : ""}${pid ? `&pillar=${pid}` : ""}`}>Post</Link>
+                    <Link className="btn btn--ghost ui-btn-xs" href={`/creator/newsletter?musingIds=${m.id}`}>Email</Link>
+                    {m.published && <a className="btn btn--ghost ui-btn-xs" href={`/musings/${m.id}`} target="_blank" rel="noreferrer">View ↗</a>}
+                    <button type="button" className="btn btn--ghost ui-btn-xs" disabled={!!busy} onClick={() => void remove(m)}>Delete</button>
                   </td>
                 </tr>
               );
             })}
-            {!shown.length && <tr><td colSpan={6} className="ads-hint">Nothing here yet.</td></tr>}
+            {!shown.length && <tr><td colSpan={6} className="ui-hint">Nothing here yet.</td></tr>}
           </tbody>
         </table>
       </div>
 
       {edit && (
-        <div className="ads-modal" role="dialog" aria-modal="true">
-          <div className="ads-modal__card cr-modal cr-modal--wide">
+        <div className="ui-modal" role="dialog" aria-modal="true">
+          <div className="ui-modal__card cr-modal cr-modal--wide">
             <h3>Edit {edit.num}</h3>
-            <label className="ads-label">Title</label>
-            <input className="ads-input" value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} />
-            <div className="ads-row--2">
+            <label className="ui-label">Title</label>
+            <input className="ui-input" value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} />
+            <div className="ui-row--2">
               <div>
-                <label className="ads-label">Category</label>
-                <select className="ads-input" value={edit.cat} onChange={(e) => setEdit({ ...edit, cat: e.target.value })}>{CATS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+                <label className="ui-label">Category</label>
+                <select className="ui-input" value={edit.cat} onChange={(e) => setEdit({ ...edit, cat: e.target.value })}>{CATS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
               </div>
               <div>
-                <label className="ads-label">Date label</label>
-                <input className="ads-input" value={edit.date} onChange={(e) => setEdit({ ...edit, date: e.target.value })} />
+                <label className="ui-label">Date label</label>
+                <input className="ui-input" value={edit.date} onChange={(e) => setEdit({ ...edit, date: e.target.value })} />
               </div>
             </div>
-            <div className="ads-row--2">
+            <div className="ui-row--2">
               <div>
-                <label className="ads-label">Place</label>
-                <input className="ads-input" value={edit.loc ?? ""} onChange={(e) => setEdit({ ...edit, loc: e.target.value })} />
+                <label className="ui-label">Place</label>
+                <input className="ui-input" value={edit.loc ?? ""} onChange={(e) => setEdit({ ...edit, loc: e.target.value })} />
               </div>
               <div>
-                <label className="ads-label">Image</label>
-                <div className="ads-row">
-                  <input className="ads-input" style={{ flex: 1 }} value={edit.img ?? ""} onChange={(e) => setEdit({ ...edit, img: e.target.value })} />
-                  <button type="button" className="btn btn--ghost ads-btn-xs" onClick={() => setPicker((p) => !p)}>{picker ? "Close" : "Library"}</button>
+                <label className="ui-label">Image</label>
+                <div className="ui-row">
+                  <input className="ui-input" style={{ flex: 1 }} value={edit.img ?? ""} onChange={(e) => setEdit({ ...edit, img: e.target.value })} />
+                  <button type="button" className="btn btn--ghost ui-btn-xs" onClick={() => setPicker((p) => !p)}>{picker ? "Close" : "Library"}</button>
                 </div>
               </div>
             </div>
             {picker && <div style={{ marginTop: 8 }}><ImageGrid items={library} pillars={pillars} selected={edit.img} onSelect={(it) => { setEdit({ ...edit, img: it.src }); setPicker(false); }} maxHeight={240} compact /></div>}
-            <label className="ads-label">Excerpt</label>
-            <textarea className="ads-input" rows={2} value={edit.excerpt} onChange={(e) => setEdit({ ...edit, excerpt: e.target.value })} />
-            <label className="ads-label">Body</label>
-            <textarea className="ads-input" rows={12} value={edit.body} onChange={(e) => setEdit({ ...edit, body: e.target.value })} />
-            <label className="ads-check" style={{ marginTop: 8 }}><input type="checkbox" checked={edit.published} onChange={(e) => setEdit({ ...edit, published: e.target.checked })} /><span>Published</span></label>
-            <div className="ads-row" style={{ marginTop: 14 }}>
+            <label className="ui-label">Excerpt</label>
+            <textarea className="ui-input" rows={2} value={edit.excerpt} onChange={(e) => setEdit({ ...edit, excerpt: e.target.value })} />
+            <label className="ui-label">Body</label>
+            <textarea className="ui-input" rows={12} value={edit.body} onChange={(e) => setEdit({ ...edit, body: e.target.value })} />
+            <label className="ui-check" style={{ marginTop: 8 }}><input type="checkbox" checked={edit.published} onChange={(e) => setEdit({ ...edit, published: e.target.checked })} /><span>Published</span></label>
+            <div className="ui-row" style={{ marginTop: 14 }}>
               <button className="btn btn--gold" disabled={!!busy} onClick={() => void saveEdit()}>{busy ? "Saving…" : "Save"}</button>
               <button className="btn btn--ghost" disabled={!!busy} onClick={() => setEdit(null)}>Cancel</button>
             </div>

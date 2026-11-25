@@ -26,8 +26,8 @@ export default async function TechnicalSeo() {
             {fixes.map((f) => (
               <li key={`${f.page || "site"}-${f.id}`}>
                 <span className={`seo-pill is-${f.grade}`}>{WORD[f.grade]}</span>
-                <b>{f.label}</b>{f.page ? <span className="ads-hint"> · {f.page}</span> : null}
-                <div className="ads-hint">{f.detail}</div>
+                <b>{f.label}</b>{f.page ? <span className="ui-hint"> · {f.page}</span> : null}
+                <div className="ui-hint">{f.detail}</div>
                 {f.fix && <p>{f.fix}</p>}
               </li>
             ))}
@@ -47,7 +47,7 @@ export default async function TechnicalSeo() {
         {a.pages.map((p) => (
           <div key={p.path} className="kw-card seo-page">
             <h3>{p.path === "/" ? "Home" : p.path}</h3>
-            {p.title && <div className="ads-hint seo-title">{p.title}</div>}
+            {p.title && <div className="ui-hint seo-title">{p.title}</div>}
             <ul className="seo-list">
               {p.checks.map((c) => (
                 <li key={c.id}><span className={`seo-pill is-${c.grade}`}>{WORD[c.grade]}</span><b>{c.label}</b><span>{c.detail}</span></li>

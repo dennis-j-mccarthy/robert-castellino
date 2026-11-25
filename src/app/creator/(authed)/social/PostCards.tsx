@@ -67,13 +67,13 @@ export default function PostCards({ rows }: { rows: PostCard[] }) {
                   {r.state === "failed" && r.error && <span className="pc__err">{r.error}</span>}
                   <div className="pc__actions">
                     {r.link ? (
-                      <a className="btn btn--ghost ads-btn-xs" href={r.link} target="_blank" rel="noreferrer">View on Facebook ↗</a>
+                      <a className="btn btn--ghost ui-btn-xs" href={r.link} target="_blank" rel="noreferrer">View on Facebook ↗</a>
                     ) : fromPage ? (
                       <span className="pc__meta">Scheduled in Meta</span>
                     ) : (
-                      <a className="btn ads-btn-xs" href={edit}>{r.state === "scheduled" ? "Change" : "Open"}</a>
+                      <a className="btn ui-btn-xs" href={edit}>{r.state === "scheduled" ? "Change" : "Open"}</a>
                     )}
-                    {r.link && <a className="btn ads-btn-xs" href={edit}>Use these words again</a>}
+                    {r.link && <a className="btn ui-btn-xs" href={edit}>Use these words again</a>}
                   </div>
                 </div>
               </article>
@@ -82,7 +82,7 @@ export default function PostCards({ rows }: { rows: PostCard[] }) {
         </div>
       )}
       {shown.length > limit && (
-        <div className="pc__more"><button type="button" className="btn ads-btn-sm" onClick={() => setLimit((n) => n + 12)}>Show 12 more · {shown.length - limit} left</button></div>
+        <div className="pc__more"><button type="button" className="btn ui-btn-sm" onClick={() => setLimit((n) => n + 12)}>Show 12 more · {shown.length - limit} left</button></div>
       )}
     </section>
   );

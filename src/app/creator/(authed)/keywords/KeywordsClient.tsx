@@ -72,33 +72,33 @@ export default function KeywordsClient({ initial }: { initial: KeywordRow[] }) {
     <div className="kw">
       <div className="kw-filters">
         {(["all", ...KEYWORD_KINDS] as const).map((f) => (
-          <button key={f} type="button" className={`btn btn--ghost ads-btn-sm${filter === f ? " is-on" : ""}`} aria-pressed={filter === f} onClick={() => setFilter(f)}>
+          <button key={f} type="button" className={`btn btn--ghost ui-btn-sm${filter === f ? " is-on" : ""}`} aria-pressed={filter === f} onClick={() => setFilter(f)}>
             {f === "all" ? "All" : KIND_LABEL[f]}
           </button>
         ))}
-        <label className="kw-dropped ads-hint">
+        <label className="kw-dropped ui-hint">
           <input type="checkbox" checked={showDropped} onChange={(e) => setShowDropped(e.target.checked)} /> Show dropped
         </label>
       </div>
 
       <div className="kw-card">
         <h2>Word cloud</h2>
-        <p className="ads-hint">Bigger words matter more. Sized by our priority score (0 to 100), not search volume.</p>
+        <p className="ui-hint">Bigger words matter more. Sized by our priority score (0 to 100), not search volume.</p>
         <div className="kw-cloud">
           {cloud.map(({ r, size }) => (
             <span key={r.id} className={`kw-word kw-word--${r.kind}`} style={{ fontSize: size }} title={`${KIND_LABEL[r.kind]} · priority ${r.priority}`}>
               {r.phrase}
             </span>
           ))}
-          {!cloud.length && <span className="ads-hint">No keywords yet.</span>}
+          {!cloud.length && <span className="ui-hint">No keywords yet.</span>}
         </div>
       </div>
 
       <div className="kw-card">
         <h2>Find new keywords and phrases</h2>
-        <p className="ads-hint">Claude suggests phrases people type, weighted toward gift searches. Nothing is saved until you click Add.</p>
+        <p className="ui-hint">Claude suggests phrases people type, weighted toward gift searches. Nothing is saved until you click Add.</p>
         <div className="kw-row">
-          <input className="ads-input" value={focus} onChange={(e) => setFocus(e.target.value)} placeholder="Optional focus, e.g. Christmas, aspens, Rocky Mountain National Park" />
+          <input className="ui-input" value={focus} onChange={(e) => setFocus(e.target.value)} placeholder="Optional focus, e.g. Christmas, aspens, Rocky Mountain National Park" />
           <button type="button" className="btn btn--gold" disabled={busy} onClick={() => void suggest()}>
             {busy ? "Thinking…" : "Suggest phrases"}
           </button>
@@ -109,12 +109,12 @@ export default function KeywordsClient({ initial }: { initial: KeywordRow[] }) {
               <li key={s.phrase}>
                 <div>
                   <b>{s.phrase}</b>
-                  <p className="ads-hint">
+                  <p className="ui-hint">
                     {KIND_LABEL[s.kind]} · priority {s.priority}
                     {s.why ? ` · ${s.why}` : ""}
                   </p>
                 </div>
-                <button type="button" className="btn btn--ghost ads-btn-xs" onClick={() => void add(s.phrase, s.kind, s.priority, "claude")}>
+                <button type="button" className="btn btn--ghost ui-btn-xs" onClick={() => void add(s.phrase, s.kind, s.priority, "claude")}>
                   Add
                 </button>
               </li>
@@ -128,38 +128,38 @@ export default function KeywordsClient({ initial }: { initial: KeywordRow[] }) {
             if (phrase.trim()) void add(phrase.trim(), kind).then((ok) => ok && setPhrase(""));
           }}
         >
-          <input className="ads-input" value={phrase} onChange={(e) => setPhrase(e.target.value)} placeholder="Add your own keyword or phrase" />
-          <select className="ads-input kw-select" value={kind} onChange={(e) => setKind(e.target.value as KeywordKind)} aria-label="Kind">
+          <input className="ui-input" value={phrase} onChange={(e) => setPhrase(e.target.value)} placeholder="Add your own keyword or phrase" />
+          <select className="ui-input kw-select" value={kind} onChange={(e) => setKind(e.target.value as KeywordKind)} aria-label="Kind">
             {KEYWORD_KINDS.map((k) => (
               <option key={k} value={k}>{KIND_LABEL[k]}</option>
             ))}
           </select>
           <button type="submit" className="btn btn--ghost">Add keyword</button>
         </form>
-        {msg && <p className="ads-hint ads-hint--err">{msg}</p>}
+        {msg && <p className="ui-hint ui-hint--err">{msg}</p>}
       </div>
 
       <h2 className="kw-h2">
-        Keywords <span className="ads-hint">({visible.length})</span>
+        Keywords <span className="ui-hint">({visible.length})</span>
       </h2>
       <ul className="kw-tiles">
         {visible.map((r) => (
           <li key={r.id} className={`kw-tile kw-tile--${r.kind}${r.status === "dropped" ? " is-dropped" : ""}`}>
             <div>
               <b>{r.phrase}</b>
-              <p className="ads-hint">
+              <p className="ui-hint">
                 {KIND_LABEL[r.kind]} · priority {r.priority}
               </p>
-              {r.note && <p className="ads-hint">{r.note}</p>}
+              {r.note && <p className="ui-hint">{r.note}</p>}
             </div>
             <div className="kw-actions">
-              <button type="button" className={`btn btn--ghost ads-btn-xs${r.status === "target" ? " is-on" : ""}`} onClick={() => void patch(r.id, { status: r.status === "target" ? "idea" : "target" })}>
+              <button type="button" className={`btn btn--ghost ui-btn-xs${r.status === "target" ? " is-on" : ""}`} onClick={() => void patch(r.id, { status: r.status === "target" ? "idea" : "target" })}>
                 {r.status === "target" ? "Targeting" : "Target this"}
               </button>
-              <a className="btn btn--ghost ads-btn-xs" href={`https://www.google.com/search?q=${encodeURIComponent(r.phrase)}`} target="_blank" rel="noreferrer">
+              <a className="btn btn--ghost ui-btn-xs" href={`https://www.google.com/search?q=${encodeURIComponent(r.phrase)}`} target="_blank" rel="noreferrer">
                 See who ranks ↗
               </a>
-              <button type="button" className="btn btn--bare ads-btn-xs" onClick={() => void patch(r.id, { status: r.status === "dropped" ? "idea" : "dropped" })}>
+              <button type="button" className="btn btn--bare ui-btn-xs" onClick={() => void patch(r.id, { status: r.status === "dropped" ? "idea" : "dropped" })}>
                 {r.status === "dropped" ? "Restore" : "Drop"}
               </button>
             </div>
