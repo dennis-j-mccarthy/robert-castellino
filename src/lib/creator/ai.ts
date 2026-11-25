@@ -27,6 +27,32 @@ export interface GenerateJsonOptions {
   imageUrl?: string;
 }
 
+
+/*
+  Pictures go to the model as bytes, not as a link. The site's public URL may
+  not be where the app is served from (a custom domain still on an old host,
+  a preview deploy, localhost), and the model's own fetch then fails with
+  "Unable to download the file". We fetch the picture here, where the host
+  is reachable, and fall back to the URL only if that fetch fails.
+*/
+async function imageBlock(url: string): Promise<Anthropic.ImageBlockParam> {
+  try {
+    const r = await fetch(url, { cache: "no-store" });
+    const ct = (r.headers.get("content-type") || "").split(";")[0].trim();
+    const ok = ["image/jpeg", "image/png", "image/gif", "image/webp"] as const;
+    const mt = ok.find((m) => m === ct);
+    if (r.ok && mt) {
+      const buf = Buffer.from(await r.arrayBuffer());
+      if (buf.length > 0 && buf.length < 20 * 1024 * 1024) {
+        return { type: "image", source: { type: "base64", media_type: mt, data: buf.toString("base64") } };
+      }
+    }
+  } catch {
+    /* fall through to the URL */
+  }
+  return { type: "image", source: { type: "url", url } };
+}
+
 export async function generateJson<T>(opts: GenerateJsonOptions): Promise<T> {
   if (!hasAnthropicKey()) throw new Error(AI_NOT_CONFIGURED);
   const client = new Anthropic();
@@ -43,7 +69,7 @@ export async function generateJson<T>(opts: GenerateJsonOptions): Promise<T> {
       {
         role: "user",
         content: opts.imageUrl
-          ? [{ type: "image", source: { type: "url", url: opts.imageUrl } }, { type: "text", text: opts.user }]
+          ? [await imageBlock(opts.imageUrl), { type: "text", text: opts.user }]
           : opts.user,
       },
     ],
