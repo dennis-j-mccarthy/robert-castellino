@@ -58,6 +58,12 @@ export interface BrandFacts {
   logo: string | null;
   /** Primary accent for emails */
   accent: string;
+  /**
+   * Designed post graphics (Posts → the five concept tiles). Colours and a
+   * Google Font family for the on-image typography. Omitted values fall back
+   * to accent / near-black ink / warm paper / Bricolage Grotesque.
+   */
+  og?: { font?: string; accent?: string; accent2?: string; ink?: string; paper?: string; domain?: string };
   /** The blog's public name and path: Musings at /musings, Blog at /blog, Journal at /journal */
   blog: { label: string; singular: string; path: string; writerRole: string; categories?: Array<{ id: string; label: string }>; /** Studio page that manages every post (site-specific) */ managePath?: string;
     /**

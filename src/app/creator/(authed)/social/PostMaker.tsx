@@ -6,6 +6,7 @@ import ImageGrid from "@/components/creator/ImageGrid";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import Thumb from "@/components/creator/Thumb";
 import { api, copyText, errText } from "@/lib/creator/client";
+import { designedImagePath, type DesignedPost } from "@/lib/creator/designed";
 import type { LibraryItem } from "@/lib/creator/library";
 import { pillarTagClsFor, type CoreMessage, type Pillar } from "@/lib/creator/pillars";
 import { CAPTION_LIMITS, PLATFORM_LABELS, PUBLISHES, SOCIAL_PLATFORMS, isSocialPlatform, type SocialPlatform } from "@/lib/creator/social";
@@ -16,9 +17,13 @@ import { studio } from "@/studio.config";
 
     ① Platform   Facebook publishes; Instagram is copy-only (no IG linked)
     ② Picture    the real plates (mockups never offered); paste a URL too
-    ③ Pillar     the moment a pillar is picked, five caption tiles write
-                 themselves. Every tile is editable; "Use this" puts it on
-                 the post. The preview on the right changes as you type.
+    ③ Pillar     the moment a pillar is picked, five CONCEPTS write
+                 themselves: an angle each, a designed graphic (a bold
+                 statement in the brand's type and colours, or set over the
+                 chosen picture) and the caption. Statement, sub and caption
+                 are editable; the graphic re-renders as you type. "Use this"
+                 puts the caption and the graphic on the post; "Plain photo"
+                 puts the picture back.
 
   URL prefill (from the Library, the Musings list, the Posts board):
     /creator/social?imageId=/assets/…&caption=…&platform=facebook&pillar=light&at=2026-11-01T07:30&musingId=m07&draftId=…
@@ -51,7 +56,8 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
   const [messageId, setMessageId] = useState<string>("");
   const [topic, setTopic] = useState("");
   const [musingId, setMusingId] = useState("");
-  const [tiles, setTiles] = useState<string[]>([]);
+  const [tiles, setTiles] = useState<DesignedPost[]>([]);
+  const [graphic, setGraphic] = useState<string>(""); // site-relative og path when a concept is on the post
   const [used, setUsed] = useState<number | null>(null);
   const [caption, setCaption] = useState("");
   const [scheduledAt, setScheduledAt] = useState("");
@@ -59,7 +65,9 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
   const [result, setResult] = useState<{ id: string; scheduled: boolean; scheduledAt: string | null; page: string } | null>(null);
 
   const selected = useMemo(() => library.find((i) => i.src === image) ?? null, [library, image]);
-  const imageUrl = selected ? selected.url : /^https:\/\//i.test(image) ? image : "";
+  const pictureUrl = selected ? selected.url : /^https:\/\//i.test(image) ? image : "";
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const imageUrl = graphic ? `${origin}${graphic}` : pictureUrl;
   const pillarMessages = messages.filter((m) => !pillarId || m.pillar === pillarId);
   const pillar = pillars.find((p) => p.id === pillarId) ?? null;
 
@@ -95,13 +103,13 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
     setBusy("captions");
     setNotice(null);
     try {
-      const r = await api<{ captions: string[] }>("/api/creator/social/captions", {
+      const r = await api<{ posts: DesignedPost[] }>("/api/creator/social/concepts", {
         method: "POST",
         json: { pillarId, messageId: messageId || undefined, platform, imageSrc: selected?.src, musingId: musingId || undefined, topic, count: TILES },
       });
-      setTiles(r.captions);
+      setTiles(r.posts);
       setUsed(null);
-      if (why === "auto" && !caption.trim() && r.captions[0]) { setCaption(r.captions[0]); setUsed(0); }
+      if (why === "auto" && !caption.trim() && r.posts[0]) { setCaption(r.posts[0].caption); setUsed(0); setGraphic(designedImagePath(r.posts[0], { img: r.posts[0].theme === "photo-hero" ? pictureUrl : null })); }
     } catch (e) {
       setNotice({ kind: "err", text: errText(e) });
     } finally {
@@ -120,11 +128,16 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
     void writeCaptions("auto");
   }, [pillarId, platform, writeCaptions]);
 
-  function editTile(i: number, text: string) {
-    setTiles((t) => t.map((x, j) => (j === i ? text : x)));
-    if (used === i) setCaption(text);
+  const tilePath = (t: DesignedPost) => designedImagePath(t, { img: t.theme === "photo-hero" ? pictureUrl : null });
+  function editTile(i: number, patch: Partial<DesignedPost>) {
+    setTiles((t) => t.map((x, j) => (j === i ? { ...x, ...patch } : x)));
+    if (used === i) {
+      const next = { ...tiles[i], ...patch };
+      if (patch.caption !== undefined) setCaption(patch.caption);
+      if (patch.caption === undefined) setGraphic(tilePath(next));
+    }
   }
-  function pickTile(i: number) { setUsed(i); setCaption(tiles[i]); }
+  function pickTile(i: number) { setUsed(i); setCaption(tiles[i].caption); setGraphic(tilePath(tiles[i])); }
 
   async function submit(schedule: boolean) {
     setBusy(schedule ? "schedule" : "publish");
@@ -220,21 +233,33 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
             {pillarId && (
               <div className="pm__tiles">
                 <div className="pm__tiles-head">
-                  <b>{busy === "captions" ? "Writing five ways to say it…" : tiles.length ? `Five ways to say it · ${pillar?.name ?? ""}` : "Nothing written yet"}</b>
-                  <button type="button" className="btn btn--ghost ui-btn-xs" disabled={!config.ai || !!busy} onClick={() => void writeCaptions("more")}>{busy === "captions" ? "…" : "Write 5 more"}</button>
+                  <b>{busy === "captions" ? "Working five angles…" : tiles.length ? `Five angles · ${pillar?.name ?? ""}` : "Nothing written yet"}</b>
+                  <button type="button" className="btn btn--ghost ui-btn-xs" disabled={!config.ai || !!busy} onClick={() => void writeCaptions("more")}>{busy === "captions" ? "…" : "Five more angles"}</button>
                 </div>
                 {!config.ai && <div className="ui-hint">AI is not configured, so write the words on the post itself, right.</div>}
                 {busy === "captions" && !tiles.length && (
                   <div className="pm__tilegrid" aria-hidden>{Array.from({ length: TILES }).map((_, i) => <div key={i} className="pm__tile is-ghost" />)}</div>
                 )}
                 {tiles.length > 0 && (
-                  <div className="pm__tilegrid">
+                  <div className="pm__tilegrid pm__tilegrid--designed">
                     {tiles.map((t, i) => (
-                      <div key={i} className={`pm__tile${used === i ? " is-used" : ""}`}>
-                        <textarea value={t} onChange={(e) => editTile(i, e.target.value)} rows={5} aria-label={`Caption option ${i + 1}`} />
+                      <div key={i} className={`pm__tile pm__tile--designed${used === i ? " is-used" : ""}`}>
+                        <div className="pm__tile-angle"><b>{t.angle}</b><small>{t.theme === "photo-hero" ? "on your picture" : t.theme}</small></div>
+                        <div className="pm__tile-img">
+                          {/* eslint-disable-next-line @next/next/no-img-element -- rendered by our own og route */}
+                          <img src={tilePath(t)} alt={t.statement} loading="lazy" />
+                        </div>
+                        <input className="pm__tile-line" value={t.statement} onChange={(e) => editTile(i, { statement: e.target.value })} aria-label="Statement on the graphic" />
+                        {t.theme !== "checklist" && t.theme !== "steps" && (
+                          <input className="pm__tile-line pm__tile-line--sub" value={t.sub} placeholder={t.theme === "quote" ? "attribution" : "supporting line"} onChange={(e) => editTile(i, { sub: e.target.value })} aria-label="Supporting line" />
+                        )}
+                        <textarea value={t.caption} onChange={(e) => editTile(i, { caption: e.target.value })} rows={4} aria-label={`Caption option ${i + 1}`} />
                         <div className="pm__tile-foot">
-                          <span className={t.length > limit ? "ui-hint--err" : ""}>{t.length} / {limit}</span>
-                          <button type="button" className={`btn ui-btn-xs${used === i ? " btn--gold" : ""}`} onClick={() => pickTile(i)}>{used === i ? "On the post" : "Use this"}</button>
+                          <span className={t.caption.length > limit ? "ui-hint--err" : ""}>{t.caption.length} / {limit}</span>
+                          <span className="ui-row" style={{ gap: 6 }}>
+                            <a className="btn btn--ghost ui-btn-xs" href={tilePath(t)} target="_blank" rel="noreferrer" title="Open the graphic full size">PNG ↗</a>
+                            <button type="button" className={`btn ui-btn-xs${used === i ? " btn--gold" : ""}`} onClick={() => pickTile(i)}>{used === i ? "On the post" : "Use this"}</button>
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -260,13 +285,22 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
               <textarea className="fbcard__msg pm__msg" value={caption} onChange={(e) => { setCaption(e.target.value); setUsed(null); }} placeholder="Pick a pillar and the words write themselves. Or type here." rows={4} aria-label="Caption" />
             )}
             <div className="fbcard__img">
-              <Thumb src={image} className="" empty={<div className="fbcard__img-empty">Pick a picture (②)</div>} />
+              {graphic ? (
+                // eslint-disable-next-line @next/next/no-img-element -- rendered by our own og route
+                <img src={graphic} alt="" className="pm__graphic" />
+              ) : (
+                <Thumb src={image} className="" empty={<div className="fbcard__img-empty">Pick a picture (②)</div>} />
+              )}
             </div>
             {platform === "instagram" && (
               <textarea className="fbcard__msg pm__msg" value={caption} onChange={(e) => { setCaption(e.target.value); setUsed(null); }} placeholder="Pick a pillar and the words write themselves. Or type here." rows={4} aria-label="Caption" />
             )}
           </article>
-          <div className={`ui-hint pm__count${caption.length > limit ? " ui-hint--err" : ""}`}>{caption.length} / {limit}{used != null ? ` · tile ${used + 1}` : caption ? " · your own words" : ""}</div>
+          <div className={`ui-hint pm__count${caption.length > limit ? " ui-hint--err" : ""}`}>
+            {caption.length} / {limit}{used != null ? ` · ${tiles[used]?.angle ?? `tile ${used + 1}`}` : caption ? " · your own words" : ""}
+            {graphic && <> · designed graphic <button type="button" className="ui-linkbtn" onClick={() => setGraphic("")}>Plain photo instead</button></>}
+            {!graphic && used != null && tiles[used] && <> · <button type="button" className="ui-linkbtn" onClick={() => setGraphic(tilePath(tiles[used]))}>Put the graphic back</button></>}
+          </div>
 
           <div className="pm__send">
             <label className="ui-label">When</label>
