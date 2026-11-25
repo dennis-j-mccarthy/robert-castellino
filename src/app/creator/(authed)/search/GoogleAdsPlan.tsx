@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { openPanel } from "@/components/creator/TwoAccordion";
-import { RSA_LIMITS, type AdCampaign, type AdGroup, type AdsPlan } from "@/lib/creator/ads-plan";
+import { RSA_LIMITS, type AdCampaign, type AdGroup, type AdsPlan } from "@/lib/creator/ads-plan-types";
 import { api, errText } from "@/lib/creator/client";
 import { studio } from "@/studio.config";
 
