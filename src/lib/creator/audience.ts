@@ -3,7 +3,6 @@ import { graphGet } from "@/lib/studio-meta/graph";
 import { adAccountId, isAdsConfigured, listCampaigns } from "@/lib/studio-meta/ads";
 import { getBrandEssence } from "@/lib/creator/essence-store";
 import { getTone } from "@/lib/creator/tone-store";
-import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import type { Audience } from "@/lib/creator/pillars";
 
 /*
@@ -81,17 +80,12 @@ export async function getAudienceView(opts: { refresh?: boolean } = {}): Promise
   const cards = essence.audiences;
   const base: AudienceView = { reader: tone.audience, subscribers: null, segments: cards.map((c) => ({ card: c, live: null, name: c.name, uses: [], metaUrl: `https://adsmanager.facebook.com/adsmanager/audiences?act=${adAccountId()}` })), configured: isAdsConfigured(), error: null, fetchedAt: null };
 
-  if (isDatabaseConfigured()) {
-    try {
-      const since = new Date(Date.now() - 30 * 86400000);
-      const [total, confirmed, last30] = await Promise.all([
-        prisma.subscriber.count({ where: { active: true } }),
-        prisma.subscriber.count({ where: { active: true, confirmed: true } }),
-        prisma.subscriber.count({ where: { active: true, createdAt: { gte: since } } }),
-      ]);
-      base.subscribers = { total, confirmed, last30 };
-    } catch {}
-  }
+  try {
+    const since = new Date(Date.now() - 30 * 86400000);
+    const stats = await adapters.subscribers.stats?.(since);
+    const total = stats?.total ?? (await adapters.subscribers.count());
+    if (total != null) base.subscribers = { total, confirmed: stats?.confirmed ?? total, last30: stats?.last30 ?? 0 };
+  } catch {}
   if (!base.configured) return base;
 
   try {
