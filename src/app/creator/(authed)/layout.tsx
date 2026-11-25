@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import { redirect } from "next/navigation";
 import { loadLibrary } from "@/lib/creator/library";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
@@ -15,12 +14,13 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-// The Throughline type stack, loaded for /creator only (the public site
-// keeps Cormorant + Manrope). Exposed as CSS variables the scoped
-// creator.css reads under `.tl`.
-const disp = Bricolage_Grotesque({ variable: "--tl-font-disp", subsets: ["latin"], weight: ["400", "600", "700", "800"], display: "swap" });
-const sans = Instrument_Sans({ variable: "--tl-font-sans", subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
-const mono = JetBrains_Mono({ variable: "--tl-font-mono", subsets: ["latin"], weight: ["400", "500", "700"], display: "swap" });
+// The Throughline type stack (Bricolage Grotesque, Instrument Sans, JetBrains
+// Mono), loaded for /creator only as a Google Fonts stylesheet. creator.css
+// names the families directly, so no CSS variables are needed. next/font is
+// deliberately NOT used here: Turbopack's font replacer fails on Bricolage in
+// some Next 16 builds ("queries have exactly one entry"), which broke two
+// sites' builds.
+const FONTS_HREF = "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap";
 
 // Cheap counts for the rail chips. Never let them break the page.
 async function navCounts(): Promise<NavCounts> {
@@ -42,8 +42,13 @@ export default async function CreatorLayout({ children }: { children: React.Reac
   const counts = await navCounts();
 
   return (
-    <CreatorShell fontClass={`${disp.variable} ${sans.variable} ${mono.variable}`} counts={counts}>
-      {children}
-    </CreatorShell>
+    <>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link rel="stylesheet" href={FONTS_HREF} precedence="default" />
+      <CreatorShell fontClass="" counts={counts}>
+        {children}
+      </CreatorShell>
+    </>
   );
 }
