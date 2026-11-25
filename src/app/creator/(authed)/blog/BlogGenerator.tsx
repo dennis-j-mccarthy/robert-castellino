@@ -8,6 +8,7 @@ import type { BlogTone } from "@/lib/creator/blog-tone";
 import { api, errText, seasonLabel } from "@/lib/creator/client";
 import type { LibraryItem } from "@/lib/creator/library";
 import type { Pillar } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 
 interface Props {
   pillars: Pillar[];
@@ -118,25 +119,19 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
     setNotice(null);
     try {
       const payload = {
-        cat: draft.cat,
+        id: saved?.id,
+        category: draft.cat,
         title: draft.title.trim(),
         date: draft.date.trim() || seasonLabel(),
         loc: draft.loc.trim() || null,
         img: draft.img.trim() || null,
-        size: (draft.size || null) as "sm" | "md" | "lg" | null,
         excerpt: draft.excerpt.trim(),
-        body,
+        paragraphs: body,
         published: publish,
-        order: 0,
       };
-      if (saved) {
-        await api(`/api/admin/musings/${saved.id}`, { method: "PUT", json: payload });
-        setSaved({ id: saved.id, published: publish });
-      } else {
-        const m = await api<{ id: string; published: boolean }>("/api/admin/musings", { method: "POST", json: payload });
-        setSaved({ id: m.id, published: m.published });
-      }
-      setNotice({ kind: "ok", text: publish ? "Published — it's live on /musings." : "Saved as a draft (unpublished)." });
+      const m = await api<{ id: string; published: boolean }>("/api/creator/blog/save", { method: "POST", json: payload });
+      setSaved({ id: m.id, published: m.published });
+      setNotice({ kind: "ok", text: publish ? `Published — it's live on ${studio.brand.blog.path}.` : "Saved as a draft (unpublished)." });
     } catch (e) {
       setNotice({ kind: "err", text: errText(e) });
     } finally {
@@ -213,7 +208,7 @@ export default function BlogGenerator({ pillars, tone, ai, library }: Props) {
           </div>
           <div />
         </div>
-        <label className="ads-label">Bob&rsquo;s rough notes (optional — the piece stays inside them)</label>
+        <label className="ads-label">{studio.site.owner}&rsquo;s rough notes (optional — the piece stays inside them)</label>
         <textarea className="ads-input" rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="what happened, what the light did, what he noticed…" />
         <div className="ads-row" style={{ marginTop: 12 }}>
           <button className="btn btn--gold ads-btn-sm" disabled={!ai || !!busy || !title.trim()} onClick={() => void write()}>{busy === "write" ? "Writing…" : "Write the post"}</button>

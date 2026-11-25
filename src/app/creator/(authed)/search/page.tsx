@@ -1,9 +1,8 @@
 import { Accordion } from "@/components/creator/TwoAccordion";
-import CompetitorsSection from "../competitors/CompetitorsSection";
-import GoogleAdsSection from "../google-ads/GoogleAdsSection";
 import KeywordsSection from "../keywords/KeywordsSection";
 import LandingSection from "./LandingSection";
 import TechnicalSeo from "./TechnicalSeo";
+import { panels } from "@/studio.panels";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +17,8 @@ export const dynamic = "force-dynamic";
   ?open=<id> opens a panel directly (the old /creator/keywords etc. redirect here).
 */
 
-const IDS = ["keywords", "landing", "technical-seo", "competitors", "google-ads"] as const;
+const EXTRA = panels.search ?? [];
+const IDS = ["keywords", "landing", "technical-seo", ...EXTRA.map((p) => p.id)];
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ open?: string; keyword?: string }> }) {
   const sp = await searchParams;
@@ -43,8 +43,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           { id: "keywords", n: 1, title: "Keywords", sub: "the phrases to own · gifts first", body: <KeywordsSection /> },
           { id: "landing", n: 2, title: "Landing pages", sub: "one page per phrase · your plate on top · the signed book to order", body: <LandingSection preselect={sp.keyword} /> },
           { id: "technical-seo", n: 3, title: "Technical SEO", sub: "live checks against the site · what to fix first", body: <TechnicalSeo /> },
-          { id: "competitors", n: 4, title: "Competitors", sub: "who wins those searches today, and why", body: <CompetitorsSection /> },
-          { id: "google-ads", n: 5, title: "Google Ads", sub: "the paid lane · the $500 credit · the plan", body: <GoogleAdsSection /> },
+          ...EXTRA.map((p, i) => ({ id: p.id, n: 4 + i, title: p.title, sub: p.sub, body: p.body })),
         ]}
       />
     </section>

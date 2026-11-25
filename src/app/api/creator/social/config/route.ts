@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { creatorGuard } from "@/lib/creator/guard";
 import { hasAnthropicKey } from "@/lib/creator/ai";
-import { getConnection, isConnected } from "@/lib/meta/store";
+import { getConnection, isConnected } from "@/lib/studio-meta/store";
 
 /*
   GET /api/creator/social/config — is publishing available, and to what?

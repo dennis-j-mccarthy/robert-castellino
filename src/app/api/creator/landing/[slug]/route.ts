@@ -2,14 +2,13 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { creatorDbGuard, readJson } from "@/lib/creator/guard";
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@/generated/prisma/client";
 
 export const runtime = "nodejs";
 
 type Patch = {
   title?: string; metaDescription?: string; h1?: string; intro?: string; body?: string;
   faq?: { q: string; a: string }[]; heroImage?: string | null; heroAlt?: string | null; published?: boolean;
-  sections?: Prisma.InputJsonValue;
+  sections?: object;
 };
 
 // PATCH any of the fields above (Publish = { published: true }); DELETE removes the page.

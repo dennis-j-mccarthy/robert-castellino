@@ -10,6 +10,8 @@
   EmailDraft.pillarId), so renaming a pillar never touches them.
 */
 
+import { studio } from "@/studio.config";
+
 export type PillarId = string;
 
 export interface Pillar {
@@ -27,7 +29,7 @@ export interface Pillar {
   active: boolean;
 }
 
-/** One of Bob's ten core messages (stored as JSON on BrandEssence.messages). */
+/** One of the owner's core messages (stored as JSON on BrandEssence.messages). */
 export interface CoreMessage {
   id: string;
   pillar: PillarId;
@@ -75,24 +77,15 @@ export interface BrandEssenceRecord {
 
 /* ───────── fixed facts (never invent around these) ───────── */
 
+/** Site facts, from the site's studio config (client-safe: plain strings). */
 export const SITE = {
-  name: "Robert Castellino Photography",
-  short: "Robert Castellino",
-  url: "https://robertcastellino.com",
-  domain: "robertcastellino.com",
-  location: "Lafayette, Colorado",
-  bookPath: "/book",
-  galleryPath: "/gallery",
-  musingsPath: "/musings",
-} as const;
-
-export const BOOK = {
-  title: "Colorado: Life & Light on the Land",
-  plates: 84,
-  pages: 116,
-  printing: "first printing",
-  price: "$49.95",
-  facts: "84 plates · 116 pages · first printing · $49.95 signed",
+  name: studio.site.name,
+  short: studio.site.short,
+  url: studio.site.url,
+  domain: studio.site.domain,
+  location: studio.site.location,
+  offerPath: studio.offer.path,
+  blogPath: studio.brand.blog.path,
 } as const;
 
 /* ───────── slug helpers ───────── */

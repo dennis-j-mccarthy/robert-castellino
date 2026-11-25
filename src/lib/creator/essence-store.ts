@@ -1,7 +1,8 @@
 import { prisma, isDatabaseConfigured } from "@/lib/prisma";
-import type { Prisma } from "@/generated/prisma/client";
 import type { Audience, BrandEssenceRecord, CoreMessage } from "@/lib/creator/pillars";
-import { DEFAULT_VOICE, defaultEssence } from "@/lib/creator/seed-data";
+import { studio } from "@/studio.config";
+const DEFAULT_VOICE = studio.defaults.voice;
+const defaultEssence = () => structuredClone(studio.defaults.essence);
 
 /*
   BrandEssence singleton (id "default") — the Essence page. SERVER ONLY.
@@ -143,8 +144,8 @@ export async function saveBrandEssence(patch: Partial<BrandEssenceRecord>): Prom
     voiceFormal: next.voice.formal,
     voiceBold: next.voice.bold,
     cta: next.cta,
-    messages: next.messages as unknown as Prisma.InputJsonValue,
-    audiences: next.audiences as unknown as Prisma.InputJsonValue,
+    messages: next.messages as unknown as object,
+    audiences: next.audiences as unknown as object,
   };
   await prisma.brandEssence.upsert({ where: { id: ID }, create: { id: ID, ...data }, update: data });
   return getBrandEssence();

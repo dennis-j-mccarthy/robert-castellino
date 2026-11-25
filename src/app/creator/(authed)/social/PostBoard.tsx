@@ -1,8 +1,8 @@
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import { absoluteImageUrl } from "@/lib/creator/library";
 import { fmtDay, fmtTime } from "@/lib/creator/plan";
-import { listPublishedPosts, listScheduledPosts } from "@/lib/meta/graph";
-import { getConnection, isConnected } from "@/lib/meta/store";
+import { listPublishedPosts, listScheduledPosts } from "@/lib/studio-meta/graph";
+import { getConnection, isConnected } from "@/lib/studio-meta/store";
 import PostCards, { type PostCard } from "./PostCards";
 
 /*

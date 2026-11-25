@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { studio } from "@/studio.config";
+import type { ToolId } from "@/lib/creator/studio-types";
 
 /*
   The creator studio shell: a top sequence. Nine numbered tools run left to
@@ -26,9 +28,6 @@ function subscribeTheme(cb: () => void) {
   return () => { window.removeEventListener(THEME_EVENT, cb); window.removeEventListener("storage", cb); };
 }
 
-const PAGE_ID = "134235743309639";
-const AD_ACCOUNT = "1788471615529613";
-const CAMPAIGN_ID = "120251354161250171";
 
 export type NavCounts = { library: number | null; queued: number | null };
 
@@ -48,6 +47,8 @@ const I = {
   home: <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>,
 };
 
+const toolId = (href: string): ToolId => (href.replace("/creator/", "") as ToolId);
+
 const TOOLS: Tool[] = [
   { n: 1, href: "/creator/essence", label: "Essence", hint: "who you are", icon: I.essence },
   { n: 2, href: "/creator/library", label: "Brand kit", hint: "pictures & marks", icon: I.library, match: ["/creator/library", "/creator/brand"] },
@@ -57,21 +58,17 @@ const TOOLS: Tool[] = [
   { n: 6, href: "/creator/email", label: "Email", hint: "notes & the issue", icon: I.email, match: ["/creator/email", "/creator/newsletter"] },
   { n: 7, href: "/creator/social", label: "Posts", hint: "share a picture", icon: I.posts },
   { n: 8, href: "/creator/ads", label: "Ads", hint: "paid reach", icon: I.ads, match: ["/creator/ads"] },
-  { n: 9, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads, soon: true },
+  { n: 9, href: "/creator/leads", label: "Leads", hint: "soon", icon: I.leads },
   { n: 10, href: "/creator/plan", label: "Plan", hint: "the rhythm", icon: I.plan },
 ];
 
 
-const MORE: Array<{ label: string; href: string; ext?: boolean }> = [
-  { label: "Comments & DMs (Meta)", href: `https://business.facebook.com/latest/inbox/all?asset_id=${PAGE_ID}`, ext: true },
-  { label: "Budgets & bidding (Meta)", href: `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${AD_ACCOUNT}&selected_campaign_ids=${CAMPAIGN_ID}`, ext: true },
-  { label: "Build audiences (Meta)", href: `https://adsmanager.facebook.com/adsmanager/audiences?act=${AD_ACCOUNT}`, ext: true },
-  { label: "Admin", href: "/admin" },
-];
+const MORE: Array<{ label: string; href: string; ext?: boolean }> = studio.nav.more ?? [];
 
 export default function CreatorShell({ children, fontClass, counts }: { children: ReactNode; fontClass: string; counts: NavCounts }) {
   const path = usePathname() ?? "";
-  const active = TOOLS.find((t) => (t.match ?? [t.href]).some((m) => path === m || path.startsWith(m + "/")));
+  const VISIBLE = TOOLS.filter((t) => !(studio.nav.hide ?? []).includes(toolId(t.href))).map((t) => ({ ...t, soon: (studio.nav.soon ?? []).includes(toolId(t.href)) }));
+  const active = VISIBLE.find((t) => (t.match ?? [t.href]).some((m) => path === m || path.startsWith(m + "/")));
   const isHome = path === "/creator" || path === "/creator/";
 
   const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light" as const);
@@ -108,8 +105,8 @@ export default function CreatorShell({ children, fontClass, counts }: { children
         <header className="ts-top">
           <div className="ts-bar">
             <Link href="/creator" className="ts-brand" aria-label="This week, home">
-              <span className="tl-mark">RC</span>
-              <span className="ts-brand__t"><b>Robert Castellino</b><span>Creator studio</span></span>
+              <span className="tl-mark">{studio.site.short.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</span>
+              <span className="ts-brand__t"><b>{studio.site.short}</b><span>Creator studio</span></span>
             </Link>
             <div className="ts-bar__sp" />
             <Link href="/creator" className={`ts-home${isHome ? " is-on" : ""}`}>{I.home}<span>This week</span></Link>
@@ -122,7 +119,7 @@ export default function CreatorShell({ children, fontClass, counts }: { children
                   ) : (
                     <Link key={m.href} role="menuitem" href={m.href} onClick={() => setMoreFor(null)}>{m.label}</Link>
                   ))}
-                  <form action="/api/admin/logout" method="post"><button type="submit" role="menuitem">Sign out</button></form>
+                  <form action={studio.nav.logoutPath ?? "/api/admin/logout"} method="post"><button type="submit" role="menuitem">Sign out</button></form>
                 </div>
               )}
             </div>
@@ -135,7 +132,7 @@ export default function CreatorShell({ children, fontClass, counts }: { children
             </button>
           </div>
           <nav className="ts-seq" ref={seqRef} aria-label="The tools, in order">
-            {TOOLS.map((t) => {
+            {VISIBLE.map((t) => {
               const on = active?.n === t.n;
               const chip = t.n === 2 && counts.library != null ? counts.library : t.n === 7 && counts.queued ? counts.queued : null;
               return (

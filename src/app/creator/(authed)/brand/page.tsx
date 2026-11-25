@@ -1,5 +1,6 @@
 import { getBrandEssence } from "@/lib/creator/essence-store";
-import { BOOK, SITE } from "@/lib/creator/pillars";
+import { SITE } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 import KitTabs from "@/components/creator/KitTabs";
 import CopyChip from "@/components/creator/CopyChip";
 
@@ -12,28 +13,9 @@ export const dynamic = "force-dynamic";
   Read-only; the words come from Essence and the colours from the site's CSS.
 */
 
-const LOGOS = [
-  { src: "/assets/logo-script.png", name: "Script logo", note: "The site's wordmark · 919 × 212 PNG, transparent. Use on dark.", dark: true },
-  { src: "/gift-series/book-cover-hi.jpg", name: "Book cover", note: "The real cover · 694 × 700. Never a mockup.", dark: false },
-  { src: "/assets/portrait-hat.png", name: "Bob, portrait", note: "Approved portrait. The only other Bob photos are behind-3, home-teaser and about-hero.", dark: false },
-];
-
-const COLOURS = [
-  { name: "Ink", hex: "#050608", note: "Site background, the darkest" },
-  { name: "Ink 15", hex: "#15161c", note: "Text on paper · newsletter ink" },
-  { name: "Gold", hex: "#c8a96a", note: "Site accent · buttons, rules" },
-  { name: "Gold, deep", hex: "#b9871f", note: "Newsletter and print accent" },
-  { name: "Gold, dim", hex: "#8b774a", note: "Quiet gold on dark" },
-  { name: "Paper", hex: "#f4f0e6", note: "Newsletter and print background" },
-  { name: "Rule", hex: "#e3dccb", note: "Hairlines on paper" },
-  { name: "Muted", hex: "#6b665a", note: "Secondary text on paper" },
-];
-
-const TYPE = [
-  { name: "Cormorant Garamond", role: "Headlines and the long reads. Light weights, italic for emphasis.", css: "var(--font-cormorant), 'EB Garamond', Georgia, serif", sample: "Fifty years of waiting for the light.", size: 34, weight: 400 },
-  { name: "Manrope", role: "Everything else on the site: body, labels, buttons.", css: "var(--font-manrope), system-ui, sans-serif", sample: "Every plate is a real place, made by one man who stood there at dawn.", size: 17, weight: 400 },
-  { name: "Mr De Haviland", role: "The signature only. Never for words.", css: "var(--font-sig), cursive", sample: "Robert Castellino", size: 40, weight: 400 },
-];
+const LOGOS = studio.brandKit?.logos ?? [];
+const COLOURS = studio.brandKit?.colours ?? [];
+const TYPE = studio.brandKit?.type ?? [];
 
 export default async function BrandKitPage() {
   const essence = await getBrandEssence();
@@ -41,8 +23,7 @@ export default async function BrandKitPage() {
     { k: "The line", v: essence.line },
     { k: "Promise", v: essence.promise },
     { k: "Call to action", v: essence.cta },
-    { k: "Book facts", v: BOOK.facts },
-    { k: "Book title", v: BOOK.title },
+    ...(studio.brandKit?.words ?? []),
     { k: "Studio", v: `${SITE.name} · ${SITE.location} · ${SITE.domain}` },
   ].filter((w) => w.v);
 

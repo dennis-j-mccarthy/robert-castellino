@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { AI_NOT_CONFIGURED, aiErrorMessage, generateJson, hasAnthropicKey } from "@/lib/creator/ai";
 import { brandSystemPrompt, loadBrandContext } from "@/lib/creator/brand-context";
 import { creatorGuard, readJson } from "@/lib/creator/guard";
+import { studio } from "@/studio.config";
 
 /*
   POST /api/creator/blog/titles — step 2 of the blog generator.
   Body: { topic?, pillarId?, count? }  → { titles: string[], pillarId }
 
-  Title ideas for new Musings in Bob's voice: the brand brief
+  Title ideas for new blog posts in the owner's voice: the brand brief
   (src/lib/creator/brand-context.ts) plus the chosen pillar's message and
   angles. Titles only — the Musing itself is /api/creator/blog/write.
 */
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
   try {
     const data = await generateJson<{ titles: unknown }>({
       system: brandSystemPrompt(ctx, {
-        role: "You suggest titles for Robert Castellino's Musings — short first-person essays on light, land and fifty years of looking. Each title must be one he could actually write: a real place, hour, weather or practice, never a vague theme. No numbering, no quotes.",
+        role: `You suggest titles for ${studio.site.ownerFull}'s ${studio.brand.blog.label}. ${studio.brand.blog.writerRole}`,
         includePillars: true,
       }),
       user: `Give me exactly ${count} Musing titles${topic ? ` about: "${topic}"` : ""}${ctx.pillar ? ` for the "${ctx.pillar.name}" pillar` : ""}. Spread them across different angles. Return them in the titles array.`,

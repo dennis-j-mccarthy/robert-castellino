@@ -1,4 +1,5 @@
 import { SITE } from "@/lib/creator/pillars";
+import { studio } from "@/studio.config";
 
 /*
   Technical SEO, checked live against the public site each time Search is
@@ -12,12 +13,12 @@ export interface SeoCheck { id: string; label: string; grade: Grade; detail: str
 export interface SeoPageReport { path: string; title: string | null; checks: SeoCheck[] }
 export interface SeoAudit { checkedAt: string; site: SeoCheck[]; pages: SeoPageReport[]; score: { pass: number; warn: number; fail: number } }
 
-const PAGES = ["/", "/book", "/musings", "/gallery"];
+const PAGES = studio.seo.auditPages;
 
 async function get(path: string): Promise<{ status: number; body: string; ms: number; type: string }> {
   const t0 = Date.now();
   try {
-    const r = await fetch(`${SITE.url}${path}`, { cache: "no-store", headers: { "user-agent": "CreatorStudioSEO/1 (+robertcastellino.com)" }, redirect: "follow" });
+    const r = await fetch(`${SITE.url}${path}`, { cache: "no-store", headers: { "user-agent": `CreatorStudioSEO/1 (+${SITE.domain})` }, redirect: "follow" });
     const body = await r.text();
     return { status: r.status, body, ms: Date.now() - t0, type: r.headers.get("content-type") ?? "" };
   } catch {
@@ -46,11 +47,11 @@ function pageChecks(path: string, body: string, status: number, ms: number): Seo
   const imgs = body.match(/<img\b[^>]*>/gi) ?? [];
   const noAlt = imgs.filter((t) => !/\balt=/.test(t)).length;
   const emptyAlt = imgs.filter((t) => /\balt=["']\s*["']/.test(t)).length;
-  c.push({ id: "alt", label: "Pictures described (alt text)", grade: imgs.length === 0 ? "pass" : noAlt ? "fail" : emptyAlt > imgs.length / 2 ? "warn" : "pass", detail: `${imgs.length} pictures · ${noAlt} without alt · ${emptyAlt} empty alt`, fix: noAlt || emptyAlt > imgs.length / 2 ? "Every plate should say what it is and where: \"Maroon Bells at first light, autumn\". Google Images is a real doorway for a photographer." : undefined });
+  c.push({ id: "alt", label: "Pictures described (alt text)", grade: imgs.length === 0 ? "pass" : noAlt ? "fail" : emptyAlt > imgs.length / 2 ? "warn" : "pass", detail: `${imgs.length} pictures · ${noAlt} without alt · ${emptyAlt} empty alt`, fix: noAlt || emptyAlt > imgs.length / 2 ? "Every picture should say what it is and where. Google Images is a real doorway." : undefined });
   const og = pick(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']*)["']/i, body);
   c.push({ id: "og", label: "Share picture (Open Graph)", grade: og ? "pass" : "warn", detail: og ? "set" : "missing", fix: !og ? "Without it, Facebook and iMessage show a blank card when the link is shared." : undefined });
   const ld = (body.match(/application\/ld\+json/gi) ?? []).length;
-  c.push({ id: "ld", label: "Structured data (JSON-LD)", grade: ld ? "pass" : "warn", detail: ld ? `${ld} block${ld === 1 ? "" : "s"}` : "none", fix: !ld ? "Tell Google this is a Person / Book / Product so it can show rich results." : undefined });
+  c.push({ id: "ld", label: "Structured data (JSON-LD)", grade: ld ? "pass" : "warn", detail: ld ? `${ld} block${ld === 1 ? "" : "s"}` : "none", fix: !ld ? "Tell Google what this is (a Person, a Product, a LocalBusiness) so it can show rich results." : undefined });
   const viewport = /<meta[^>]+name=["']viewport["']/i.test(body);
   c.push({ id: "viewport", label: "Mobile viewport", grade: viewport ? "pass" : "fail", detail: viewport ? "set" : "missing", fix: !viewport ? "Google indexes the phone version first." : undefined });
   const noindex = /<meta[^>]+name=["']robots["'][^>]+noindex/i.test(body);
@@ -69,9 +70,9 @@ export async function runSeoAudit(): Promise<SeoAudit> {
   const urls = (sitemap.body.match(/<loc>/g) ?? []).length;
   site.push({ id: "sitemap", label: "sitemap.xml", grade: sitemapOk ? (urls >= 5 ? "pass" : "warn") : "fail", detail: sitemapOk ? `${urls} addresses listed` : `HTTP ${sitemap.status}`, fix: !sitemapOk ? "Publish a sitemap and submit it in Google Search Console." : urls < 5 ? "Very few pages are listed; Musings and gallery pages should all be in it." : undefined });
   const robotsNamesSitemap = /sitemap:/i.test(robots.body);
-  site.push({ id: "robots-sitemap", label: "robots.txt names the sitemap", grade: robotsNamesSitemap ? "pass" : "warn", detail: robotsNamesSitemap ? "yes" : "no", fix: !robotsNamesSitemap ? "Add `Sitemap: https://robertcastellino.com/sitemap.xml` to robots.txt." : undefined });
-  const musingsInMap = (sitemap.body.match(/\/musings\//g) ?? []).length;
-  site.push({ id: "musings-map", label: "Musings in the sitemap", grade: musingsInMap >= 5 ? "pass" : musingsInMap ? "warn" : "fail", detail: `${musingsInMap} Musing addresses`, fix: musingsInMap < 5 ? "Each Musing is a page Google can rank for its own phrase; they belong in the sitemap." : undefined });
+  site.push({ id: "robots-sitemap", label: "robots.txt names the sitemap", grade: robotsNamesSitemap ? "pass" : "warn", detail: robotsNamesSitemap ? "yes" : "no", fix: !robotsNamesSitemap ? `Add "Sitemap: ${SITE.url}/sitemap.xml" to robots.txt.` : undefined });
+  const musingsInMap = (sitemap.body.match(new RegExp(studio.brand.blog.path.replace(/\//g, "\\/") + "\\/", "g")) ?? []).length;
+  site.push({ id: "musings-map", label: "Musings in the sitemap", grade: musingsInMap >= 5 ? "pass" : musingsInMap ? "warn" : "fail", detail: `${musingsInMap} blog post addresses`, fix: musingsInMap < 5 ? "Each blog post is a page Google can rank for its own phrase; they belong in the sitemap." : undefined });
 
   const reports = PAGES.map((p, i) => pageChecks(p, pages[i].body, pages[i].status, pages[i].ms));
   const all = [...site, ...reports.flatMap((r) => r.checks)];
@@ -82,9 +83,9 @@ export async function runSeoAudit(): Promise<SeoAudit> {
 /** The standing to-do list: things a fetch cannot see but every small site needs. */
 export const SEO_STANDING: Array<{ title: string; why: string; how: string }> = [
   { title: "Google Search Console, verified", why: "It is the only place Google tells you which searches you appear in, which pages it cannot read, and whether the sitemap was accepted.", how: "search.google.com/search-console → Add property → robertcastellino.com → verify by DNS record at the registrar. Then Sitemaps → submit sitemap.xml." },
-  { title: "Google Business Profile, complete", why: "The map card and the knowledge panel for \"Robert Castellino\" come from here, not from the website.", how: "business.google.com → photographer category, studio hours by appointment, the book as a product, ten plates as photos, the website link." },
-  { title: "One phrase per page", why: "Google ranks pages, not sites. The book page should own \"Colorado coffee table book\"; each Musing should own its place and hour.", how: "Pick the phrase from Keywords, put it in the title, the H1, the first sentence and one picture's alt text. Nowhere else." },
-  { title: "Alt text on every plate", why: "Google Images sends real traffic to photographers, and it can only read the alt text.", how: "Brand kit → Pictures: the caption field becomes the alt text. Use the AI caption button for the blanks." },
-  { title: "Page speed on a phone", why: "Google measures Core Web Vitals on mobile; big plates are the usual cause.", how: "pagespeed.web.dev → robertcastellino.com. Anything red is a picture to resize or lazy-load." },
-  { title: "Links in from elsewhere", why: "Other sites linking here is still the strongest signal. The book gives you a reason to ask.", how: "Colorado tourism sites, the printer, the galleries that hang the work, local press about the book. One email each, with the book page link." },
+  { title: "Google Business Profile, complete", why: "The map card and the knowledge panel for the owner's name come from here, not from the website.", how: "business.google.com → the right category, hours, the offer as a product, ten pictures, the website link." },
+  { title: "One phrase per page", why: "Google ranks pages, not sites. The offer page should own its phrase; each blog post should own one of its own.", how: "Pick the phrase from Keywords, put it in the title, the H1, the first sentence and one picture's alt text. Nowhere else." },
+  { title: "Alt text on every picture", why: "Google Images sends real traffic, and it can only read the alt text.", how: "Brand kit → Pictures: the caption field becomes the alt text. Use the AI caption button for the blanks." },
+  { title: "Page speed on a phone", why: "Google measures Core Web Vitals on mobile; big pictures are the usual cause.", how: "pagespeed.web.dev → robertcastellino.com. Anything red is a picture to resize or lazy-load." },
+  { title: "Links in from elsewhere", why: "Other sites linking here is still the strongest signal. The offer gives you a reason to ask.", how: "Local press, partners, suppliers, the places that carry the work. One email each, with the offer page link." },
 ];

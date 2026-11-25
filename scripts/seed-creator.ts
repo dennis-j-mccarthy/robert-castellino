@@ -28,7 +28,7 @@ async function main() {
   }
   const force = process.argv.includes("--force");
   // Dynamic imports so dotenv has run before src/lib/prisma.ts reads the env.
-  const { seedCreator } = await import("../src/lib/creator/seed");
+  const { seedCreator } = await import("../src/studio-site/seed");
   const { prisma } = await import("../src/lib/prisma");
 
   const c = await seedCreator({ force });

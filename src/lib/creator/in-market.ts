@@ -1,4 +1,4 @@
-import { graphGet } from "@/lib/meta/graph";
+import { graphGet } from "@/lib/studio-meta/graph";
 import {
   accountAdInsights,
   adAccountId,
@@ -8,7 +8,7 @@ import {
   listAds,
   type AdInsights,
   type LiveAd,
-} from "@/lib/meta/ads";
+} from "@/lib/studio-meta/ads";
 
 /*
   "In market" — the live ads in Bob's book campaign. SERVER ONLY.

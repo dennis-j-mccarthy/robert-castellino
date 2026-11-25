@@ -5,7 +5,7 @@ import { creatorGuard } from "@/lib/creator/guard";
 import { getInMarket, invalidateInMarket } from "@/lib/creator/in-market";
 import { loadLibrary } from "@/lib/creator/library";
 import { DraftSchema, submitDraft, toCreateData } from "@/lib/ads-drafts";
-import { ADS_NOT_CONFIGURED, errorMessage, isAdsConfigured } from "@/lib/meta/ads";
+import { ADS_NOT_CONFIGURED, errorMessage, isAdsConfigured } from "@/lib/studio-meta/ads";
 
 /*
   POST /api/creator/ads/stage — turn a concept into a real ad in the book

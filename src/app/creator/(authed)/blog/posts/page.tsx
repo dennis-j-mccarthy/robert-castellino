@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { loadLibrary } from "@/lib/creator/library";
 import { loadPillars } from "@/lib/creator/pillar-store";
-import { MUSING_PILLARS } from "@/lib/creator/seed-data";
+import { MUSING_PILLARS } from "@/studio-site/seed-data";
 import BlogPosts from "./BlogPosts";
 
 export const dynamic = "force-dynamic";

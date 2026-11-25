@@ -5,6 +5,7 @@ import { prisma, isDatabaseConfigured } from "@/lib/prisma";
 import { rowToMusing } from "@/lib/data-source";
 import { revalidateMusings, onMusingPublished } from "@/lib/publish-hooks";
 import { MUSINGS } from "@/data/musings";
+import { generateIdAndNum } from "@/lib/musing-ids";
 
 export const runtime = "nodejs";
 
@@ -46,21 +47,6 @@ const CreateSchema = z.object({
   order: z.number().int().default(0),
 });
 
-async function generateIdAndNum(): Promise<{ id: string; num: string }> {
-  const musings = await prisma.musing.findMany({ select: { id: true, num: true } });
-  const maxId = musings
-    .map(m => parseInt(m.id.replace(/\D/g, ""), 10))
-    .filter(n => !isNaN(n))
-    .reduce((a, b) => Math.max(a, b), 0);
-  const maxNum = musings
-    .map(m => parseInt(m.num.replace(/\D/g, ""), 10))
-    .filter(n => !isNaN(n))
-    .reduce((a, b) => Math.max(a, b), 0);
-  return {
-    id: `m${String(maxId + 1).padStart(2, "0")}`,
-    num: `M.${String(maxNum + 1).padStart(3, "0")}`,
-  };
-}
 
 export async function POST(req: Request) {
   const blocked = await guard();

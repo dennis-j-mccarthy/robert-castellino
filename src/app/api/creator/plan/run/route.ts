@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { adapters } from "@/studio.adapters";
 import { isDatabaseConfigured } from "@/lib/prisma";
 import { runWeeklyPlan } from "@/lib/creator/plan";
 
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const session = await getSession();
+  const session = await adapters.auth.getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!isDatabaseConfigured()) return NextResponse.json({ error: "No database" }, { status: 503 });
   let body: { force?: boolean; weekOffset?: 0 | 1 } = {};

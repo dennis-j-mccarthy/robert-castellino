@@ -1,5 +1,5 @@
 import { prisma, isDatabaseConfigured } from "@/lib/prisma";
-import { deletePagePost, MetaError } from "@/lib/meta/graph";
+import { deletePagePost, MetaError } from "@/lib/studio-meta/graph";
 import { SITE } from "@/lib/creator/pillars";
 
 /*

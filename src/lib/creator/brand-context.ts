@@ -1,7 +1,6 @@
 import { tonePrompt, type BlogTone } from "@/lib/creator/blog-tone";
 import { getBrandEssence } from "@/lib/creator/essence-store";
 import {
-  BOOK,
   SITE,
   pillarIn,
   pillarPrompt,
@@ -12,6 +11,7 @@ import {
 } from "@/lib/creator/pillars";
 import { loadPillars } from "@/lib/creator/pillar-store";
 import { getTone } from "@/lib/creator/tone-store";
+import { studio } from "@/studio.config";
 
 /*
   ONE brand context for every generator (titles, the musing writer, captions,
@@ -82,12 +82,8 @@ export function essenceBlock(e: BrandEssenceRecord): string {
   ].join("\n");
 }
 
-/** The paragraph that never changes: who Bob is and the facts that are fixed. */
-export const BRAND_PARAGRAPH =
-  `The brand is "${SITE.name}" (${SITE.domain}): Robert "Bob" Castellino, a large-format landscape photographer of fifty years — Colorado first (the Flatirons, the Maroon Bells, Red Mountain Pass, Rocky Mountain National Park), then the wider West. He works from his studio in Boulder County, Colorado, and signs every book and print himself. ` +
-  `His book is "${BOOK.title}": ${BOOK.facts}. Those facts are fixed — never change the plate count, page count, printing or price, and never invent other numbers, dates, awards, quotes or place names. ` +
-  `Limited prints are at ${SITE.url}${SITE.galleryPath}; the signed book is at ${SITE.url}${SITE.bookPath}; the writing lives at ${SITE.url}${SITE.musingsPath}. ` +
-  `Speak as Bob, first person, unless told otherwise. No hype, no countdowns, no "sale", no emoji, no exclamation marks. Never call the work "content". Never mention AI, mockups or renderings.`;
+/** The paragraph that never changes: who the owner is and the facts that are fixed. Written by the site in studio.config. */
+export const BRAND_PARAGRAPH = studio.brand.paragraph;
 
 /**
  * The shared system prompt. `role` is the one-paragraph job description for

@@ -9,6 +9,7 @@ import { api, copyText, errText } from "@/lib/creator/client";
 import type { LibraryItem } from "@/lib/creator/library";
 import { pillarTagClsFor, type CoreMessage, type Pillar } from "@/lib/creator/pillars";
 import { CAPTION_LIMITS, PLATFORM_LABELS, PUBLISHES, SOCIAL_PLATFORMS, isSocialPlatform, type SocialPlatform } from "@/lib/creator/social";
+import { studio } from "@/studio.config";
 
 /*
   Post maker. Three steps down the left, the live post on the right.
@@ -130,7 +131,7 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
     setNotice(null);
     setResult(null);
     try {
-      const r = await api<{ ok: true; id: string; scheduled: boolean; scheduledAt: string | null; page: string }>("/api/admin/facebook/post", {
+      const r = await api<{ ok: true; id: string; scheduled: boolean; scheduledAt: string | null; page: string }>("/api/creator/social/publish", {
         method: "POST",
         json: {
           caption,
@@ -251,7 +252,7 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
             <header className="fbcard__head">
               <div className="fbcard__avatar">RC</div>
               <div>
-                <div className="fbcard__page">{config.page ?? "Robert Castellino Photography"}</div>
+                <div className="fbcard__page">{config.page ?? studio.site.name}</div>
                 <div className="fbcard__meta">{scheduledAt ? `Scheduled · ${new Date(scheduledAt).toLocaleString()}` : "Just now"} · {PLATFORM_LABELS[platform]}</div>
               </div>
             </header>

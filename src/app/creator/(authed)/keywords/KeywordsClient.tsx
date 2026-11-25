@@ -14,7 +14,7 @@ export default function KeywordsClient({ initial }: { initial: KeywordRow[] }) {
   const [filter, setFilter] = useState<KeywordKind | "all">("all");
   const [showDropped, setShowDropped] = useState(false);
   const [phrase, setPhrase] = useState("");
-  const [kind, setKind] = useState<KeywordKind>("gift");
+  const [kind, setKind] = useState<KeywordKind>(KEYWORD_KINDS[0]);
   const [focus, setFocus] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [busy, setBusy] = useState(false);

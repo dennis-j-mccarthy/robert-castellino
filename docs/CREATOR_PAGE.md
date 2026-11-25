@@ -387,3 +387,45 @@ before 24x36. Fix the row's `img` in /admin/collections.
   (public, in globals.css).
 - This is the model to port to the other studios: same panel, site-specific
   offer and plates come from config.
+
+## 2026-11-24, late night — The studio is shared code now
+
+The creator studio no longer knows it is Bob's. Everything under
+`src/app/creator`, `src/app/api/creator`, `src/lib/creator`,
+`src/lib/studio-meta` and `src/components/creator` is the **shared tree**,
+vendored from the private repo `dennis-j-mccarthy/creator-studio` by its
+`sync.sh`. It reads three site files:
+
+- `src/studio.config.ts` — who Bob is, the offer (the book), brand
+  paragraph/tagline/logo/accent, the blog's public name and path (Musings at
+  /musings), Meta ids, SEO audit pages, keyword kinds and seeds, Essence /
+  pillar / tone defaults, nav (hide/soon/more/login/logout paths), brand kit
+  assets, the leads hint, the plan's email line. Typed by
+  `src/lib/creator/studio-types.ts`. Client-safe: data only.
+- `src/studio.panels.tsx` — server-rendered panels appended to a tool's
+  accordions. Here: Competitors and Google Ads on Search.
+- `src/studio.adapters.ts` — content (Musing rows; create/update go through
+  `src/lib/musing-ids.ts` and the publish hooks), pictures (the ad-image
+  manifest + Photo rows; uploads land in the "Studio uploads" collection),
+  uploads (`src/lib/image-store.ts`, Postgres Image rows), subscribers,
+  auth (the admin cookie), notify (Resend for the Monday plan), seed
+  (`src/studio-site/seed.ts`). Site modules are imported lazily inside the
+  functions: eager imports created an init-time cycle that only the
+  production bundle tripped over ("Cannot access 'r' before initialization").
+
+Site-only code (never synced; listed in the repo's `studio/.site-only`):
+`competitors/`, `google-ads/`, `blog/posts/` (the Musings manager),
+`ads/` write-ups and routes, `src/studio-site/*` (seed data, seed keywords),
+`src/lib/creator/{competitors,googleAds,concepts,in-market,gift-plan}.ts`.
+
+New shared routes replacing admin ones inside the studio:
+`POST /api/creator/upload`, `POST /api/creator/social/publish`,
+`POST /api/creator/blog/save`, `GET /api/creator/blog/list`;
+`/api/creator/library/add` goes through `pictures.add`.
+`src/lib/meta/*` are one-line shims so the site's own admin routes keep
+their imports.
+
+To change the studio everywhere: edit in creator-studio, then in each site
+`bash ../creator-studio/sync.sh && npx tsc --noEmit`, commit, let Vercel
+build. Castellino is the source of record while the shared repo settles:
+edit here, then re-import (see the repo README).

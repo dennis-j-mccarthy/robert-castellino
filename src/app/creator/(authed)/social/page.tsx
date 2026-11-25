@@ -2,7 +2,7 @@ import { hasAnthropicKey } from "@/lib/creator/ai";
 import { getBrandEssence } from "@/lib/creator/essence-store";
 import { loadLibrary } from "@/lib/creator/library";
 import { loadPillars } from "@/lib/creator/pillar-store";
-import { getConnection, isConnected } from "@/lib/meta/store";
+import { getConnection, isConnected } from "@/lib/studio-meta/store";
 import PostBoard, { loadPosts } from "./PostBoard";
 import PostsAccordion from "./PostsAccordion";
 import InstantPost from "./InstantPost";

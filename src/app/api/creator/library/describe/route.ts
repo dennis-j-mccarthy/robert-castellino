@@ -3,10 +3,11 @@ import { aiErrorMessage, generateJson, hasAnthropicKey, AI_NOT_CONFIGURED } from
 import { brandSystemPrompt, loadBrandContext } from "@/lib/creator/brand-context";
 import { creatorGuard, readJson } from "@/lib/creator/guard";
 import { absoluteImageUrl } from "@/lib/creator/library";
+import { studio } from "@/studio.config";
 
 /*
   POST /api/creator/library/describe { src } → { title, loc, blurb, pillarId, caption }
-  Claude looks at the picture and fills the library fields in Bob's voice:
+  Claude looks at the picture and fills the library fields in the owner's voice:
   a short title, the place if it can tell (else ""), a one-line blurb, the
   best-fitting pillar, and one caption ready for a post. Nothing is saved
   here; the client applies what it likes via PATCH /api/creator/library.
@@ -26,11 +27,11 @@ export async function POST(req: Request) {
     const ids = ctx.pillars.map((p) => p.id);
     const out = await generateJson<Out>({
       system: brandSystemPrompt(ctx, {
-        role: "You caption Robert Castellino's landscape photographs for his own library.",
+        role: `You caption ${studio.site.ownerFull}'s pictures for ${studio.site.pronouns[1]} own library.`,
         includePillars: true,
         extra: "Look at the photograph. Name only what you can see; if you are not sure of the exact place, give the region or leave loc empty rather than guess a landmark. No hype, no exclamation marks, no hashtags.",
       }),
-      user: `Fill the library card for this picture.${body.hint ? ` Bob's note: "${body.hint}".` : ""}\n\nReturn JSON: title (3–6 words, the place or the light, Title Case), loc (place, state — or empty), blurb (one sentence, under 140 characters, first person as Bob), pillarId (one of: ${ids.join(", ")}), caption (a Facebook caption in his voice, 1–2 sentences, ends with the place), confidence (high|medium|low on the place).`,
+      user: `Fill the library card for this picture.${body.hint ? ` ${studio.site.owner}'s note: "${body.hint}".` : ""}\n\nReturn JSON: title (3–6 words, the place or the light, Title Case), loc (place, state — or empty), blurb (one sentence, under 140 characters, first person as ${studio.site.owner}), pillarId (one of: ${ids.join(", ")}), caption (a Facebook caption in his voice, 1–2 sentences, ends with the place), confidence (high|medium|low on the place).`,
       schema: {
         type: "object",
         additionalProperties: false,

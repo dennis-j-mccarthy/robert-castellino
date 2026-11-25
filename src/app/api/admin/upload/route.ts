@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import sharp from "sharp";
 import { getSession } from "@/lib/auth";
-import { isDatabaseConfigured, prisma } from "@/lib/prisma";
+import { isDatabaseConfigured } from "@/lib/prisma";
+import { storeImage } from "@/lib/image-store";
 
 export const runtime = "nodejs";
 
@@ -39,19 +39,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const input = Buffer.from(await file.arrayBuffer());
-    // .rotate() bakes in EXIF orientation (phone photos); resize + compress
-    // so the DB row stays small. 2600px long edge keeps prints crisp on screen.
-    const { data, info } = await sharp(input)
-      .rotate()
-      .resize({ width: 2600, height: 2600, fit: "inside", withoutEnlargement: true })
-      .jpeg({ quality: 84, mozjpeg: true })
-      .toBuffer({ resolveWithObject: true });
-
-    const rec = await prisma.image.create({
-      data: { data, contentType: "image/jpeg", width: info.width, height: info.height },
-    });
-    return NextResponse.json({ url: `/api/images/${rec.id}` });
+    const rec = await storeImage(file);
+    return NextResponse.json({ url: rec.url });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Could not process the image.";
     return NextResponse.json({ error: msg }, { status: 502 });

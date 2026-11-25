@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { creatorGuard } from "@/lib/creator/guard";
 import { getInMarket, invalidateInMarket } from "@/lib/creator/in-market";
-import { ADS_NOT_CONFIGURED, deleteEntity, errorMessage, isAdsConfigured } from "@/lib/meta/ads";
+import { ADS_NOT_CONFIGURED, deleteEntity, errorMessage, isAdsConfigured } from "@/lib/studio-meta/ads";
 
 /*
   POST /api/creator/ads/remove — pull an ad out of Meta (delete it there).

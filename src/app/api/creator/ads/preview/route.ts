@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { creatorGuard } from "@/lib/creator/guard";
-import { PREVIEW_FORMATS, getPreview, isAdsConfigured } from "@/lib/meta/ads";
+import { PREVIEW_FORMATS, getPreview, isAdsConfigured } from "@/lib/studio-meta/ads";
 
 /*
   GET /api/creator/ads/preview?creativeId=…&format=… → { src }
