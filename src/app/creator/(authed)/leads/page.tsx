@@ -1,9 +1,11 @@
 export const dynamic = "force-dynamic";
 import { studio } from "@/studio.config";
+import { panels } from "@/studio.panels";
 
 // Tool 8 · Leads. Not switched on for this site yet; the page exists so the
 // studio has no hole in it, and so the shape is agreed before it's built.
 export default function LeadsPage() {
+  if (panels.replace?.leads) return <>{panels.replace.leads}</>;
   return (
     <section className="admin-page cr-page">
       <div className="tl-eyebrow">Leads · coming</div>

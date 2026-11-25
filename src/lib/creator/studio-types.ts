@@ -110,7 +110,14 @@ export interface ExtraPanel {
 }
 
 /** Site-written panels appended to a tool's accordions. Lives in `src/studio.panels.tsx` (server only). */
-export type StudioPanels = Partial<Record<"search" | "ads", ExtraPanel[]>>;
+export type StudioPanels = Partial<Record<"search" | "ads", ExtraPanel[]>> & {
+  /**
+   * A site's own tool in place of a shared placeholder. Leads and Email ship
+   * as placeholders; a site that already has a real leads desk or email
+   * maker renders it here (a server component) and keeps the same tab.
+   */
+  replace?: Partial<Record<"leads" | "email", ReactNode>>;
+};
 
 export interface StudioConfig {
   site: SiteFacts;

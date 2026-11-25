@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { panels } from "@/studio.panels";
 
 export const dynamic = "force-dynamic";
 
 // Tool 5 · Email. One note to one person or a few. The newsletter lives on Blog.
 // The sending side isn't wired yet; this page holds the place and explains it.
 export default function EmailPage() {
+  if (panels.replace?.email) return <>{panels.replace.email}</>;
   return (
     <section className="admin-page cr-page">
       <div className="tl-eyebrow">Email</div>
