@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { AI_NOT_CONFIGURED, aiErrorMessage, hasAnthropicKey } from "@/lib/creator/ai";
 import { creatorDbGuard, readJson } from "@/lib/creator/guard";
-import { keywordId } from "@/lib/creator/keywords";
+import { KEYWORD_KINDS, keywordId } from "@/lib/creator/keywords";
 import { writeLanding } from "@/lib/creator/landing";
 import { loadLibrary } from "@/lib/creator/library";
 import { prisma } from "@/lib/prisma";
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     await prisma.keyword.upsert({
       where: { id: keywordId(keyword) },
       update: { landingSlug: slug, status: "target" },
-      create: { id: keywordId(keyword), phrase: keyword, kind: "gift", priority: 60, status: "target", source: "manual", landingSlug: slug },
+      create: { id: keywordId(keyword), phrase: keyword, kind: KEYWORD_KINDS[0], priority: 60, status: "target", source: "manual", landingSlug: slug },
     }).catch(() => null);
     return NextResponse.json({ page });
   } catch (e) {

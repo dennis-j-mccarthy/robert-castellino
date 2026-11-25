@@ -1,3 +1,4 @@
+import { adapters } from "@/studio.adapters";
 import { graphGet } from "@/lib/studio-meta/graph";
 import { adAccountId, isAdsConfigured, listCampaigns } from "@/lib/studio-meta/ads";
 import { getBrandEssence } from "@/lib/creator/essence-store";

@@ -57,6 +57,9 @@ export const studio: StudioConfig = {
     preferredPageHint: "castellino",
   },
   seo: { auditPages: ["/", "/book", "/musings", "/gallery"] },
+  keywordKinds: [
+    { id: "gift", label: "Gift search" }, { id: "book", label: "The book" }, { id: "photography", label: "Photography" }, { id: "question", label: "Question" },
+  ],
   seedKeywords: SEED_KEYWORDS,
   defaults: { voice: DEFAULT_VOICE, essence: defaultEssence(), pillars: DEFAULT_PILLARS, tone: DEFAULT_TONE },
   nav: {

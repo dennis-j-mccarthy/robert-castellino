@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       .filter((s) => s.phrase && !lower.has(s.phrase.toLowerCase()))
       .map((s) => ({
         phrase: String(s.phrase).slice(0, 120),
-        kind: KEYWORD_KINDS.includes(s.kind) ? s.kind : "gift",
+        kind: KEYWORD_KINDS.includes(s.kind) ? s.kind : KEYWORD_KINDS[0],
         priority: Math.max(0, Math.min(100, Math.round(Number(s.priority)) || 50)),
         why: String(s.why ?? "").slice(0, 200),
       }));

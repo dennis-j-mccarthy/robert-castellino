@@ -14,7 +14,7 @@ import { studio } from "@/studio.config";
   SEED_KEYWORDS is inserted by migration 0010 (ON CONFLICT DO NOTHING).
 */
 
-export type KeywordKind = "gift" | "book" | "photography" | "question";
+export type KeywordKind = string;
 export type KeywordStatus = "idea" | "target" | "dropped";
 
 export interface KeywordRow {
@@ -27,14 +27,9 @@ export interface KeywordRow {
   note: string | null;
 }
 
-export const KEYWORD_KINDS: KeywordKind[] = ["gift", "book", "photography", "question"];
+export const KEYWORD_KINDS: KeywordKind[] = studio.keywordKinds.map((k) => k.id);
 
-export const KIND_LABEL: Record<KeywordKind, string> = {
-  gift: "Gift searches",
-  book: "Coffee table book",
-  photography: "Photography and the photographer",
-  question: "Question",
-};
+export const KIND_LABEL: Record<KeywordKind, string> = Object.fromEntries(studio.keywordKinds.map((k) => [k.id, k.label]));
 
 export function keywordId(phrase: string): string {
   return phrase

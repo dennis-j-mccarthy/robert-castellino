@@ -1,3 +1,4 @@
+import { adapters } from "@/studio.adapters";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
 import { loadLibrary, type LibraryItem } from "@/lib/creator/library";
 import { SITE } from "@/lib/creator/pillars";
@@ -263,13 +264,9 @@ export async function runWeeklyPlan(opts: { force?: boolean; weekOffset?: 0 | 1 
   await saveWeeklyPlan(start, items, summary);
 
   const to = settings.notifyEmail; // never fall back to the contact address: the plan goes only where Plan says
-  const from = process.env.CONTACT_FROM_EMAIL;
-  const key = process.env.RESEND_API_KEY;
-  if (!to || !from || !key) return { weekStart: start.toISOString(), items: items.length, emailed: false, to: to || null, reason: to ? "email not configured" : "no address set in Plan" };
+  if (!to || !adapters.notify) return { weekStart: start.toISOString(), items: items.length, emailed: false, to: to || null, reason: to ? "email not configured" : "no address set in Plan" };
   if (existing?.emailedAt && !opts.force) return { weekStart: start.toISOString(), items: items.length, emailed: false, to, reason: "already emailed" };
 
-  const { Resend } = await import("resend");
-  const resend = new Resend(key);
   const url = `${SITE.url}/creator`;
   const text =
     `Your week, ${fmtDay(start)}\n\n` +
@@ -284,7 +281,8 @@ export async function runWeeklyPlan(opts: { force?: boolean; weekOffset?: 0 | 1 
     `</table><p style="white-space:pre-line;font-size:14px;color:#45505f;margin:16px 0">${esc(summary)}</p>` +
     `<p><a href="${url}" style="display:inline-block;background:#15161c;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;font-family:Arial,sans-serif;font-size:14px">Open the plan</a></p></div>`;
   try {
-    await resend.emails.send({ from, to, subject: `Your week · ${fmtDay(start)}`, text, html });
+    const sent = await adapters.notify.sendEmail({ to, subject: `Your week · ${fmtDay(start)}`, text, html });
+    if (!sent) return { weekStart: start.toISOString(), items: items.length, emailed: false, to, reason: "email not configured" };
     await prisma.weeklyPlan.update({ where: { weekStart: start }, data: { emailedTo: to, emailedAt: new Date() } });
     return { weekStart: start.toISOString(), items: items.length, emailed: true, to };
   } catch (e) {

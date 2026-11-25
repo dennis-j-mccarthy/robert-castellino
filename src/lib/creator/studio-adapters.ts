@@ -80,6 +80,8 @@ export interface UploadsAdapter {
 
 export interface SubscribersAdapter {
   count(): Promise<number | null>;
+  /** Finer numbers when the site has them */
+  stats?(since: Date): Promise<{ total: number; confirmed: number; last30: number } | null>;
   recent?(limit: number): Promise<Array<{ email: string; createdAt: string }>>;
 }
 
@@ -89,7 +91,13 @@ export interface AuthAdapter {
   logoutPath: string;
 }
 
+export interface NotifyAdapter {
+  /** Send one email (the Monday plan). Return false when no mail provider is configured. */
+  sendEmail(input: { to: string; subject: string; text: string; html: string }): Promise<boolean>;
+}
+
 export interface StudioAdapters {
+  notify?: NotifyAdapter;
   /** Optional first-visit seeding (tables empty → defaults) */
   seed?: () => Promise<unknown>;
   content: ContentAdapter;

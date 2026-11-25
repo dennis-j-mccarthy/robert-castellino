@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { creatorGuard } from "@/lib/creator/guard";
 import { resolvePillarId } from "@/lib/creator/pillar-store";
 import { recordPost } from "@/lib/creator/social-queue";
@@ -13,21 +12,25 @@ import { getConnection, isConnected } from "@/lib/studio-meta/store";
 */
 export const runtime = "nodejs";
 
-const Schema = z.object({
-  caption: z.string().min(1, "Write a caption.").max(5000),
-  imageUrl: z.string().url().optional(),
-  scheduledAt: z.string().optional(),
-  pillarId: z.string().optional(),
-  draftId: z.string().optional(),
-});
+type Input = { caption: string; imageUrl?: string; scheduledAt?: string; pillarId?: string; draftId?: string };
+function parse(b: unknown): Input | string {
+  if (!b || typeof b !== "object") return "Invalid request.";
+  const o = b as Record<string, unknown>;
+  const caption = String(o.caption ?? "").trim();
+  if (!caption) return "Write a caption.";
+  if (caption.length > 5000) return "Caption is too long.";
+  const imageUrl = typeof o.imageUrl === "string" && o.imageUrl ? o.imageUrl : undefined;
+  if (imageUrl && !/^https?:\/\//i.test(imageUrl)) return "Image URL must be absolute.";
+  const str = (k: string) => (typeof o[k] === "string" && o[k] ? String(o[k]) : undefined);
+  return { caption, imageUrl, scheduledAt: str("scheduledAt"), pillarId: str("pillarId"), draftId: str("draftId") };
+}
 
 export async function POST(req: Request) {
   const blocked = await creatorGuard();
   if (blocked) return blocked;
-  let input: z.infer<typeof Schema>;
-  try { input = Schema.parse(await req.json()); } catch (e: unknown) {
-    return NextResponse.json({ error: e instanceof z.ZodError ? e.issues[0]?.message : "Invalid request." }, { status: 400 });
-  }
+  const parsed = parse(await req.json().catch(() => null));
+  if (typeof parsed === "string") return NextResponse.json({ error: parsed }, { status: 400 });
+  const input = parsed;
   const conn = await getConnection();
   if (!isConnected(conn)) return NextResponse.json({ error: "Facebook isn't connected yet." }, { status: 409 });
   const pillarId = (await resolvePillarId(input.pillarId)) ?? undefined;

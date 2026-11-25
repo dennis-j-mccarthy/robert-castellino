@@ -97,6 +97,8 @@ export interface StudioConfig {
   seo: SeoFacts;
   /** Platform briefs override; owner name is substituted by the shared code */
   platformBrief?: Partial<Record<SocialPlatform, string>>;
+  /** Kinds a search phrase can be, first = default (gift / book / photography / question; problem / service / question…) */
+  keywordKinds: Array<{ id: string; label: string }>;
   /** Seed search phrases offered on first run */
   seedKeywords: Array<{ phrase: string; kind: string; priority: number; note?: string }>;
   /** What Essence, pillars and tone start as before anyone edits them (and the no-database fallback) */

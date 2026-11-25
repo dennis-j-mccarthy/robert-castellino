@@ -36,7 +36,7 @@ export default function EmailMaker({ pillars, ai, db }: Props) {
   const loadDrafts = useCallback(() => api<{ items: EmailDraftSummary[] }>("/api/creator/email").then((d) => setDrafts(d.items)).catch(() => undefined), []);
 
   useEffect(() => {
-    api<{ items: MusingLite[] }>("/api/admin/musings")
+    api<{ items: MusingLite[] }>("/api/creator/blog/list")
       .then((d) => setMusings(d.items.filter((m) => m.published)))
       .catch((e: unknown) => setNotice({ kind: "err", text: errText(e) }));
     void loadDrafts();

@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   if (!b) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   const phrase = String(b.phrase ?? "").trim().replace(/\s+/g, " ").slice(0, 120);
   if (phrase.length < 3) return NextResponse.json({ error: "Type a keyword or phrase." }, { status: 400 });
-  const kind = KEYWORD_KINDS.includes(b.kind as KeywordKind) ? (b.kind as KeywordKind) : "gift";
+  const kind = KEYWORD_KINDS.includes(b.kind as KeywordKind) ? (b.kind as KeywordKind) : KEYWORD_KINDS[0];
   const priority = Math.max(0, Math.min(100, Math.round(Number(b.priority)) || 50));
   const source = b.source === "claude" ? "claude" : "manual";
   const id = keywordId(phrase);

@@ -1,15 +1,9 @@
 import adImages from "@/data/ad-images.json";
 import { MUSINGS as STATIC_MUSINGS } from "@/data/musings";
 import { getSession } from "@/lib/auth";
-import { getAllMusings, getMusing } from "@/lib/data-source";
 import { isDatabaseConfigured, prisma } from "@/lib/prisma";
-import { generateIdAndNum } from "@/lib/musing-ids";
-import { rowToMusing } from "@/lib/data-source";
-import { onMusingPublished, revalidateMusings } from "@/lib/publish-hooks";
 import type { StudioAdapters, ContentPost, SitePicture } from "@/lib/creator/studio-adapters";
 import { studio } from "@/studio.config";
-import { ensureCreatorSeeded } from "@/studio-site/seed";
-import { storeImage } from "@/lib/image-store";
 
 /*
   Robert Castellino — how the shared studio reaches this site's own data.
@@ -26,26 +20,34 @@ function toPost(m: { id: string; title: string; date: string; img?: string | nul
   return { id: m.id, title: m.title, date: m.date, img: m.img ?? null, excerpt: strip(m.excerpt), paragraphs: m.body.map(strip), loc: m.loc ?? null, published: m.published ?? true, starred: m.starred ?? false, createdAt: m.createdAt ?? null, updatedAt: m.updatedAt ?? null };
 }
 
+// Site modules are imported lazily inside the functions: this file is imported
+// by shared code at module-init time, and eager imports here would create
+// import cycles (adapters → publish hooks → creator libs → adapters) that the
+// production bundle resolves as "Cannot access before initialization".
+const ds = () => import("@/lib/data-source");
+const hooks = () => import("@/lib/publish-hooks");
+
 export const adapters: StudioAdapters = {
-  seed: ensureCreatorSeeded,
+  seed: async () => (await import("@/studio-site/seed")).ensureCreatorSeeded(),
   content: {
     async list() {
       if (!isDatabaseConfigured()) return STATIC_MUSINGS.map((m) => toPost({ ...m, published: true, starred: false }));
       const rows = await prisma.musing.findMany({ orderBy: [{ updatedAt: "desc" }] }).catch(() => []);
-      if (!rows.length) return (await getAllMusings()).map((m) => toPost(m));
+      if (!rows.length) return (await (await ds()).getAllMusings()).map((m) => toPost(m));
       return rows.map((r) => toPost({ ...r, createdAt: r.createdAt.toISOString(), updatedAt: r.updatedAt.toISOString() }));
     },
     async get(id) {
-      const m = await getMusing(id);
+      const m = await (await ds()).getMusing(id);
       return m ? toPost(m) : null;
     },
     async create(input) {
       const cat = (studio.brand.blog.categories ?? []).some((c) => c.id === input.category) ? (input.category as string) : "reflections";
+      const { generateIdAndNum } = await import("@/lib/musing-ids");
       const { id, num } = await generateIdAndNum();
       const row = await prisma.musing.create({
         data: { id, num, title: input.title, excerpt: input.excerpt, body: input.paragraphs, img: input.img, loc: input.loc, cat: cat as never, published: input.published, date: input.date || new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }) },
       });
-      if (row.published) { revalidateMusings(row.id); void onMusingPublished(rowToMusing(row)); }
+      if (row.published) { const [h, d] = await Promise.all([hooks(), ds()]); h.revalidateMusings(row.id); void h.onMusingPublished(d.rowToMusing(row)); }
       return { id: row.id };
     },
     async update(id, input) {
@@ -54,8 +56,9 @@ export const adapters: StudioAdapters = {
         where: { id },
         data: { title: input.title, excerpt: input.excerpt, body: input.paragraphs, img: input.img, loc: input.loc, ...(cat ? { cat: cat as never } : {}), published: input.published, ...(input.date ? { date: input.date } : {}) },
       });
-      revalidateMusings(row.id);
-      if (row.published) void onMusingPublished(rowToMusing(row));
+      const [h, d] = await Promise.all([hooks(), ds()]);
+      h.revalidateMusings(row.id);
+      if (row.published) void h.onMusingPublished(d.rowToMusing(row));
     },
     async setPublished(id, published) { await prisma.musing.update({ where: { id }, data: { published } }); },
     async setStarred(id, starred) { await prisma.musing.update({ where: { id }, data: { starred } }); },
@@ -88,13 +91,32 @@ export const adapters: StudioAdapters = {
     },
   },
   uploads: {
-    async upload(file) { return storeImage(file); },
+    async upload(file) { return (await import("@/lib/image-store")).storeImage(file); },
   },
   subscribers: {
     async count() {
       if (!isDatabaseConfigured()) return null;
       return prisma.subscriber.count({ where: { active: true } }).catch(() => null);
     },
+    async stats(since) {
+      if (!isDatabaseConfigured()) return null;
+      const [total, confirmed, last30] = await Promise.all([
+        prisma.subscriber.count({ where: { active: true } }),
+        prisma.subscriber.count({ where: { active: true, confirmed: true } }),
+        prisma.subscriber.count({ where: { active: true, createdAt: { gte: since } } }),
+      ]);
+      return { total, confirmed, last30 };
+    },
   },
   auth: { getSession, logoutPath: "/api/admin/logout" },
+  notify: {
+    async sendEmail({ to, subject, text, html }) {
+      const from = process.env.CONTACT_FROM_EMAIL;
+      const key = process.env.RESEND_API_KEY;
+      if (!from || !key) return false;
+      const { Resend } = await import("resend");
+      await new Resend(key).emails.send({ from, to, subject, text, html });
+      return true;
+    },
+  },
 };
