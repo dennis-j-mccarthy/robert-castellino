@@ -10,6 +10,6 @@ import GoogleAdsSection from "@/app/creator/(authed)/google-ads/GoogleAdsSection
 export const panels: StudioPanels = {
   search: [
     { id: "competitors", title: "Competitors", sub: "who wins those searches today, and why", body: <CompetitorsSection /> },
-    { id: "google-ads", title: "Google Ads", sub: "the paid lane · the $500 credit · the plan", body: <GoogleAdsSection /> },
+    { id: "google-ads-credit", title: "Google Ads · the credit and access", sub: "the $500 offer · Bob's accounts · Dennis's manager", body: <GoogleAdsSection /> },
   ],
 };
