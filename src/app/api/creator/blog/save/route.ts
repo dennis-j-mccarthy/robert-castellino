@@ -28,9 +28,9 @@ export async function POST(req: Request) {
     date: b.date ?? null,
   };
   try {
-    if (b.id) { await adapters.content.update(String(b.id), input); return NextResponse.json({ id: String(b.id), published: input.published }); }
+    if (b.id) { await adapters.content.update(String(b.id), input); return NextResponse.json({ id: String(b.id), published: input.published, url: adapters.content.url(String(b.id)) }); }
     const r = await adapters.content.create(input);
-    return NextResponse.json({ id: r.id, published: input.published }, { status: 201 });
+    return NextResponse.json({ id: r.id, published: input.published, url: adapters.content.url(r.id) }, { status: 201 });
   } catch (e) {
     return errorResponse(e, "Could not save the post.");
   }

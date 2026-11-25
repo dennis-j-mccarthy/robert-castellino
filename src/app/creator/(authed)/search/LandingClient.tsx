@@ -1,5 +1,7 @@
 "use client";
 
+import { studio } from "@/studio.config";
+
 import { useState } from "react";
 import type { LandingSections } from "@/lib/creator/landing";
 import { api, errText } from "@/lib/creator/client";
@@ -64,7 +66,7 @@ export default function LandingClient({ initialPages, keywords, plates, preselec
           <input className="ads-input" placeholder="type a phrase people search" value={custom} onChange={(e) => setCustom(e.target.value)} />
           <button type="button" className="btn btn--gold" disabled={!phrase || !!busy || !ai || !db} onClick={() => void generate()}>{busy === "make" ? "Writing the page…" : "✦ Make the page"}</button>
         </div>
-        <p className="ads-hint">The page gets a headline in the searcher&rsquo;s words, one of your plates at the top, why this book, how ordering works, the story, questions and answers, and an Order button that leads to the book page with the $49.95 price applied.</p>
+        <p className="ads-hint">The page gets a headline in the searcher&rsquo;s words, one of your pictures at the top, why this is for them, what they get, how it works, the story, questions and answers, and a button that leads to {studio.offer.path}.</p>
         {msg && <p className="ld-msg">{msg}</p>}
       </section>
 
@@ -147,7 +149,7 @@ function SectionsEditor({ s, onChange }: { s: LandingSections; onChange: (s: Lan
   return (
     <div className="ld-sections">
       <label className="ads-label">Small line above the headline</label><input className="ads-input" value={s.eyebrow} onChange={(e) => set({ eyebrow: e.target.value })} />
-      <label className="ads-label">Why this book (under the headline)</label><textarea className="ads-input" rows={2} value={s.valueProp} onChange={(e) => set({ valueProp: e.target.value })} />
+      <label className="ads-label">Why this is for them (under the headline)</label><textarea className="ads-input" rows={2} value={s.valueProp} onChange={(e) => set({ valueProp: e.target.value })} />
       {pairs("benefits", "What you get")}
       {pairs("steps", "How it works")}
       <div className="ads-row--2">

@@ -45,6 +45,11 @@ export const studio: StudioConfig = {
       singular: "Musing",
       path: "/musings",
       writerRole: "You write Robert Castellino's Musings: short first-person essays for his site, in the register of 'Why I Rise Early' and 'The Fifty-Second Light'. Make ONE observation and land it. Plain prose, unhurried, specific to a real place and hour. Never pitch the book or prints inside a Musing; it ends on the observation.",
+      fromPicture: {
+        noun: "story",
+        title: "The story of this picture",
+        brief: "Write the story behind this photograph as Bob: where he was, the hour and the light, what he waited for, and what the place means to him. 350 to 500 words, three or four short sections with a '## ' heading each, plain and specific, no hype.",
+      },
       categories: [
         { id: "reflections", label: "Reflections" }, { id: "light", label: "Light" }, { id: "land", label: "Land" }, { id: "locations", label: "Locations" }, { id: "wilderness", label: "Wilderness" },
       ],

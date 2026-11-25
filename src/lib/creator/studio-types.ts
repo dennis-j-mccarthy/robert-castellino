@@ -59,7 +59,24 @@ export interface BrandFacts {
   /** Primary accent for emails */
   accent: string;
   /** The blog's public name and path: Musings at /musings, Blog at /blog, Journal at /journal */
-  blog: { label: string; singular: string; path: string; writerRole: string; categories?: Array<{ id: string; label: string }>; /** Studio page that manages every post (site-specific) */ managePath?: string };
+  blog: { label: string; singular: string; path: string; writerRole: string; categories?: Array<{ id: string; label: string }>; /** Studio page that manages every post (site-specific) */ managePath?: string;
+    /**
+     * Pictures → the long form behind one picture: a recipe for a chef, the
+     * story of a plate for a photographer. Claude writes it from the picture
+     * and Essence; the owner edits and saves it as a draft post with the
+     * picture on top. Leave out to hide the step.
+     */
+    fromPicture?: {
+      /** "recipe", "story" — used in buttons and notices */
+      noun: string;
+      /** Section title in the picture popup, e.g. "The full recipe" */
+      title: string;
+      /** What Claude is asked for; shared code adds the picture, the voice and the JSON shape */
+      brief: string;
+      /** Blog category id for the saved post, if the site has categories */
+      category?: string;
+    };
+  };
 }
 
 export interface MetaFacts {

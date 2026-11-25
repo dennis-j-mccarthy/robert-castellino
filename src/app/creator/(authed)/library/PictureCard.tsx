@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Badges } from "@/components/creator/ImageGrid";
 import { api, errText } from "@/lib/creator/client";
-import type { LibraryItem } from "@/lib/creator/library";
+import type { LibraryItem, PicturePost } from "@/lib/creator/library";
+import { studio } from "@/studio.config";
 import { pillarTagClsFor, type CoreMessage, type Pillar } from "@/lib/creator/pillars";
 
 /*
@@ -19,10 +20,19 @@ type Described = { title: string; loc: string; blurb: string; pillarId: string; 
 const pick = (i: LibraryItem): Fields => ({ title: i.title, loc: i.loc, blurb: i.blurb, pillarId: i.pillarId, messageId: i.messageId });
 const same = (a: Fields, b: Fields) => (["title", "loc", "blurb", "pillarId", "messageId"] as const).every((k) => (a[k] ?? "") === (b[k] ?? ""));
 
-export default function PictureCard({ item, pillars, messages, db, ai, onClose, onSaved, onError }: {
+type Long = { title: string; excerpt: string; body: string };
+
+export default function PictureCard({ item, pillars, messages, db, ai, post, onClose, onSaved, onLongSaved, onError }: {
   item: LibraryItem; pillars: Pillar[]; messages: CoreMessage[]; db: boolean; ai: boolean;
-  onClose: () => void; onSaved: (patch: Fields) => void; onError: (text: string) => void;
+  /** The post already saved from this picture (its recipe, its story), if one */
+  post?: PicturePost | null;
+  onClose: () => void; onSaved: (patch: Fields) => void; onLongSaved?: (post: PicturePost) => void; onError: (text: string) => void;
 }) {
+  const fp = studio.brand.blog.fromPicture;
+  const singular = studio.brand.blog.singular.toLowerCase();
+  const [long, setLong] = useState<Long | null>(null);
+  const [expanding, setExpanding] = useState(false);
+  const [savingLong, setSavingLong] = useState(false);
   const [saved, setSaved] = useState<Fields>(pick(item));
   const [f, setF] = useState<Fields>(pick(item));
   const [busy, setBusy] = useState(false);
@@ -59,8 +69,36 @@ export default function PictureCard({ item, pillars, messages, db, ai, onClose, 
     }
   }
 
+  async function expand() {
+    setExpanding(true);
+    try {
+      const out = await api<{ title: string; excerpt: string; paragraphs: string[] }>("/api/creator/library/expand", { method: "POST", json: { src: item.src, title: f.title, blurb: f.blurb } });
+      setLong({ title: out.title, excerpt: out.excerpt, body: out.paragraphs.join("\n\n") });
+    } catch (e) {
+      onError(errText(e));
+    } finally {
+      setExpanding(false);
+    }
+  }
+
+  async function saveLong(publish: boolean) {
+    if (!long || !fp) return;
+    const paragraphs = long.body.split(/\n{2,}/).map((x) => x.trim()).filter(Boolean);
+    if (!long.title.trim() || !paragraphs.length) { onError(`The ${fp.noun} needs a title and some text.`); return; }
+    setSavingLong(true);
+    try {
+      const r = await api<{ id: string; published: boolean; url: string }>("/api/creator/blog/save", { method: "POST", json: { id: post?.id, title: long.title.trim(), excerpt: long.excerpt.trim(), paragraphs, img: item.src, loc: f.loc || null, category: fp.category ?? null, pillarId: f.pillarId ?? null, published: publish } });
+      onLongSaved?.({ id: r.id, title: long.title.trim(), url: r.url, published: r.published });
+      setLong(null);
+    } catch (e) {
+      onError(errText(e));
+    } finally {
+      setSavingLong(false);
+    }
+  }
+
   function close() {
-    if (dirty && !window.confirm("You have unsaved changes on this picture. Close without saving?")) return;
+    if ((dirty || long) && !window.confirm("You have unsaved changes on this picture. Close without saving?")) return;
     onClose();
   }
 
@@ -131,6 +169,40 @@ export default function PictureCard({ item, pillars, messages, db, ai, onClose, 
                 <span className="lb__savebar__msg is-ok">Saved</span>
               )}
             </div>
+
+            {fp && !item.mockup && (
+              <div className="lb__long">
+                <div className="lb__long__head"><b>{fp.title}</b>{post && !long && <span className={`seo-pill ${post.published ? "is-pass" : "is-warn"}`}>{post.published ? "LIVE" : "DRAFT"}</span>}</div>
+                {long ? (
+                  <>
+                    <label className="ads-label">Title</label>
+                    <input className="ads-input" value={long.title} disabled={savingLong} onChange={(e) => setLong({ ...long, title: e.target.value })} />
+                    <label className="ads-label">Summary (shown in the {studio.brand.blog.label} list)</label>
+                    <textarea className="ads-input" rows={2} value={long.excerpt} disabled={savingLong} onChange={(e) => setLong({ ...long, excerpt: e.target.value })} />
+                    <label className="ads-label">The {fp.noun} (## starts a subheading, - starts a list item)</label>
+                    <textarea className="ads-input ld-body" rows={18} value={long.body} disabled={savingLong} onChange={(e) => setLong({ ...long, body: e.target.value })} />
+                    <div className="ads-row" style={{ marginTop: 10 }}>
+                      <button type="button" className="btn btn--gold ads-btn-sm" disabled={savingLong || !db} onClick={() => void saveLong(false)}>{savingLong ? "Saving…" : post ? `Update the ${singular}` : `Save as a draft ${singular}`}</button>
+                      <button type="button" className="btn ads-btn-sm" disabled={savingLong} onClick={() => void expand()}>{expanding ? "Writing…" : "✦ Write it again"}</button>
+                      <button type="button" className="btn btn--ghost ads-btn-sm" disabled={savingLong} onClick={() => setLong(null)}>Discard</button>
+                    </div>
+                    <p className="ads-hint">Saved as a draft on {studio.brand.blog.path} with this picture on top. Publish it from {studio.brand.blog.label}.</p>
+                  </>
+                ) : post ? (
+                  <div className="ads-row">
+                    <span className="ads-hint" style={{ marginTop: 0 }}>Saved as the {singular} &ldquo;{post.title}&rdquo;.</span>
+                    <Link className="btn ads-btn-xs" href={studio.brand.blog.managePath ?? "/creator/blog"}>Edit in {studio.brand.blog.label}</Link>
+                    <a className="btn btn--ghost ads-btn-xs" href={post.url} target="_blank" rel="noreferrer">{post.published ? "View" : "Preview"} ↗</a>
+                    {ai && <button type="button" className="ads-linkbtn" disabled={expanding || !db} onClick={() => void expand()}>{expanding ? "Writing…" : "Write it again"}</button>}
+                  </div>
+                ) : (
+                  <div className="ap__blank">
+                    <span>Let the studio look at the picture and write the full {fp.noun}. You read it, fix anything, then save it as a draft {singular} with this picture on top.</span>
+                    <button type="button" className="btn btn--gold ads-btn-sm" disabled={!db || !ai || expanding || busy} onClick={() => void expand()}>{expanding ? `Writing the ${fp.noun}…` : `✦ Write the full ${fp.noun} with AI`}</button>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="ads-row" style={{ marginTop: 14 }}>
               {!item.mockup && <Link className="btn btn--gold ads-btn-xs" href={`/creator/social?imageId=${encodeURIComponent(item.src)}${f.pillarId ? `&pillar=${f.pillarId}` : ""}`}>Use in a post</Link>}

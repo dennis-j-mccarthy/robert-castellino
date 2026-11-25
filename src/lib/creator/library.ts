@@ -42,6 +42,9 @@ export interface LibraryItem {
   source: "manifest" | "photo" | "both";
 }
 
+/** A post saved from a picture (its recipe, its story) — keyed by the picture's src */
+export interface PicturePost { id: string; title: string; url: string; published: boolean }
+
 export interface LibraryView {
   items: LibraryItem[];
   collections: { slug: string; label: string; count: number }[];

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Badges } from "@/components/creator/ImageGrid";
 import Notice, { type NoticeState } from "@/components/creator/Notice";
 import { api, errText } from "@/lib/creator/client";
-import type { LibraryItem, LibraryView } from "@/lib/creator/library";
+import type { LibraryItem, LibraryView, PicturePost } from "@/lib/creator/library";
 import { pillarTagClsFor, type CoreMessage, type Pillar } from "@/lib/creator/pillars";
 import PictureCard from "./PictureCard";
 import AddPictures from "./AddPictures";
@@ -24,14 +24,17 @@ interface Props {
   db: boolean;
   ai: boolean;
   imageAi: boolean;
+  /** Posts already saved from a picture (recipe, story), keyed by picture src */
+  posts?: Record<string, PicturePost>;
 }
 
 type Described = { title: string; loc: string; blurb: string; pillarId: string; caption: string; confidence: string };
 const IN_BOOK = "__book__";
 const BATCH = 12;
 
-export default function LibraryClient({ initial, pillars, messages, db, ai, imageAi }: Props) {
+export default function LibraryClient({ initial, pillars, messages, db, ai, imageAi, posts: initialPosts }: Props) {
   const [items, setItems] = useState<LibraryItem[]>(initial.items);
+  const [posts, setPosts] = useState<Record<string, PicturePost>>(initialPosts ?? {});
   const [sel, setSel] = useState<LibraryItem | null>(null);
   const [notice, setNotice] = useState<NoticeState>(null);
   const [showMockups, setShowMockups] = useState(false);
@@ -150,8 +153,10 @@ export default function LibraryClient({ initial, pillars, messages, db, ai, imag
           messages={messages}
           db={db}
           ai={ai}
+          post={posts[sel.src] ?? null}
           onClose={() => setSel(null)}
           onSaved={(patch) => applyLocal(sel.src, patch)}
+          onLongSaved={(p) => { setPosts((m) => ({ ...m, [sel.src]: p })); setNotice({ kind: "ok", text: `Saved “${p.title}” as a draft.` }); }}
           onError={(text) => setNotice({ kind: "err", text })}
         />
       )}

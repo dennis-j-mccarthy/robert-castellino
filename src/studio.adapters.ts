@@ -27,6 +27,8 @@ function toPost(m: { id: string; title: string; date: string; img?: string | nul
 const ds = () => import("@/lib/data-source");
 const hooks = () => import("@/lib/publish-hooks");
 
+const flattenLong = (ps: string[]) => ps.map((p) => p.replace(/^##\s+/, "").replace(/^-\s+/gm, "• ")).filter(Boolean);
+
 export const adapters: StudioAdapters = {
   seed: async () => (await import("@/studio-site/seed")).ensureCreatorSeeded(),
   content: {
@@ -40,7 +42,8 @@ export const adapters: StudioAdapters = {
       const m = await (await ds()).getMusing(id);
       return m ? toPost(m) : null;
     },
-    async create(input) {
+    async create(input0) {
+      const input = { ...input0, paragraphs: flattenLong(input0.paragraphs) };
       const cat = (studio.brand.blog.categories ?? []).some((c) => c.id === input.category) ? (input.category as string) : "reflections";
       const { generateIdAndNum } = await import("@/lib/musing-ids");
       const { id, num } = await generateIdAndNum();
@@ -50,7 +53,8 @@ export const adapters: StudioAdapters = {
       if (row.published) { const [h, d] = await Promise.all([hooks(), ds()]); h.revalidateMusings(row.id); void h.onMusingPublished(d.rowToMusing(row)); }
       return { id: row.id };
     },
-    async update(id, input) {
+    async update(id, input0) {
+      const input = { ...input0, paragraphs: flattenLong(input0.paragraphs) };
       const cat = (studio.brand.blog.categories ?? []).some((c) => c.id === input.category) ? (input.category as string) : undefined;
       const row = await prisma.musing.update({
         where: { id },
