@@ -250,7 +250,7 @@ export default function PostMaker({ library, pillars, messages, config }: Props)
           <div className="pm__side-h">The post, as it will look</div>
           <article className={`fbcard pm__card${platform === "instagram" ? " is-ig" : ""}`}>
             <header className="fbcard__head">
-              <div className="fbcard__avatar">RC</div>
+              <div className="fbcard__avatar">{studio.site.short.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</div>
               <div>
                 <div className="fbcard__page">{config.page ?? studio.site.name}</div>
                 <div className="fbcard__meta">{scheduledAt ? `Scheduled · ${new Date(scheduledAt).toLocaleString()}` : "Just now"} · {PLATFORM_LABELS[platform]}</div>
